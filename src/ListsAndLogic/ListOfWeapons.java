@@ -20,6 +20,12 @@ public class ListOfWeapons {
 		initMonster("Light Bow", "Missile", "14");
 		initMonster("Thrusting Sword", "Striking", "4");
 		initMonster("Crossbow", "Missile", "12");
+		initMonster("Medium Bow", "Missile", "16");
+		initMonster("Morning Star", "Striking", "6");
+		initMonster("Staff", "Striking", "9");
+		initMonster("Mace", "Striking", "1");
+		initMonster("Dagger", "Striking", "0");
+		initMonster("Tooth/Claw", "Striking", "0");
 		
 	}
 	
