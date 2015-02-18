@@ -1,7 +1,6 @@
 package View;
 
 import javax.swing.*;
-//import java.awt.*;
 
 public class MagicRealmGUI {
 		
@@ -60,17 +59,32 @@ public class MagicRealmGUI {
 		desktopPane1.add(internalFrame1);
 		window.add(desktopPane1);
 		
-		// JLabel: map
-		JLabel map = new JLabel();
-		map.setIcon(new ImageIcon(getClass().getResource("board.png")));
-		
 		// JScrollPane - holds map
 		JScrollPane mapScrollPane = new JScrollPane();
-		mapScrollPane.setViewportView(map);
+		mapScrollPane.setViewportView(getMapLabel());
 		internalFrame1.add(mapScrollPane);
 		
 		window.setVisible(true);
 	}
+	
+	
+	
+	
+	
+/****************************************************************************************
+* FUNCTION: getMap() 
+* PURPOSE:  - Grabs the map image (board.png) and puts it in a JLabel.
+* @return:  - JLabel
+* CONTEXT:  - buildWindow() calls this function. 
+****************************************************************************************/
+	public JLabel getMapLabel(){
+		
+		ImageIcon mapImageIcon = new ImageIcon(getClass().getResource("board.png"));
+		JLabel mapImageLabel   = new JLabel(mapImageIcon);
+		mapImageLabel.addMouseListener(new MapBrain(mapImageLabel));
+		return mapImageLabel;
+	}
+	
 }
 
 
