@@ -3,22 +3,22 @@ package ObjectClasses;
  * The weapon chit class.
  */
 public class Weapon extends Chit{
-	boolean sharpnessStar;
+	int sharpnessStarCount;
 	boolean alerted;
 	int attackTime;
 	boolean valuable;
 	
 	public Weapon(String inputName, String inpLetter, boolean inpAlerted,
-			int inpAtkTime, boolean inpValuable, boolean isSharp) {
+			int inpAtkTime, boolean inpValuable, int sharpnessStars) {
 		super(inputName, inpLetter);
 		alerted = inpAlerted;
 		attackTime = inpAtkTime;
 		valuable = inpValuable;
-		sharpnessStar = isSharp;
+		sharpnessStarCount = sharpnessStars;
 	}
 	
-	public boolean hasSharpnessStar(){
-		return sharpnessStar;
+	public int numSharpnessStar(){
+		return sharpnessStarCount;
 	}
 	
 	public boolean isAlerted(){
