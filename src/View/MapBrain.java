@@ -2,60 +2,65 @@ package View;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
+
 import javax.swing.*;
+
+import ObjectClasses.Clearing;
 
 public class MapBrain extends MouseAdapter{
 
 	JLabel label;
-	Rectangle[] hotspot;
+	ArrayList<Clearing> clearings;
+	// Demo variable!
+	Clearing currentClearing;
 	
 	public MapBrain(JLabel label){
 		this.label = label;
+		clearings = new ArrayList<Clearing>();
+		initHotSpots();
 	}
 	
 	private void initHotSpots() {
-		hotspot = new Rectangle[50];
-		
 		/* CLIFF HOTSPOTS */
-		hotspot[1]  = new Rectangle(560, 355, 100, 80); // CLIFF C1 
-		hotspot[2]  = new Rectangle(690, 355, 100, 80); // CLIFF C2
-		hotspot[3]  = new Rectangle(625, 240, 100, 80); // CLIFF C3
- 		hotspot[4]  = new Rectangle(560, 120, 100, 80); // CLIFF C4
- 		hotspot[5]  = new Rectangle(700, 125, 100, 80); // CLIFF C5
- 		hotspot[6]  = new Rectangle(500, 245, 100, 80); // CLIFF C6
+		clearings.add(new Clearing(new Rectangle(560, 355, 100, 80), "CLIFF C1", "CLIFF C6,EV C2"));
+		clearings.add(new Clearing(new Rectangle(690, 355, 100, 80), "CLIFF C2", "LEDGES C3,CLIFF C3"));
+		clearings.add(new Clearing(new Rectangle(625, 240, 100, 80), "CLIFF C3", "CLIFF C5,CLIFF C2,CLIFF C6"));
+		clearings.add(new Clearing(new Rectangle(560, 120, 100, 80), "CLIFF C4", "CLIFF C6"));
+		clearings.add(new Clearing(new Rectangle(700, 125, 100, 80), "CLIFF C5", "CLIFF C3"));
+		clearings.add(new Clearing(new Rectangle(500, 245, 100, 80), "CLIFF C6", "CLIFF C1,CLIFF C4"));
  		
  		/* EVIL VALLEY HOTSPOTS */
- 		hotspot[7]  = new Rectangle(350, 500, 100, 80); // EV C1 
-		hotspot[8]  = new Rectangle(475, 495, 100, 80); // EV C2
-		hotspot[9]  = new Rectangle(530, 680, 100, 80); // EV C4
- 		hotspot[10] = new Rectangle(350, 720, 100, 80); // EV C5
+		clearings.add(new Clearing(new Rectangle(350, 500, 100, 80), "EV C1", "EV C4"));
+		clearings.add(new Clearing(new Rectangle(475, 495, 100, 80), "EV C2", "CLIFF C1,EV C5"));
+		clearings.add(new Clearing(new Rectangle(530, 680, 100, 80), "EV C4", "EV C1,LEDGES C2,BORDERLAND C2"));
+		clearings.add(new Clearing(new Rectangle(350, 720, 100, 80), "EV C5", "EV C2,HP C6"));
 		
 	}
 	
 	public void mousePressed(MouseEvent e){
-		if (hotspot == null)
-			initHotSpots();
 		Point p = e.getPoint();
-		if (hotspot[1].contains(p)){
-			System.out.println("CLIFF - Clearing 1");
-		} else if (hotspot[2].contains(p)){
-			System.out.println("CLIFF - Clearing 2");
-		} else if (hotspot[3].contains(p)){
-			System.out.println("CLIFF - Clearing 3");
-		} else if (hotspot[4].contains(p)){
-			System.out.println("CLIFF - Clearing 4");
-		} else if (hotspot[5].contains(p)){
-			System.out.println("CLIFF - Clearing 5");
-		} else if (hotspot[6].contains(p)){
-			System.out.println("CLIFF - Clearing 6");
-		} else if (hotspot[7].contains(p)){
-			System.out.println("EVIL VALLEY - Clearing 1");
-		}else if (hotspot[8].contains(p)){
-			System.out.println("EVIL VALLEY - Clearing 2");
-		}else if (hotspot[9].contains(p)){
-			System.out.println("EVIL VALLEY - Clearing 4");
-		}else if (hotspot[10].contains(p)){
-			System.out.println("EVIL VALLEY - Clearing 5");
+		for (Clearing clearing : clearings){
+			if (clearing.getArea().contains(p)){
+				if (e.getButton() == MouseEvent.BUTTON3){
+					currentClearing = clearing;
+					System.out.println(clearing.getName() + " set as current clearing");
+				}
+				else{
+					if (currentClearing != null){
+						if (clearing.isAdjacentTo(currentClearing.getName())){
+							System.out.println("You can move from " + currentClearing.getName() + " to " + clearing.getName() + "!");
+						}
+						else{
+							System.out.println("You CAN'T move from " + currentClearing.getName() + " to " + clearing.getName() + "!");
+						}
+					}
+					else{
+						System.out.println(clearing.getName());
+					}
+				}
+				break;
+			}
 		}
 	}
 }
