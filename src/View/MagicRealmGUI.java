@@ -193,6 +193,7 @@ public class MagicRealmGUI {
 
 		if ((this_character != null) && (this_character.length() > 0)) {
 		    System.out.println("You chose " +this_character+ " as your character!");
+		    buildCharInternalFrame(this_character);
 		    startGameButton.setEnabled(true);
 		    System.out.println("-- Start Game Button enabled.");
 		    return;
@@ -200,7 +201,63 @@ public class MagicRealmGUI {
 		System.out.println("-- Did not choose a character.");
 	}
 	
-}
+	
+	
+	
+	
+/****************************************************************************************
+* FUNCTION: buildCharInternalFrame()
+* CONTEXT:  - Called after a character is chosen.
+****************************************************************************************/
+	public void buildCharInternalFrame(String charName) {
+		
+		System.out.println("-- In buildCharInternalFrame().");
+		
+		JInternalFrame charInternalFrame = new JInternalFrame(charName);
+		charInternalFrame.setLayout(new GridBagLayout());
+		charInternalFrame.setSize(450, 500);
+		charInternalFrame.setMaximizable(true);
+		charInternalFrame.setIconifiable(true);
+		charInternalFrame.setResizable  (true);
+		charInternalFrame.setVisible    (true);
+		
+		GridBagConstraints constraints = new GridBagConstraints();
+		constraints.weightx = 0.5;
+		constraints.weighty = 0.5;
+		
+		JLabel charNameLabel = new JLabel(charName);
+		charNameLabel.setFont(new Font("Serif", Font.BOLD, 28));
+		//constraints.anchor = GridBagConstraints.FIRST_LINE_START;
+		constraints.gridx  = 0;
+		constraints.gridy  = 0;
+		charInternalFrame.add(charNameLabel);
+		
+		// Setup Victory Requirements Button
+		JButton setupVRButton = new JButton("Setup VR");
+		setupVRButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				// Place function here.
+			}
+		});
+		constraints.weightx = 0.5;
+		constraints.weighty = 8.0;
+		constraints.gridx   = 1;
+		constraints.gridy   = 1;
+		charInternalFrame.add(setupVRButton);
+		
+		// Show Card Button
+		JButton showCardButton = new JButton("Show Card");
+		showCardButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				// Place function here.
+			}
+		});
+		charInternalFrame.add(showCardButton);
+		
+		desktopPane.add(charInternalFrame);
+	}
+	
+} /* CLOSES CLASS */
 
 
 
