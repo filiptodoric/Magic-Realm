@@ -45,6 +45,11 @@ public class MagicRealmServer implements Runnable{
      * The counter for the current day in the Magic Realm.
      */
     private static int day;
+    
+    /**
+     * The server's copy of playable characters.
+     */
+    static ArrayList<String> playableCharacters;
 
     /**
      * The application main method, which just listens on a port and
@@ -52,6 +57,13 @@ public class MagicRealmServer implements Runnable{
      */
     public static void main(String[] args) throws Exception {
         MagicRealmServer server = new MagicRealmServer();
+		playableCharacters = new ArrayList<String>();
+		playableCharacters.add("Amazon");
+		playableCharacters.add("Swordsman");
+		playableCharacters.add("Captain");
+		playableCharacters.add("Dwarf");
+		playableCharacters.add("Elf");
+		playableCharacters.add("Black Knight");
         server.run();
     }
 
@@ -112,10 +124,20 @@ public class MagicRealmServer implements Runnable{
                     }
                 }
 
-                // Now that a successful name has been chosen, add the
-                // socket's print writer to the set of all writers so
-                // this client can receive broadcast messages.
-                out.writeObject("NAMEACCEPTED");
+
+                while (true) {
+                    out.writeObject("CHOOSECHARACTER:" + getAvailableCharacterString());
+                    name = (String) in.readObject();
+                    synchronized (names) {
+                        if (playableCharacters.contains(name)) {
+                            playableCharacters.remove(name);
+                            break;
+                        }
+                        else{
+                        	out.writeObject("INVALIDNAME");
+                        }
+                    }
+                }
                 writers.add(out);
                 System.out.println("User " + name + " connected and communicating on port " + socket.getPort());
                 for (ObjectOutputStream writer : writers) {
@@ -163,6 +185,15 @@ public class MagicRealmServer implements Runnable{
                 shutdown("Player disconnected.");
             }
         }
+
+		private String getAvailableCharacterString() {
+			String temp = "";
+			for (String character : playableCharacters){
+				temp += character + ",";
+			}
+			System.out.println(playableCharacters);
+			return temp.substring(0, temp.length()-1);
+		}
 
 		private void newRound() {
             try {

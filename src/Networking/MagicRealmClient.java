@@ -8,6 +8,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 
@@ -25,7 +26,9 @@ public class MagicRealmClient implements Runnable {
     MagicRealmGUI gui;
     Player player;
     String name;
+    String character;
     Socket socket;
+    ArrayList<String> playableCharacters;
     
     public MagicRealmClient() {
     	gui = new MagicRealmGUI();
@@ -85,14 +88,28 @@ public class MagicRealmClient implements Runnable {
         		break;
         	}
             if (line.startsWith("SUBMITNAME")) {
-            	while (name == null || name.equals("")){
-                	name = gui.openChooseCharacterDialog();
-            	}
-                try {
+            	name = gui.getName();
+            	try {
 					out.writeObject(name);
+	            	name = null;
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+            } else if (line.startsWith("CHOOSECHARACTER:")){
+            	String[] charStr = line.substring(16).split(",");
+            	playableCharacters = new ArrayList<String>();
+            	for (String character : charStr){
+            		playableCharacters.add(character);
+            	}
+            	while (character == null || character.equals("")){
+                	character = gui.openChooseCharacterDialog(playableCharacters);
+            	}
+            	try {
+					out.writeObject(character);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+            	player = new Player(name, character);
             } else if (line.startsWith("INVALIDNAME")){
             } else if (line.startsWith("NAMEACCEPTED")) {
             } else if (line.startsWith("GAMECANSTART")) {

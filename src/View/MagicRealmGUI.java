@@ -4,6 +4,7 @@ import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 
 public class MagicRealmGUI {
 		
@@ -147,17 +148,6 @@ public class MagicRealmGUI {
 		constraints.weightx = 0.5;
 		constraints.weighty = 0.5;
 		
-		// "New Character" Button
-		JButton newCharButton = new JButton("New Character");
-		newCharButton.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				openChooseCharacterDialog();
-			}
-		});
-		constraints.gridx = 0;
-		constraints.gridy = 0;
-		playersInternalFrame.add(newCharButton, constraints);
-		
 		// "Start Game" Button
 		startGameButton = new JButton("Start Game");
 		constraints.gridx = 0;
@@ -184,12 +174,9 @@ public class MagicRealmGUI {
 * FUNCTION: openChooseCharDialog()
 * CONTEXT:  - Pressing "New Character" button calls this function.
 ****************************************************************************************/
-	public String openChooseCharacterDialog() {
+	public String openChooseCharacterDialog(ArrayList<String> characters) {
 		
 		System.out.println("-- In newCharButtonClicked()");
-		
-		Object[] characters = { "Amazon", "Black Knight", "Captain", 
-				            "Dwarf",  "Elf", "Swordsman" };
 		
 		String this_character = (String)JOptionPane.showInputDialog(
 		                    	window,
@@ -197,14 +184,13 @@ public class MagicRealmGUI {
 		                    	"Choose Character Dialog",
 		                    	JOptionPane.PLAIN_MESSAGE,
 		                    	null,
-		                    	characters,
+		                    	characters.toArray(),
 		                    	"Amazon");
 
-		if ((this_character != null) && (this_character.length() > 0)) {
+		if ((this_character != null) && (characters.contains(this_character))) {
 		    System.out.println("You chose " +this_character+ " as your character!");
 		    buildCharInternalFrame(this_character);
-		    startGameButton.setEnabled(true);
-		    System.out.println("-- Start Game Button enabled.");
+		    characters.remove(this_character);
 		    return this_character;
 		}
 		System.out.println("-- Did not choose a character.");
@@ -215,6 +201,14 @@ public class MagicRealmGUI {
         return JOptionPane.showInputDialog(
             desktopPane,
             "Enter IP Address of the Server:",
+            "Magic Realm v0.1",
+            JOptionPane.QUESTION_MESSAGE);
+    }
+	
+	public String getName() {
+        return JOptionPane.showInputDialog(
+            desktopPane,
+            "Enter your name:",
             "Magic Realm v0.1",
             JOptionPane.QUESTION_MESSAGE);
     }
