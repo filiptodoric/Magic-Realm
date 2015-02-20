@@ -36,5 +36,26 @@ public class Character {
 			inventory.add(new Armour("Shield", "M"));
 		}
 	}
+	
+	// Parent class function to be overridden
+	public void hide(){
+		System.out.println("Character Class - hide");
+	}
+	
+	public void move(){
+		System.out.println("Character Class - move");
+	}
+	
+	public void search(){
+		System.out.println("Character Class - search");
+	}
+	
+	public void rest(){
+		System.out.println("Character Class - rest");
+	}
+	
+	public void trade(){
+		System.out.println("Character Class - trade");
+	}
 
 }
