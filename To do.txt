@@ -7,3 +7,8 @@ Dylan: Working on the View, mostly the map
 
 Ryan: Working on model, work with other group members for necessary 
 		changes in model, help with bugs in code of Dylan and Filip
+		
+THursday night:
+- "abstract" character class
+-character classes
+- generating a new character (using menu)

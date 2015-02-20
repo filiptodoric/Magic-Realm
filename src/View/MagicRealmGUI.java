@@ -159,9 +159,15 @@ public class MagicRealmGUI {
 		
 		// "Start Game" Button
 		startGameButton = new JButton("Start Game");
-		startGameButton.setEnabled(false);
 		constraints.gridx = 0;
 		constraints.gridy = 1;
+		startGameButton.setToolTipText("Click to start game.");
+		startGameButton.setEnabled(false);
+		startGameButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				// TODO Place function here.
+			}
+		});
 		playersInternalFrame.add(startGameButton, constraints);
 		
 		
@@ -243,14 +249,15 @@ public class MagicRealmGUI {
 		});
 		constraints.weightx = 0.5;
 		constraints.weighty = 8.0;
-		constraints.gridx   = 1;
-		constraints.gridy   = 1;
+		constraints.gridx   = 0;
+		constraints.gridy   = 2;
 		charInternalFrame.add(setupVRButton, constraints);
 		
 		// Show Card Button
 		JButton showCardButton = new JButton("Show Card");
+		showCardButton.setToolTipText("Show Character's Card");
 		constraints.gridx = 0;
-		constraints.gridy = 2;
+		constraints.gridy = 1;
 		showCardButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				// TODO Place function here.
@@ -265,6 +272,11 @@ public class MagicRealmGUI {
 		hideButton.setToolTipText("Hide");
 		hideButton.setIcon(new ImageIcon(getClass().getResource("hide.gif")));
 		hideButton.setEnabled(false);
+		hideButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				// TODO Place function here.
+			}
+		});
 		charInternalFrame.add(hideButton, constraints);
 				
 				
@@ -275,6 +287,11 @@ public class MagicRealmGUI {
 		moveButton.setToolTipText("Move");
 		moveButton.setIcon(new ImageIcon(getClass().getResource("move.gif")));
 		moveButton.setEnabled(false);
+		moveButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				// TODO Place function here.
+			}
+		});
 		charInternalFrame.add(moveButton, constraints);
 				
 		// Search Button
@@ -284,6 +301,11 @@ public class MagicRealmGUI {
 		searchButton.setToolTipText("Search");
 		searchButton.setIcon(new ImageIcon(getClass().getResource("search.gif")));
 		searchButton.setEnabled(false);
+		searchButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				// TODO Place function here.
+			}
+		});
 		charInternalFrame.add(searchButton, constraints);
 				
 		// Rest Button
@@ -293,6 +315,11 @@ public class MagicRealmGUI {
 		restButton.setToolTipText("Rest");
 		restButton.setIcon(new ImageIcon(getClass().getResource("rest.gif")));
 		restButton.setEnabled(false);
+		restButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				// TODO Place function here.
+			}
+		});
 		charInternalFrame.add(restButton, constraints);
 				
 		// Trade Button
@@ -302,6 +329,11 @@ public class MagicRealmGUI {
 		tradeButton.setToolTipText("Trade");
 		tradeButton.setIcon(new ImageIcon(getClass().getResource("trade.gif")));
 		tradeButton.setEnabled(false);
+		tradeButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				// TODO Place function here.
+			}
+		});
 		charInternalFrame.add(tradeButton, constraints);
 		
 		desktopPane.add(charInternalFrame);
