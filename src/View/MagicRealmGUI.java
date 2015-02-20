@@ -1,14 +1,15 @@
 package View;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.*;
 
 public class MagicRealmGUI {
 		
-	private JFrame       window;
-	private JDesktopPane desktopPane;
-	private JButton      startGameButton;
+	JFrame       window;
+	JDesktopPane desktopPane;
+	public JButton      startGameButton;
 	
 /****************************************************************************************
 * CONSTRUCTOR
@@ -183,7 +184,7 @@ public class MagicRealmGUI {
 * FUNCTION: openChooseCharDialog()
 * CONTEXT:  - Pressing "New Character" button calls this function.
 ****************************************************************************************/
-	public void openChooseCharacterDialog() {
+	public String openChooseCharacterDialog() {
 		
 		System.out.println("-- In newCharButtonClicked()");
 		
@@ -204,10 +205,19 @@ public class MagicRealmGUI {
 		    buildCharInternalFrame(this_character);
 		    startGameButton.setEnabled(true);
 		    System.out.println("-- Start Game Button enabled.");
-		    return;
+		    return this_character;
 		}
 		System.out.println("-- Did not choose a character.");
+		return null;
 	}
+	
+	public String getServerAddress() {
+        return JOptionPane.showInputDialog(
+            desktopPane,
+            "Enter IP Address of the Server:",
+            "Magic Realm v0.1",
+            JOptionPane.QUESTION_MESSAGE);
+    }
 	
 	
 	
@@ -338,6 +348,7 @@ public class MagicRealmGUI {
 		
 		desktopPane.add(charInternalFrame);
 	}
+
 	
 } /* CLOSES CLASS */
 
