@@ -264,7 +264,7 @@ public class MagicRealmGUI {
 		constraints.gridy = 1;
 		showCardButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				// TODO Place function here.
+				showCharacterCard(charName);
 			}
 		});
 		charInternalFrame.add(showCardButton, constraints);
@@ -341,6 +341,43 @@ public class MagicRealmGUI {
 		charInternalFrame.add(tradeButton, constraints);
 		
 		desktopPane.add(charInternalFrame);
+	}
+	
+	
+	
+	
+/****************************************************************************************
+* FUNCTION: showCharacterCard()
+* PURPOSE:  - Pops up a dialog box with the selected character's info and image. 
+****************************************************************************************/
+	public void showCharacterCard(String selectedCharacter) {
+			
+		switch(selectedCharacter){
+			case "Amazon":
+				JOptionPane.showMessageDialog(window, 
+					new ImageIcon(getClass().getResource("amazon.jpg")));
+				break;
+			case "Black Knight":
+				JOptionPane.showMessageDialog(window, 
+					new ImageIcon(getClass().getResource("black_knight.jpg")));
+				break;
+			case "Captain":
+				JOptionPane.showMessageDialog(window, 
+					new ImageIcon(getClass().getResource("captain.jpg")));
+				break;
+			case "Dwarf":
+				JOptionPane.showMessageDialog(window,
+					new ImageIcon(getClass().getResource("dwarf.jpg")));
+				break;
+			case "Elf":
+				JOptionPane.showMessageDialog(window, 
+					new ImageIcon(getClass().getResource("elf.jpg")));
+				break;
+			case "Swordsman":
+				JOptionPane.showMessageDialog(window, 
+					new ImageIcon(getClass().getResource("swordsman.jpg")));
+				break;
+		}
 	}
 
 	
