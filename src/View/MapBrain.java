@@ -24,6 +24,7 @@ public class MapBrain extends MouseAdapter{
 		tiles = new ArrayList<HexTile>();
 		counter = 0;
 		initClearings();
+		paintChits(); 	
 	}
 	
 	private void initClearings() {
@@ -254,4 +255,16 @@ public class MapBrain extends MouseAdapter{
 		}
 		//generateHexTileCode(p);
 	}
+
+	public void paintChits(Graphics g)	{
+		for (HexTile tile : tiles){
+			for (Clearing clearing : tile.getClearings()){
+				if (clearing.get){
+					clearing.getArea().
+				}
+			}
+		}
+	}
+
+
 }
