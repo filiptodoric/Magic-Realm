@@ -19,7 +19,7 @@ public class HexTile {
 		return clearings;
 	}
 	
-	public ArrayList<Chit> getChit() {
+	public ArrayList<Chit> getChit(){
 		return chits;
 	}
 	
