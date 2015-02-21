@@ -111,14 +111,14 @@ public class MagicRealmClient implements Runnable {
 				}
             	player = new Player(name, character);
             } else if (line.startsWith("INVALIDNAME")){
-            } else if (line.startsWith("NAMEACCEPTED")) {
-            } else if (line.startsWith("GAMECANSTART")) {
+            } else if (line.startsWith("NAMEACCEPTED")){
+            } else if (line.startsWith("GAMECANSTART")){
             	gui.startGameButton.setEnabled(true);
-            } else if (line.startsWith("GAMECAN'TSTART")) {
+            } else if (line.startsWith("GAMECAN'TSTART")){
             	gui.startGameButton.setEnabled(false);
             } else if (line.startsWith("GAMESTART")) {
             	System.out.println("The game is now starting!");
-            } else if (line.startsWith("ROUNDSTART")) {
+            } else if (line.startsWith("ROUNDSTART")){
             } else if (line.startsWith("MESSAGE")){
             } else if (line.startsWith("Score:")){
             } else if (line.startsWith("Players Active:")){

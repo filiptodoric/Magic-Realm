@@ -1,16 +1,15 @@
 package View;
 
 import javax.swing.*;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 
 public class MagicRealmGUI {
 		
-	JFrame       window;
-	JDesktopPane desktopPane;
-	public JButton      startGameButton;
+	JFrame       	window;
+	JDesktopPane 	desktopPane;
+	public JButton	startGameButton;
 	
 /****************************************************************************************
 * CONSTRUCTOR
