@@ -10,6 +10,7 @@ import ObjectClasses.Chit;
 import ObjectClasses.Clearing;
 import ObjectClasses.Denizen;
 import ObjectClasses.HexTile;
+import ObjectClasses.Native;
 
 public class MapBrain extends MouseAdapter{
 
@@ -174,6 +175,9 @@ public class MapBrain extends MouseAdapter{
 		for (Clearing clearing : tile.getClearings()){
 			if (clearing.getName().equals("AV C5")){
 				clearing.addChit(new Chit("Inn", null));
+				clearing.addChit(new Native("Guard 1", "H", true, 5, 5, "G"));
+				clearing.addChit(new Native("Guard 2", "H", true, 5, 5, "G"));
+				clearing.addChit(new Native("Guard HQ", "H", true, 5, 5, "G"));
 			}
 		}
 		tiles.add(tile);
