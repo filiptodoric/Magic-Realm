@@ -1,6 +1,7 @@
 package View;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -10,6 +11,16 @@ public class MagicRealmGUI {
 	JFrame       	window;
 	JDesktopPane 	desktopPane;
 	public JButton	startGameButton;
+	public JButton 	tradeButton;
+	public JButton 	restButton;
+	public JButton 	searchButton;
+	public JButton 	moveButton;
+	public JButton 	hideButton;
+	public JButton 	showCardButton;
+	public JButton 	setupVRButton;
+	public JLayeredPane map;
+	private MapBrain mapBrain;
+	private ImageLookup lookup;
 	
 /****************************************************************************************
 * CONSTRUCTOR
@@ -17,6 +28,7 @@ public class MagicRealmGUI {
 	public MagicRealmGUI() {
 		
 		System.out.println("-- In MagicRealmGUI constructor.");
+		lookup = new ImageLookup();
 		buildWindow();
 	}
 
@@ -69,16 +81,49 @@ public class MagicRealmGUI {
 * @return:  - JLabel
 * CONTEXT:  - buildWindow() calls this function. 
 ****************************************************************************************/
-	public JLabel getMapLabel(){
-		
-		ImageIcon mapImageIcon = new ImageIcon(getClass().getResource("board.png"));
-		JLabel mapImageLabel   = new JLabel(mapImageIcon);
-		mapImageLabel.addMouseListener(new MapBrain(mapImageLabel));
-		return mapImageLabel;
+	public JLayeredPane getMap(){
+		map = new JLayeredPane();
+		mapBrain = new MapBrain(map);
+		map.addMouseListener(mapBrain);
+		map.setLayout(new BorderLayout());
+		MouseMotionAdapter scroll = new MouseMotionAdapter() {
+            public void mouseDragged(MouseEvent e) {
+            	map.scrollRectToVisible(new Rectangle(
+            			(int)map.getVisibleRect().getCenterX() + (e.getXOnScreen() - (int)map.getVisibleRect().getCenterX()), 
+            			(int)map.getVisibleRect().getCenterY() + (e.getYOnScreen() - (int)map.getVisibleRect().getCenterY()),
+            			(int)map.getVisibleRect().getHeight(),
+            			(int)map.getVisibleRect().getWidth()));
+            }
+        };
+        map.addMouseMotionListener(scroll);
+		/*
+		addImage("chapel.gif",1630,730,100,80,2, true);
+		addImage("guard.gif",1973,881,100,80,2, true);
+		addImage("house.gif",773,1255,100,80,2, true);
+		addImage("inn.gif",1841,1627,100,80,2, true);
+		addImage("board.png",0,0,2221,2439,1, false);
+		*/
+		return map;
 	}
-
 	
+	public void addImage(String imageName, int x, int y, int width, int height, 
+			int layer, boolean opaque){
+		ImageIcon imageIcon = 
+				new ImageIcon(getClass().getResource(lookup.getValue(imageName)));
+		JLabel label = new JLabel(imageIcon);
+		label.setBounds(x,y,width,height);
+		label.setOpaque(opaque);
+		label.setName(imageName);
+		map.add(label);
+	}
 	
+	public void removeImage(String imageName){
+		for (Component component : map.getComponents()){
+			if (component.getName().equals(imageName)){
+				map.remove(component);
+			}
+		}
+	}
 	
 	
 /****************************************************************************************
@@ -107,8 +152,7 @@ public class MagicRealmGUI {
 	public void buildMapInternalFrame() {
 		
 		// mapScrollPane - holds the mapImageLabel 
-		JScrollPane mapScrollPane = new JScrollPane();
-		mapScrollPane.setViewportView(getMapLabel());
+		JScrollPane mapScrollPane = new JScrollPane(getMap());
 		
 		// mapInternalFrame - holds the mapScrollPane
 		JInternalFrame mapInternalFrame = new JInternalFrame("Magic Realm Map");
@@ -244,12 +288,7 @@ public class MagicRealmGUI {
 		charInternalFrame.add(charNameLabel, constraints);
 		
 		// Setup Victory Requirements Button
-		JButton setupVRButton = new JButton("Setup VPs");
-		setupVRButton.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				// TODO Place function here.
-			}
-		});
+		setupVRButton = new JButton("Setup VPs");
 		constraints.weightx = 0.5;
 		constraints.weighty = 8.0;
 		constraints.gridx   = 0;
@@ -257,89 +296,63 @@ public class MagicRealmGUI {
 		charInternalFrame.add(setupVRButton, constraints);
 		
 		// Show Card Button
-		JButton showCardButton = new JButton("Show Card");
+		showCardButton = new JButton("Show Card");
 		showCardButton.setToolTipText("Show Character's Card");
 		constraints.gridx = 0;
 		constraints.gridy = 1;
-		showCardButton.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				showCharacterCard(charName);
-			}
-		});
 		charInternalFrame.add(showCardButton, constraints);
 		
 		// Hide Button
-		JButton hideButton = new JButton();
+		hideButton = new JButton();
 		constraints.gridx = 0;
 		constraints.gridy = 3;
 		hideButton.setToolTipText("Hide");
 		hideButton.setIcon(new ImageIcon(getClass().getResource("hide.gif")));
 		hideButton.setEnabled(false);
-		hideButton.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				// TODO Place function here.
-			}
-		});
 		charInternalFrame.add(hideButton, constraints);
 				
 				
 		// Move Button
-		JButton moveButton = new JButton();
+		moveButton = new JButton();
 		constraints.gridx = 1;
 		constraints.gridy = 3;
 		moveButton.setToolTipText("Move");
 		moveButton.setIcon(new ImageIcon(getClass().getResource("move.gif")));
 		moveButton.setEnabled(false);
-		moveButton.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				// TODO Place function here.
-			}
-		});
 		charInternalFrame.add(moveButton, constraints);
 				
 		// Search Button
-		JButton searchButton = new JButton();
+		searchButton = new JButton();
 		constraints.gridx = 2;
 		constraints.gridy = 3;
 		searchButton.setToolTipText("Search");
 		searchButton.setIcon(new ImageIcon(getClass().getResource("search.gif")));
 		searchButton.setEnabled(false);
-		searchButton.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				// TODO Place function here.
-			}
-		});
 		charInternalFrame.add(searchButton, constraints);
 				
 		// Rest Button
-		JButton restButton = new JButton();
+		restButton = new JButton();
 		constraints.gridx = 3;
 		constraints.gridy = 3;
 		restButton.setToolTipText("Rest");
 		restButton.setIcon(new ImageIcon(getClass().getResource("rest.gif")));
 		restButton.setEnabled(false);
-		restButton.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				// TODO Place function here.
-			}
-		});
 		charInternalFrame.add(restButton, constraints);
 				
 		// Trade Button
-		JButton tradeButton = new JButton();
+		tradeButton = new JButton();
 		constraints.gridx = 4;
 		constraints.gridy = 3;
 		tradeButton.setToolTipText("Trade");
 		tradeButton.setIcon(new ImageIcon(getClass().getResource("trade.gif")));
 		tradeButton.setEnabled(false);
-		tradeButton.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				// TODO Place function here.
-			}
-		});
 		charInternalFrame.add(tradeButton, constraints);
 		
 		desktopPane.add(charInternalFrame);
+	}
+	
+	public MapBrain getMapBrain(){
+		return mapBrain;
 	}
 	
 	

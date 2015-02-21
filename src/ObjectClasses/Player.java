@@ -8,4 +8,12 @@ public class Player {
 		name = inpName;
 		character = new Character(selectedCharacter);
 	}
+	
+	public Character getCharacter(){
+		return character;
+	}
+	
+	public String getName(){
+		return name;
+	}
 }

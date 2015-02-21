@@ -2,11 +2,12 @@ package ObjectClasses;
 
 import java.util.ArrayList;
 
-public class Character {
-	private String name;
+public class Character extends Chit{
 	private ArrayList<Chit> inventory = new ArrayList<Chit>();
+	private String currentClearing;
 	public Character(String selectedCharacter) {
-		name = selectedCharacter;
+		super(selectedCharacter,null);
+		currentClearing = "AV C4";
 		initInventory();
 	}
 	
@@ -35,6 +36,14 @@ public class Character {
 			inventory.add(new Armour("Suit of Armor", "T"));
 			inventory.add(new Armour("Shield", "M"));
 		}
+	}
+	
+	public String getClearing(){
+		return currentClearing;
+	}
+	
+	public ArrayList<Chit> getInventory(){
+		return inventory;
 	}
 	
 	// Parent class function to be overridden

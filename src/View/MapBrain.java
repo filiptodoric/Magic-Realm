@@ -14,7 +14,7 @@ import ObjectClasses.Native;
 
 public class MapBrain extends MouseAdapter{
 
-	JLabel label;
+	JLayeredPane label;
 	ArrayList<HexTile> tiles;
 	int counter;
 	String hexName;
@@ -22,12 +22,16 @@ public class MapBrain extends MouseAdapter{
 	// Demo variable!
 	Clearing currentClearing;
 	
-	public MapBrain(JLabel label){
-		this.label = label;
+	public MapBrain(JLayeredPane mapImage){
+		this.label = mapImage;
 		tiles = new ArrayList<HexTile>();
 		counter = 0;
 		initClearings();
 		paintChits(); 	
+	}
+	
+	public ArrayList<HexTile> getTiles(){
+		return tiles;
 	}
 	
 	private void initClearings() {

@@ -1,6 +1,5 @@
 package Networking;
 
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -10,8 +9,9 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
 
-import javax.swing.JButton;
-
+import ObjectClasses.Chit;
+import ObjectClasses.Clearing;
+import ObjectClasses.HexTile;
 import ObjectClasses.Player;
 import View.MagicRealmGUI;
 
@@ -49,6 +49,82 @@ public class MagicRealmClient implements Runnable {
             }
         });
 	}
+    
+    private void refreshMap(){
+    	for (HexTile tile : gui.getMapBrain().getTiles()){
+    		for (Clearing clearing : tile.getClearings()){
+    			int offset = 0;
+    			for (Chit chit : clearing.getChits()){
+    				gui.addImage(chit.getName(), 
+    						(int)clearing.getArea().getX() - offset, 
+    						(int)clearing.getArea().getY() - offset, 
+    						(int)clearing.getArea().getWidth(), 
+    						(int)clearing.getArea().getHeight(), 0, true);
+    				offset += 4;
+    			}
+    		}
+    	}
+    	gui.addImage("board.png",0,0,2221,2439,1, false);
+    }
+    
+    private void placeCharacter(){
+    	for (HexTile tile : gui.getMapBrain().getTiles()){
+    		for (Clearing clearing : tile.getClearings()){
+    			if (clearing.getName().equals(player.getCharacter().getClearing()) &&
+    					!clearing.getChits().contains(player.getCharacter())){
+    				clearing.addChit(player.getCharacter());
+    			}
+    			else if (!clearing.getName().equals(player.getCharacter().getClearing()) &&
+    					clearing.getChits().contains(player.getCharacter())){
+    				clearing.removeChit(player.getCharacter());
+    			}
+    		}
+    	}
+    }
+    
+    private void setCharacterActionListeners(){
+		gui.tradeButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				// TODO Place function here.
+			}
+		});
+		
+		gui.restButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				// TODO Place function here.
+			}
+		});
+		
+		gui.searchButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				// TODO Place function here.
+			}
+		});
+		
+		gui.moveButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				// TODO Place function here.
+			}
+		});
+		
+		gui.hideButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				// TODO Place function here.
+			}
+		});
+		
+		gui.showCardButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				gui.showCharacterCard(player.getCharacter().getName());
+			}
+		});
+		
+		gui.setupVRButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				// TODO Place function here.
+			}
+		});
+    }
 
 	/**
      * Connects to the server then enters the processing loop.
@@ -110,6 +186,9 @@ public class MagicRealmClient implements Runnable {
 					e.printStackTrace();
 				}
             	player = new Player(name, character);
+            	setCharacterActionListeners();
+            	placeCharacter();
+            	refreshMap();
             } else if (line.startsWith("INVALIDNAME")){
             } else if (line.startsWith("NAMEACCEPTED")){
             } else if (line.startsWith("GAMECANSTART")){
