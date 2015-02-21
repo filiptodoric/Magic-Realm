@@ -11,6 +11,7 @@ public class Clearing {
 	private ArrayList<String> adjacentClearings;
 	private ArrayList<Chit> chits;
 	public Clearing(Rectangle inpLocationRect, String inpName, String adjacentClearingsStr){
+		chits = new ArrayList<Chit>();
 		adjacentClearings = new ArrayList<String>();
 		locationRect = inpLocationRect;
 		name = inpName;

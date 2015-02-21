@@ -10,6 +10,13 @@ public class MagicRealmGUI {
 	JFrame       	window;
 	JDesktopPane 	desktopPane;
 	public JButton	startGameButton;
+	public JButton 	tradeButton;
+	public JButton 	restButton;
+	public JButton 	searchButton;
+	public JButton 	moveButton;
+	public JButton 	hideButton;
+	public JButton 	showCardButton;
+	public JButton 	setupVRButton;
 	
 /****************************************************************************************
 * CONSTRUCTOR
@@ -244,12 +251,7 @@ public class MagicRealmGUI {
 		charInternalFrame.add(charNameLabel, constraints);
 		
 		// Setup Victory Requirements Button
-		JButton setupVRButton = new JButton("Setup VPs");
-		setupVRButton.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				// TODO Place function here.
-			}
-		});
+		setupVRButton = new JButton("Setup VPs");
 		constraints.weightx = 0.5;
 		constraints.weighty = 8.0;
 		constraints.gridx   = 0;
@@ -257,86 +259,56 @@ public class MagicRealmGUI {
 		charInternalFrame.add(setupVRButton, constraints);
 		
 		// Show Card Button
-		JButton showCardButton = new JButton("Show Card");
+		showCardButton = new JButton("Show Card");
 		showCardButton.setToolTipText("Show Character's Card");
 		constraints.gridx = 0;
 		constraints.gridy = 1;
-		showCardButton.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				showCharacterCard(charName);
-			}
-		});
 		charInternalFrame.add(showCardButton, constraints);
 		
 		// Hide Button
-		JButton hideButton = new JButton();
+		hideButton = new JButton();
 		constraints.gridx = 0;
 		constraints.gridy = 3;
 		hideButton.setToolTipText("Hide");
 		hideButton.setIcon(new ImageIcon(getClass().getResource("hide.gif")));
 		hideButton.setEnabled(false);
-		hideButton.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				// TODO Place function here.
-			}
-		});
 		charInternalFrame.add(hideButton, constraints);
 				
 				
 		// Move Button
-		JButton moveButton = new JButton();
+		moveButton = new JButton();
 		constraints.gridx = 1;
 		constraints.gridy = 3;
 		moveButton.setToolTipText("Move");
 		moveButton.setIcon(new ImageIcon(getClass().getResource("move.gif")));
 		moveButton.setEnabled(false);
-		moveButton.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				// TODO Place function here.
-			}
-		});
 		charInternalFrame.add(moveButton, constraints);
 				
 		// Search Button
-		JButton searchButton = new JButton();
+		searchButton = new JButton();
 		constraints.gridx = 2;
 		constraints.gridy = 3;
 		searchButton.setToolTipText("Search");
 		searchButton.setIcon(new ImageIcon(getClass().getResource("search.gif")));
 		searchButton.setEnabled(false);
-		searchButton.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				// TODO Place function here.
-			}
-		});
 		charInternalFrame.add(searchButton, constraints);
 				
 		// Rest Button
-		JButton restButton = new JButton();
+		restButton = new JButton();
 		constraints.gridx = 3;
 		constraints.gridy = 3;
 		restButton.setToolTipText("Rest");
 		restButton.setIcon(new ImageIcon(getClass().getResource("rest.gif")));
 		restButton.setEnabled(false);
-		restButton.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				// TODO Place function here.
-			}
-		});
 		charInternalFrame.add(restButton, constraints);
 				
 		// Trade Button
-		JButton tradeButton = new JButton();
+		tradeButton = new JButton();
 		constraints.gridx = 4;
 		constraints.gridy = 3;
 		tradeButton.setToolTipText("Trade");
 		tradeButton.setIcon(new ImageIcon(getClass().getResource("trade.gif")));
 		tradeButton.setEnabled(false);
-		tradeButton.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				// TODO Place function here.
-			}
-		});
 		charInternalFrame.add(tradeButton, constraints);
 		
 		desktopPane.add(charInternalFrame);

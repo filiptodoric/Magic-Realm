@@ -49,6 +49,50 @@ public class MagicRealmClient implements Runnable {
             }
         });
 	}
+    
+    private void setCharacterActionListeners(){
+		gui.tradeButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				// TODO Place function here.
+			}
+		});
+		
+		gui.restButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				// TODO Place function here.
+			}
+		});
+		
+		gui.searchButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				// TODO Place function here.
+			}
+		});
+		
+		gui.moveButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				// TODO Place function here.
+			}
+		});
+		
+		gui.hideButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				// TODO Place function here.
+			}
+		});
+		
+		gui.showCardButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				gui.showCharacterCard(player.getCharacter().getName());
+			}
+		});
+		
+		gui.setupVRButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				// TODO Place function here.
+			}
+		});
+    }
 
 	/**
      * Connects to the server then enters the processing loop.
@@ -110,6 +154,7 @@ public class MagicRealmClient implements Runnable {
 					e.printStackTrace();
 				}
             	player = new Player(name, character);
+            	setCharacterActionListeners();
             } else if (line.startsWith("INVALIDNAME")){
             } else if (line.startsWith("NAMEACCEPTED")){
             } else if (line.startsWith("GAMECANSTART")){

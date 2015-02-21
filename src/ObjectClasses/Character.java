@@ -37,6 +37,14 @@ public class Character {
 		}
 	}
 	
+	public String getName(){
+		return name;
+	}
+	
+	public ArrayList<Chit> getInventory(){
+		return inventory;
+	}
+	
 	// Parent class function to be overridden
 	public void hide(){
 		System.out.println("Character Class - hide");
