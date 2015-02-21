@@ -1,8 +1,8 @@
 package ObjectClasses;
 /**
- * The abstract base class for chits.
+ * The base class for chits.
  */
-public abstract class Chit {
+public class Chit {
 	String name = null;
 	String letter = null;
 	
