@@ -7,7 +7,7 @@ public class Character extends Chit{
 	private String currentClearing;
 	public Character(String selectedCharacter) {
 		super(selectedCharacter,null);
-		currentClearing = "AV C4";
+		currentClearing = "AV C5";
 		initInventory();
 	}
 	
@@ -65,6 +65,10 @@ public class Character extends Chit{
 	
 	public void trade(){
 		System.out.println("Character Class - trade");
+	}
+	
+	public void setClearing(String clearing){
+		currentClearing = clearing;
 	}
 
 }

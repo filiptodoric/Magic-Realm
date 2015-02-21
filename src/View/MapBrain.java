@@ -267,27 +267,19 @@ public class MapBrain extends MouseAdapter{
 		for (HexTile tile : tiles){
 			for (Clearing clearing : tile.getClearings()){
 				if (clearing.getArea().contains(p)){
-					if (e.getButton() == MouseEvent.BUTTON3){
-						currentClearing = clearing;
-						System.out.println(clearing.getName() + " set as current clearing");
-					}
-					else{
-						if (currentClearing != null){
-							if (clearing.isAdjacentTo(currentClearing.getName())){
-								System.out.println("You can move from " + currentClearing.getName() + " to " + clearing.getName() + "!");
-							}
-							else{
-								System.out.println("You CAN'T move from " + currentClearing.getName() + " to " + clearing.getName() + "!");
-							}
-						}
-						else{
-							System.out.println(clearing.getName());
-						}
-					}
-					break;
+					currentClearing = clearing;
+					System.out.println("Clearing " + clearing.getName() + " selected");
 				}
 			}
 		}
-		//generateHexTileCode(p);
+	}
+	
+	public Clearing getCurrentClearing(){
+		return currentClearing;
+		
+	}
+
+	public void clearCurrentClearing() {
+		currentClearing = null;
 	}
 }

@@ -96,13 +96,6 @@ public class MagicRealmGUI {
             }
         };
         map.addMouseMotionListener(scroll);
-		/*
-		addImage("chapel.gif",1630,730,100,80,2, true);
-		addImage("guard.gif",1973,881,100,80,2, true);
-		addImage("house.gif",773,1255,100,80,2, true);
-		addImage("inn.gif",1841,1627,100,80,2, true);
-		addImage("board.png",0,0,2221,2439,1, false);
-		*/
 		return map;
 	}
 	
@@ -390,6 +383,15 @@ public class MagicRealmGUI {
 					new ImageIcon(getClass().getResource("swordsman.jpg")));
 				break;
 		}
+	}
+
+	public void enableButtons() {
+		startGameButton.setEnabled(false);
+		tradeButton.setEnabled(true);
+		restButton.setEnabled(true);
+		searchButton.setEnabled(true);
+		moveButton.setEnabled(true);
+		hideButton.setEnabled(true);
 	}
 
 	

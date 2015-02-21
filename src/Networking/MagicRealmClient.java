@@ -80,6 +80,7 @@ public class MagicRealmClient implements Runnable {
     			}
     		}
     	}
+    	refreshMap();
     }
     
     private void setCharacterActionListeners(){
@@ -103,7 +104,14 @@ public class MagicRealmClient implements Runnable {
 		
 		gui.moveButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				// TODO Place function here.
+				if (gui.getMapBrain().getCurrentClearing().getAdjacentClearings().contains(getPlayerClearing().getName())){
+					System.out.println("Moved to " + gui.getMapBrain().getCurrentClearing().getName());
+					player.getCharacter().setClearing(gui.getMapBrain().getCurrentClearing().getName());
+					placeCharacter();
+				}
+				else{
+					System.out.println("Can't travel there!");
+				}
 			}
 		});
 		
@@ -125,6 +133,17 @@ public class MagicRealmClient implements Runnable {
 			}
 		});
     }
+
+	private Clearing getPlayerClearing() {
+		for (HexTile tile : gui.getMapBrain().getTiles()){
+    		for (Clearing clearing : tile.getClearings()){
+    			if (clearing.getName().equals(player.getCharacter().getClearing())){
+    				return clearing;
+    			}
+    		}
+    	}
+		return null;
+	}
 
 	/**
      * Connects to the server then enters the processing loop.
@@ -167,7 +186,6 @@ public class MagicRealmClient implements Runnable {
             	name = gui.getName();
             	try {
 					out.writeObject(name);
-	            	name = null;
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -186,6 +204,7 @@ public class MagicRealmClient implements Runnable {
 					e.printStackTrace();
 				}
             	player = new Player(name, character);
+            	name = null;
             	setCharacterActionListeners();
             	placeCharacter();
             	refreshMap();
@@ -197,7 +216,15 @@ public class MagicRealmClient implements Runnable {
             	gui.startGameButton.setEnabled(false);
             } else if (line.startsWith("GAMESTART")) {
             	System.out.println("The game is now starting!");
-            } else if (line.startsWith("ROUNDSTART")){
+            } else if (line.startsWith("ROUNDSTART:")){
+            	if (line.contains(player.getName())){
+                	System.out.println("It's your turn...");
+                	gui.enableButtons();
+            	}
+            	else{
+            		System.out.println("Waiting...");
+            	}
+            	
             } else if (line.startsWith("MESSAGE")){
             } else if (line.startsWith("Score:")){
             } else if (line.startsWith("Players Active:")){

@@ -161,17 +161,14 @@ public class MagicRealmServer implements Runnable{
                     	for (ObjectOutputStream writer : writers) {
                             writer.writeObject("GAMESTART");
                             gameInProgress = true;
-                            day = 0;
-                            day++;
+                            day = 1;
+                            newRound();
                         }
                     }
                     else if (input.startsWith("MESSAGE:")){
                         for (ObjectOutputStream writer : writers) {
                             writer.writeObject("MESSAGE:" + name + ": " + input.substring(8));
                         }
-                    }
-                    else if (input.startsWith("CATEGORY:")){
-                    	newRound();
                     }
             	}
             } catch (IOException e) {
@@ -195,16 +192,20 @@ public class MagicRealmServer implements Runnable{
 			return temp.substring(0, temp.length()-1);
 		}
 
-		private void newRound() {
-            try {
+		private void newRound() throws IOException, ClassNotFoundException{
+			for (String name : names) {
             	for (ObjectOutputStream writer : writers) {
-					writer.writeObject("ROUNDSTART");
+            		// This uses the player name, not the character name
+					writer.writeObject("ROUNDSTART:"+name);
             	}
-				namesSubmitted.clear();
-				day++;
-            } catch (IOException e) {
-            	e.printStackTrace();
-            }
+            	while(true){
+            		String input = (String) in.readObject();
+            		if (input.equals("COMPLETE")){
+            			System.out.println(name + " has completed their round!");
+            			break;
+            		}
+            	}
+			}
 		}
 
 		private void handleGameOver(){
