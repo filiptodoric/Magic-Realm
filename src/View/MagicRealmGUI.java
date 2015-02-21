@@ -18,9 +18,11 @@ public class MagicRealmGUI {
 	public JButton 	hideButton;
 	public JButton 	showCardButton;
 	public JButton 	setupVRButton;
+	public JTable     turnsTable;
 	public JLayeredPane map;
 	private MapBrain mapBrain;
 	private ImageLookup lookup;
+	
 	
 /****************************************************************************************
 * CONSTRUCTOR
@@ -348,12 +350,15 @@ public class MagicRealmGUI {
 		tradeButton.setEnabled(false);
 		charInternalFrame.add(tradeButton, constraints);
 		
+		turnsTable = new JTable();
+		
 		desktopPane.add(charInternalFrame);
 	}
 	
 	public MapBrain getMapBrain(){
 		return mapBrain;
 	}
+	
 	
 	
 	

@@ -26,8 +26,7 @@ public class MapBrain extends MouseAdapter{
 		this.label = mapImage;
 		tiles = new ArrayList<HexTile>();
 		counter = 0;
-		initClearings();
-		paintChits(); 	
+		initClearings();	
 	}
 	
 	public ArrayList<HexTile> getTiles(){
@@ -173,8 +172,7 @@ public class MapBrain extends MouseAdapter{
 		
 		/* AWFUL VALLEY CLEARINGS */
 		tile = new HexTile("AV");
-		tile.addClearing(new Clearing(new Rectangle(1773,1742,100,80), "AV C1","RUINS C2,AV C4"));
-		tile.addClearing(new Clearing(new Rectangle(1835,1848,100,80), "AV C2","LW C5,AV C5"));
+		tile.addClearing(new Clearing(new Rectangle(1773,1742,100,80), "AV C1","RUINS C2,AV C4"));		tile.addClearing(new Clearing(new Rectangle(1835,1848,100,80), "AV C2","LW C5,AV C5"));
 		tile.addClearing(new Clearing(new Rectangle(1977,1741,100,80), "AV C4","AV C1"));
 		tile.addClearing(new Clearing(new Rectangle(1841,1627,100,80), "AV C5","AV C2,NW C2"));
 		for (Clearing clearing : tile.getClearings()){
@@ -292,15 +290,6 @@ public class MapBrain extends MouseAdapter{
 		//generateHexTileCode(p);
 	}
 
-	public void paintChits(Graphics g)	{
-		for (HexTile tile : tiles){
-			for (Clearing clearing : tile.getClearings()){
-				if (clearing.get){
-					clearing.getArea().
-				}
-			}
-		}
-	}
 
 
 }
