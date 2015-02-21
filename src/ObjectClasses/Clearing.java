@@ -44,4 +44,8 @@ public class Clearing {
 	public void addChit(Chit chit){
 		chits.add(chit);
 	}
+	
+	public void removeChit(Chit chit) {
+		chits.remove(chit);
+	}
 }

@@ -19,6 +19,8 @@ public class MagicRealmGUI {
 	public JButton 	showCardButton;
 	public JButton 	setupVRButton;
 	public JLayeredPane map;
+	private MapBrain mapBrain;
+	private ImageLookup lookup;
 	
 /****************************************************************************************
 * CONSTRUCTOR
@@ -26,6 +28,7 @@ public class MagicRealmGUI {
 	public MagicRealmGUI() {
 		
 		System.out.println("-- In MagicRealmGUI constructor.");
+		lookup = new ImageLookup();
 		buildWindow();
 	}
 
@@ -80,23 +83,36 @@ public class MagicRealmGUI {
 ****************************************************************************************/
 	public JLayeredPane getMap(){
 		map = new JLayeredPane();
-		map.addMouseListener(new MapBrain(map));
+		mapBrain = new MapBrain(map);
+		map.addMouseListener(mapBrain);
 		map.setLayout(new BorderLayout());
-		addImage("chapel.gif",1630,730,100,80,0, true);
-		addImage("guard.gif",1973,881,100,80,0, true);
-		addImage("house.gif",773,1255,100,80,0, true);
-		addImage("inn.gif",1841,1627,100,80,0, true);
-		addImage("board.png",0,0,2221,2439,0, false);
+		/*
+		addImage("chapel.gif",1630,730,100,80,2, true);
+		addImage("guard.gif",1973,881,100,80,2, true);
+		addImage("house.gif",773,1255,100,80,2, true);
+		addImage("inn.gif",1841,1627,100,80,2, true);
+		addImage("board.png",0,0,2221,2439,1, false);
+		*/
 		return map;
 	}
 	
 	public void addImage(String imageName, int x, int y, int width, int height, 
-			int level, boolean opaque){
-		ImageIcon imageIcon = new ImageIcon(getClass().getResource(imageName));
+			int layer, boolean opaque){
+		ImageIcon imageIcon = 
+				new ImageIcon(getClass().getResource(lookup.getValue(imageName)));
 		JLabel label = new JLabel(imageIcon);
 		label.setBounds(x,y,width,height);
 		label.setOpaque(opaque);
+		label.setName(imageName);
 		map.add(label);
+	}
+	
+	public void removeImage(String imageName){
+		for (Component component : map.getComponents()){
+			if (component.getName().equals(imageName)){
+				map.remove(component);
+			}
+		}
 	}
 	
 	
@@ -324,6 +340,10 @@ public class MagicRealmGUI {
 		charInternalFrame.add(tradeButton, constraints);
 		
 		desktopPane.add(charInternalFrame);
+	}
+	
+	public MapBrain getMapBrain(){
+		return mapBrain;
 	}
 	
 	

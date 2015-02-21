@@ -29,6 +29,10 @@ public class MapBrain extends MouseAdapter{
 		initClearings();
 	}
 	
+	public ArrayList<HexTile> getTiles(){
+		return tiles;
+	}
+	
 	private void initClearings() {
 		/* CLIFF HOTSPOTS */
 		HexTile tile = new HexTile("CLIFF");
