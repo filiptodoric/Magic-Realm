@@ -9,6 +9,7 @@ public class Clearing {
 	private Rectangle locationRect;
 	private String name;
 	private ArrayList<String> adjacentClearings;
+	private ArrayList<Chit> chits;
 	public Clearing(Rectangle inpLocationRect, String inpName, String adjacentClearingsStr){
 		adjacentClearings = new ArrayList<String>();
 		locationRect = inpLocationRect;
@@ -33,5 +34,13 @@ public class Clearing {
 	
 	public Rectangle getArea(){
 		return locationRect;
+	}
+	
+	public ArrayList<Chit> getChits(){
+		return chits;
+	}
+	
+	public void addChit(Chit chit){
+		chits.add(chit);
 	}
 }

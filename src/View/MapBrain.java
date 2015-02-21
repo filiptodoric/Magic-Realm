@@ -6,8 +6,11 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
+import ObjectClasses.Chit;
 import ObjectClasses.Clearing;
+import ObjectClasses.Denizen;
 import ObjectClasses.HexTile;
+import ObjectClasses.Native;
 
 public class MapBrain extends MouseAdapter{
 
@@ -45,6 +48,12 @@ public class MapBrain extends MouseAdapter{
 		tile.addClearing(new Clearing(new Rectangle(475, 495, 100, 80), "EV C2", "CLIFF C1,EV C5"));
 		tile.addClearing(new Clearing(new Rectangle(530, 680, 100, 80), "EV C4", "EV C1,LEDGES C2,BORDERLAND C2"));
 		tile.addClearing(new Clearing(new Rectangle(350, 720, 100, 80), "EV C5", "EV C2,HP C6"));
+		for (Clearing clearing : tile.getClearings()){
+			if (clearing.getName().equals("EV C5")){
+				clearing.addChit(new Denizen("Ghost", "H", false, 4, 4));
+				clearing.addChit(new Denizen("Ghost", "H", false, 4, 4));
+			}
+		}
 		tiles.add(tile);
 		
 		/* LEDGES HOTSPOTS */
@@ -164,6 +173,14 @@ public class MapBrain extends MouseAdapter{
 		tile.addClearing(new Clearing(new Rectangle(1835,1848,100,80), "AV C2","LW C5,AV C5"));
 		tile.addClearing(new Clearing(new Rectangle(1977,1741,100,80), "AV C4","AV C1"));
 		tile.addClearing(new Clearing(new Rectangle(1841,1627,100,80), "AV C5","AV C2,NW C2"));
+		for (Clearing clearing : tile.getClearings()){
+			if (clearing.getName().equals("AV C5")){
+				clearing.addChit(new Chit("Inn", null));
+				clearing.addChit(new Native("Guard 1", "H", true, 5, 5, "G"));
+				clearing.addChit(new Native("Guard 2", "H", true, 5, 5, "G"));
+				clearing.addChit(new Native("Guard HQ", "H", true, 5, 5, "G"));
+			}
+		}
 		tiles.add(tile);
 		
 		/* NUT WOODS CLEARINGS */
@@ -179,6 +196,11 @@ public class MapBrain extends MouseAdapter{
 		tile.addClearing(new Clearing(new Rectangle(1775,990,100,80), "CV C2","CV C5,DW C2"));
 		tile.addClearing(new Clearing(new Rectangle(1940,1053,100,80), "CV C4","NW C5,CV C1"));
 		tile.addClearing(new Clearing(new Rectangle(1973,881,100,80), "CV C5","CV C2"));
+		for (Clearing clearing : tile.getClearings()){
+			if (clearing.getName().equals("CV C5")){
+				clearing.addChit(new Chit("Guard", null));
+			}
+		}
 		tiles.add(tile);
 		
 		/* DARK VALLEY CLEARINGS */
@@ -187,6 +209,11 @@ public class MapBrain extends MouseAdapter{
 		tile.addClearing(new Clearing(new Rectangle(1824,624,100,80), "DV C2","DV C5"));
 		tile.addClearing(new Clearing(new Rectangle(1659,557,100,80), "DV C4","DV C1"));
 		tile.addClearing(new Clearing(new Rectangle(1630,730,100,80), "DV C5","DV C2,DW C2"));
+		for (Clearing clearing : tile.getClearings()){
+			if (clearing.getName().equals("DV C5")){
+				clearing.addChit(new Chit("Chapel", null));
+			}
+		}
 		tiles.add(tile);
 		
 		/* MAPLE WOODS CLEARINGS */
@@ -202,6 +229,11 @@ public class MapBrain extends MouseAdapter{
 		tile.addClearing(new Clearing(new Rectangle(904,1476,100,80), "BV C2","CAVES C2,BV C5"));
 		tile.addClearing(new Clearing(new Rectangle(725,1431,100,80), "BV C4","CAVERN C1,MOUNTAIN C5,BV C1"));
 		tile.addClearing(new Clearing(new Rectangle(773,1255,100,80), "BV C5","BORDERLAND C1,BV C2"));
+		for (Clearing clearing : tile.getClearings()){
+			if (clearing.getName().equals("AV C5")){
+				clearing.addChit(new Chit("House", null));
+			}
+		}
 		tiles.add(tile);
 
 	}
