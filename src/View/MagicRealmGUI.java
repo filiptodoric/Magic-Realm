@@ -86,6 +86,16 @@ public class MagicRealmGUI {
 		mapBrain = new MapBrain(map);
 		map.addMouseListener(mapBrain);
 		map.setLayout(new BorderLayout());
+		MouseMotionAdapter scroll = new MouseMotionAdapter() {
+            public void mouseDragged(MouseEvent e) {
+            	map.scrollRectToVisible(new Rectangle(
+            			(int)map.getVisibleRect().getCenterX() + (e.getXOnScreen() - (int)map.getVisibleRect().getCenterX()), 
+            			(int)map.getVisibleRect().getCenterY() + (e.getYOnScreen() - (int)map.getVisibleRect().getCenterY()),
+            			(int)map.getVisibleRect().getHeight(),
+            			(int)map.getVisibleRect().getWidth()));
+            }
+        };
+        map.addMouseMotionListener(scroll);
 		/*
 		addImage("chapel.gif",1630,730,100,80,2, true);
 		addImage("guard.gif",1973,881,100,80,2, true);
@@ -142,8 +152,7 @@ public class MagicRealmGUI {
 	public void buildMapInternalFrame() {
 		
 		// mapScrollPane - holds the mapImageLabel 
-		JScrollPane mapScrollPane = new JScrollPane();
-		mapScrollPane.setViewportView(getMap());
+		JScrollPane mapScrollPane = new JScrollPane(getMap());
 		
 		// mapInternalFrame - holds the mapScrollPane
 		JInternalFrame mapInternalFrame = new JInternalFrame("Magic Realm Map");
