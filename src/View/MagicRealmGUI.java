@@ -1,6 +1,7 @@
 package View;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ public class MagicRealmGUI {
 	public JButton 	hideButton;
 	public JButton 	showCardButton;
 	public JButton 	setupVRButton;
+	public JLayeredPane map;
 	
 /****************************************************************************************
 * CONSTRUCTOR
@@ -76,16 +78,26 @@ public class MagicRealmGUI {
 * @return:  - JLabel
 * CONTEXT:  - buildWindow() calls this function. 
 ****************************************************************************************/
-	public JLabel getMapLabel(){
-		
-		ImageIcon mapImageIcon = new ImageIcon(getClass().getResource("board.png"));
-		JLabel mapImageLabel   = new JLabel(mapImageIcon);
-		mapImageLabel.addMouseListener(new MapBrain(mapImageLabel));
-		return mapImageLabel;
+	public JLayeredPane getMap(){
+		map = new JLayeredPane();
+		map.addMouseListener(new MapBrain(map));
+		map.setLayout(new BorderLayout());
+		addImage("chapel.gif",1630,730,100,80,0, true);
+		addImage("guard.gif",1973,881,100,80,0, true);
+		addImage("house.gif",773,1255,100,80,0, true);
+		addImage("inn.gif",1841,1627,100,80,0, true);
+		addImage("board.png",0,0,2221,2439,0, false);
+		return map;
 	}
-
 	
-	
+	public void addImage(String imageName, int x, int y, int width, int height, 
+			int level, boolean opaque){
+		ImageIcon imageIcon = new ImageIcon(getClass().getResource(imageName));
+		JLabel label = new JLabel(imageIcon);
+		label.setBounds(x,y,width,height);
+		label.setOpaque(opaque);
+		map.add(label);
+	}
 	
 	
 /****************************************************************************************
@@ -115,7 +127,7 @@ public class MagicRealmGUI {
 		
 		// mapScrollPane - holds the mapImageLabel 
 		JScrollPane mapScrollPane = new JScrollPane();
-		mapScrollPane.setViewportView(getMapLabel());
+		mapScrollPane.setViewportView(getMap());
 		
 		// mapInternalFrame - holds the mapScrollPane
 		JInternalFrame mapInternalFrame = new JInternalFrame("Magic Realm Map");
