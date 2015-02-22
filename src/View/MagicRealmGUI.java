@@ -1,6 +1,9 @@
 package View;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+
+import ObjectClasses.TurnsTableModel;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -22,6 +25,7 @@ public class MagicRealmGUI {
 	public JLayeredPane map;
 	private MapBrain mapBrain;
 	private ImageLookup lookup;
+	private JScrollPane turnsTableScrollPane;
 	
 	
 /****************************************************************************************
@@ -350,7 +354,24 @@ public class MagicRealmGUI {
 		tradeButton.setEnabled(false);
 		charInternalFrame.add(tradeButton, constraints);
 		
-		turnsTable = new JTable();
+		
+		turnsTable = new JTable(new TurnsTableModel());
+		DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
+		//turnsTable.setPreferredScrollableViewportSize(new Dimension(380, 50));
+		renderer.setPreferredSize(new Dimension(380, 60));
+		turnsTableScrollPane = new JScrollPane();
+		turnsTableScrollPane.setViewportView(turnsTable);
+		constraints.weightx = 10;
+		constraints.gridwidth = 5;
+		constraints.gridx = 0;
+		constraints.gridy = 4;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		charInternalFrame.add(turnsTableScrollPane, constraints);
+		//constraints.gridx = 0;
+		//constraints.gridy = 4;
+		//constraints.fill = GridBagConstraints.HORIZONTAL;
+		//charInternalFrame.add(turnsTableScrollPane);
+		
 		
 		desktopPane.add(charInternalFrame);
 	}

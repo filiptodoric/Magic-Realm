@@ -4,25 +4,51 @@ import javax.swing.table.AbstractTableModel;
 
 public class TurnsTableModel extends AbstractTableModel {
 
-
 	private static final long serialVersionUID = 1L;
 
-	@Override
-	public int getColumnCount() {
-		// TODO Auto-generated method stub
-		return 0;
+	/* Table Columns */
+	public String[] columnNames = { "Turn", "Day", "Actions", "Kills"};
+	
+	/* Table Data */
+	public Object[][] data = {{"1", "1", "none", "1"}};
+	
+/****************************************************************************************
+* GETTER: getColumnCount()
+****************************************************************************************/
+	public int getColumnCount() { 
+		return columnNames.length; 
 	}
 
-	@Override
-	public int getRowCount() {
-		// TODO Auto-generated method stub
-		return 0;
+	
+	
+/****************************************************************************************
+* GETTER: getRowCount()
+****************************************************************************************/
+	public int getRowCount() { 
+		return data.length; 
 	}
 
-	@Override
-	public Object getValueAt(int arg0, int arg1) {
-		// TODO Auto-generated method stub
-		return null;
+	
+	
+/****************************************************************************************
+* GETTER: getValueAt()
+****************************************************************************************/
+	public Object getValueAt(int row, int col) {
+		return data[row][col];
 	}
 	
-}
+	
+		
+/****************************************************************************************
+* FUNCTION: isCellEditable()
+****************************************************************************************/
+	public boolean isCellEditable(int row, int col){
+		if(col < 2){
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
+	
+} /* CLOSES CLASS */
