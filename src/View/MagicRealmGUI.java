@@ -399,6 +399,14 @@ public class MagicRealmGUI {
 		hideButton.setEnabled(true);
 	}
 
+	public void disableButtons() {
+		startGameButton.setEnabled(false);
+		tradeButton.setEnabled(false);
+		restButton.setEnabled(false);
+		searchButton.setEnabled(false);
+		moveButton.setEnabled(false);
+		hideButton.setEnabled(false);
+	}
 	
 } /* CLOSES CLASS */
 

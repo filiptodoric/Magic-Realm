@@ -28,6 +28,7 @@ public class MagicRealmClient implements Runnable {
     String name;
     String character;
     Socket socket;
+    int turns;
     ArrayList<String> playableCharacters;
     
     public MagicRealmClient() {
@@ -108,6 +109,11 @@ public class MagicRealmClient implements Runnable {
 					System.out.println("Moved to " + gui.getMapBrain().getCurrentClearing().getName());
 					player.getCharacter().setClearing(gui.getMapBrain().getCurrentClearing().getName());
 					placeCharacter();
+					turns--;
+					if (turns == 0){
+						gui.disableButtons();
+						System.out.println("Day completed, waiting for others...");
+					}
 				}
 				else{
 					System.out.println("Can't travel there!");
@@ -117,7 +123,17 @@ public class MagicRealmClient implements Runnable {
 		
 		gui.hideButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				// TODO Place function here.
+				turns--;
+				if ((int)Math.random()*7 < 6){
+					player.getCharacter().setHidden(false);
+				}
+				else{
+					player.getCharacter().setHidden(true);
+				}
+				if (turns == 0){
+					gui.disableButtons();
+					System.out.println("Day completed, waiting for others...");
+				}
 			}
 		});
 		
@@ -219,6 +235,7 @@ public class MagicRealmClient implements Runnable {
             } else if (line.startsWith("ROUNDSTART:")){
             	if (line.contains(player.getName())){
                 	System.out.println("It's your turn...");
+                	turns = 3;
                 	gui.enableButtons();
             	}
             	else{
