@@ -67,8 +67,7 @@ public class MagicRealmClient implements Runnable {
     		}
     	}
     	gui.addImage("board.png",0,0,2221,2439,1, false);
-    	gui.map.revalidate();
-    	gui.map.repaint();
+    	gui.refreshMapInternalFrame();
     }
     
     private void placeCharacter(){
@@ -84,6 +83,7 @@ public class MagicRealmClient implements Runnable {
     			}
     		}
     	}
+    	refreshMap();
     }
     
     private void setCharacterActionListeners(){

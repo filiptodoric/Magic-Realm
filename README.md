@@ -2,9 +2,6 @@
 
 Things we still need as a team:
 
-Bugs:
-- Fix GUI refresh for moving characters!
-
 Features:
 - Add treasures (BASIC GOLD ONLY)
 - Add monsters
