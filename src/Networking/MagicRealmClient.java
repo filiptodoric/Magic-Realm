@@ -107,36 +107,50 @@ public class MagicRealmClient implements Runnable {
 					switch((int)(Math.random()*6+1)){
 					case 1:
 						System.out.println("Pick any category!");
+						break;
 					case 2:
 						System.out.println("Clues and Paths");
+						break;
 					case 3:
 						System.out.println("Hidden enemies and Paths");
+						break;
 					case 4:
 						System.out.println("Hidden enemies");
+						break;
 					case 5:
 						System.out.println("Clues");
+						break;
 					case 6:
 						System.out.println("You didn't find anything.");
+						break;
 					default:
 						System.out.println("You didn't find anything.");
+						break;
 					}
 				}
 				else{
 					switch((int)(Math.random()*6+1)){
 					case 1:
 						System.out.println("Pick any category!");
+						break;
 					case 2:
 						System.out.println("You discovered passages and clues!");
+						break;
 					case 3:
 						System.out.println("You discovered passages!");
+						break;
 					case 4:
 						System.out.println("You discovered chits!");
+						break;
 					case 5:
 						System.out.println("You didn't find anything.");
+						break;
 					case 6:
 						System.out.println("You didn't find anything.");
+						break;
 					default:
 						System.out.println("You didn't find anything.");
+						break;
 					}
 				}
 				if (turns == 0){
