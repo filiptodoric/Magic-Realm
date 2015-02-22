@@ -202,6 +202,9 @@ public class MagicRealmServer implements Runnable{
             		}
             	}
 			}
+			if (day != 28){
+				newRound();
+			}
 		}
 
 		private void handleGameOver(){

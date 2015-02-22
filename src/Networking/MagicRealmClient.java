@@ -52,6 +52,7 @@ public class MagicRealmClient implements Runnable {
 	}
     
     private void refreshMap(){
+    	gui.map.removeAll();
     	for (HexTile tile : gui.getMapBrain().getTiles()){
     		for (Clearing clearing : tile.getClearings()){
     			int offset = 0;
@@ -66,6 +67,8 @@ public class MagicRealmClient implements Runnable {
     		}
     	}
     	gui.addImage("board.png",0,0,2221,2439,1, false);
+    	gui.map.revalidate();
+    	gui.map.repaint();
     }
     
     private void placeCharacter(){
@@ -81,7 +84,6 @@ public class MagicRealmClient implements Runnable {
     			}
     		}
     	}
-    	refreshMap();
     }
     
     private void setCharacterActionListeners(){
@@ -99,7 +101,53 @@ public class MagicRealmClient implements Runnable {
 		
 		gui.searchButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				// TODO Place function here.
+				turns--;
+				int searchChoice = gui.getSearchType();
+				if (searchChoice == 0){
+					switch((int)(Math.random()*6+1)){
+					case 1:
+						System.out.println("Pick any category!");
+					case 2:
+						System.out.println("Clues and Paths");
+					case 3:
+						System.out.println("Hidden enemies and Paths");
+					case 4:
+						System.out.println("Hidden enemies");
+					case 5:
+						System.out.println("Clues");
+					case 6:
+						System.out.println("You didn't find anything.");
+					default:
+						System.out.println("You didn't find anything.");
+					}
+				}
+				else{
+					switch((int)(Math.random()*6+1)){
+					case 1:
+						System.out.println("Pick any category!");
+					case 2:
+						System.out.println("You discovered passages and clues!");
+					case 3:
+						System.out.println("You discovered passages!");
+					case 4:
+						System.out.println("You discovered chits!");
+					case 5:
+						System.out.println("You didn't find anything.");
+					case 6:
+						System.out.println("You didn't find anything.");
+					default:
+						System.out.println("You didn't find anything.");
+					}
+				}
+				if (turns == 0){
+					gui.disableButtons();
+					try {
+						out.writeObject("COMPLETE");
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+					System.out.println("Day completed, waiting for others...");
+				}
 			}
 		});
 		
@@ -112,6 +160,11 @@ public class MagicRealmClient implements Runnable {
 					turns--;
 					if (turns == 0){
 						gui.disableButtons();
+						try {
+							out.writeObject("COMPLETE");
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						}
 						System.out.println("Day completed, waiting for others...");
 					}
 				}
@@ -124,14 +177,20 @@ public class MagicRealmClient implements Runnable {
 		gui.hideButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				turns--;
-				if ((int)Math.random()*7 < 6){
-					player.getCharacter().setHidden(false);
+				if (((int)Math.random()*6)+1 > 5){
+					System.out.println("Couldn't hide!");
 				}
 				else{
 					player.getCharacter().setHidden(true);
+					System.out.println("Managed to hide!");
 				}
 				if (turns == 0){
 					gui.disableButtons();
+					try {
+						out.writeObject("COMPLETE");
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
 					System.out.println("Day completed, waiting for others...");
 				}
 			}
