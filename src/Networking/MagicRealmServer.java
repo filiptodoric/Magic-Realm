@@ -23,11 +23,6 @@ public class MagicRealmServer implements Runnable{
      * already in use.
      */
     private static HashSet<String> names = new HashSet<String>();
-    /**
-     * The set of all names of players that have selected categories for
-     * the current round.
-     */
-    private static HashSet<String> namesSubmitted = new HashSet<String>();
 
     /**
      * The set of all the print writers for all the clients.  This
@@ -74,6 +69,7 @@ public class MagicRealmServer implements Runnable{
      */
     private static class Handler extends Thread {
         private String name;
+        private String charName;
         private Socket socket;
         private ObjectInputStream in;
         private ObjectOutputStream out;
@@ -127,10 +123,10 @@ public class MagicRealmServer implements Runnable{
 
                 while (true) {
                     out.writeObject("CHOOSECHARACTER:" + getAvailableCharacterString());
-                    name = (String) in.readObject();
+                    charName = (String) in.readObject();
                     synchronized (names) {
-                        if (playableCharacters.contains(name)) {
-                            playableCharacters.remove(name);
+                        if (playableCharacters.contains(charName)) {
+                            playableCharacters.remove(charName);
                             break;
                         }
                         else{
@@ -141,7 +137,7 @@ public class MagicRealmServer implements Runnable{
                 writers.add(out);
                 System.out.println("User " + name + " connected and communicating on port " + socket.getPort());
                 for (ObjectOutputStream writer : writers) {
-                	writer.writeObject("MESSAGE " + name + " has now joined the server");
+                	writer.writeObject("MESSAGE " + name + " has now joined the server, playing as " + charName);
                 	writer.writeObject("Players Active: " + names.toString());
                 }
                 if (names.size() >= config.MIN_PLAYERS){
@@ -161,17 +157,14 @@ public class MagicRealmServer implements Runnable{
                     	for (ObjectOutputStream writer : writers) {
                             writer.writeObject("GAMESTART");
                             gameInProgress = true;
-                            day = 0;
-                            day++;
+                            day = 1;
+                            newRound();
                         }
                     }
                     else if (input.startsWith("MESSAGE:")){
                         for (ObjectOutputStream writer : writers) {
                             writer.writeObject("MESSAGE:" + name + ": " + input.substring(8));
                         }
-                    }
-                    else if (input.startsWith("CATEGORY:")){
-                    	newRound();
                     }
             	}
             } catch (IOException e) {
@@ -195,16 +188,23 @@ public class MagicRealmServer implements Runnable{
 			return temp.substring(0, temp.length()-1);
 		}
 
-		private void newRound() {
-            try {
+		private void newRound() throws IOException, ClassNotFoundException{
+			for (String name : names) {
             	for (ObjectOutputStream writer : writers) {
-					writer.writeObject("ROUNDSTART");
+            		// This uses the player name, not the character name
+					writer.writeObject("ROUNDSTART:"+name);
             	}
-				namesSubmitted.clear();
-				day++;
-            } catch (IOException e) {
-            	e.printStackTrace();
-            }
+            	while(true){
+            		String input = (String) in.readObject();
+            		if (input.equals("COMPLETE")){
+            			System.out.println(name + " has completed their round!");
+            			break;
+            		}
+            	}
+			}
+			if (day != 28){
+				newRound();
+			}
 		}
 
 		private void handleGameOver(){
@@ -221,6 +221,7 @@ public class MagicRealmServer implements Runnable{
 	            if (out != null) {
 	                writers.remove(out);
 	            }
+	            playableCharacters.add(charName);
                 for (ObjectOutputStream writer : writers) {
                 	if (name != null){
                         writer.writeObject("REMOVE:"+name);

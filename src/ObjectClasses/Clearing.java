@@ -41,6 +41,10 @@ public class Clearing {
 		return chits;
 	}
 	
+	public ArrayList<String> getAdjacentClearings(){
+		return adjacentClearings;
+	}
+	
 	public void addChit(Chit chit){
 		chits.add(chit);
 	}

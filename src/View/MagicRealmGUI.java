@@ -95,20 +95,13 @@ public class MagicRealmGUI {
 		MouseMotionAdapter scroll = new MouseMotionAdapter() {
             public void mouseDragged(MouseEvent e) {
             	map.scrollRectToVisible(new Rectangle(
-            			(int)map.getVisibleRect().getCenterX() + (e.getXOnScreen() - (int)map.getVisibleRect().getCenterX()), 
-            			(int)map.getVisibleRect().getCenterY() + (e.getYOnScreen() - (int)map.getVisibleRect().getCenterY()),
+            			e.getXOnScreen(), 
+            			e.getYOnScreen(),
             			(int)map.getVisibleRect().getHeight(),
             			(int)map.getVisibleRect().getWidth()));
             }
         };
         map.addMouseMotionListener(scroll);
-		/*
-		addImage("chapel.gif",1630,730,100,80,2, true);
-		addImage("guard.gif",1973,881,100,80,2, true);
-		addImage("house.gif",773,1255,100,80,2, true);
-		addImage("inn.gif",1841,1627,100,80,2, true);
-		addImage("board.png",0,0,2221,2439,1, false);
-		*/
 		return map;
 	}
 	
@@ -389,7 +382,6 @@ public class MagicRealmGUI {
 * PURPOSE:  - Pops up a dialog box with the selected character's info and image. 
 ****************************************************************************************/
 	public void showCharacterCard(String selectedCharacter) {
-			
 		switch(selectedCharacter){
 			case "Amazon":
 				JOptionPane.showMessageDialog(window, 
@@ -418,6 +410,29 @@ public class MagicRealmGUI {
 		}
 	}
 
+	public void enableButtons() {
+		startGameButton.setEnabled(false);
+		tradeButton.setEnabled(true);
+		restButton.setEnabled(true);
+		searchButton.setEnabled(true);
+		moveButton.setEnabled(true);
+		hideButton.setEnabled(true);
+	}
+
+	public void disableButtons() {
+		startGameButton.setEnabled(false);
+		tradeButton.setEnabled(false);
+		restButton.setEnabled(false);
+		searchButton.setEnabled(false);
+		moveButton.setEnabled(false);
+		hideButton.setEnabled(false);
+	}
+
+	public int getSearchType() {
+		String[] buttons = {"Peer", "Locate"};
+	    return JOptionPane.showOptionDialog(null, "What type of search do you want to perform?", "Search",
+	        JOptionPane.WARNING_MESSAGE, 0, null, buttons, buttons[1]);
+	}
 	
 } /* CLOSES CLASS */
 

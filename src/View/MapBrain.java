@@ -132,7 +132,7 @@ public class MapBrain extends MouseAdapter{
 		tile.addClearing(new Clearing(new Rectangle(984,1623,100,80), "CAVES C2","BV C2,CAVES C3,CAVES C4"));
 		tile.addClearing(new Clearing(new Rectangle(1046,1718,100,80), "CAVES C3","CAVES C2,CAVES C5"));
 		tile.addClearing(new Clearing(new Rectangle(916,1767,100,80), "CAVES C4","CAVES C6,CAVES C2"));
-		tile.addClearing(new Clearing(new Rectangle(1110,1622,100,80), "CAVES C5","CAVES C3, MW C4"));
+		tile.addClearing(new Clearing(new Rectangle(1110,1622,100,80), "CAVES C5","CAVES C3,MW C4"));
 		tile.addClearing(new Clearing(new Rectangle(1179,1799,100,80), "CAVES C6","CAVES C4,CAVES C1"));
 		tiles.add(tile);
 		
@@ -165,14 +165,15 @@ public class MapBrain extends MouseAdapter{
 		
 		/* LINDEN WOODS CLEARINGS */
 		tile = new HexTile("LW");
-		tile.addClearing(new Clearing(new Rectangle(1670,2162,100,80), "LW C1","LW C4"));
-		tile.addClearing(new Clearing(new Rectangle(1625,2000,100,80), "LW C2","RUINS C2,LW C2"));
-		tile.addClearing(new Clearing(new Rectangle(1782,2053,100,80), "LW C3","AV C2"));
+		tile.addClearing(new Clearing(new Rectangle(1670,2162,100,80), "LW C2","LW C4"));
+		tile.addClearing(new Clearing(new Rectangle(1625,2000,100,80), "LW C4","RUINS C2,LW C2"));
+		tile.addClearing(new Clearing(new Rectangle(1782,2053,100,80), "LW C5","AV C2"));
 		tiles.add(tile);
 		
 		/* AWFUL VALLEY CLEARINGS */
 		tile = new HexTile("AV");
-		tile.addClearing(new Clearing(new Rectangle(1773,1742,100,80), "AV C1","RUINS C2,AV C4"));		tile.addClearing(new Clearing(new Rectangle(1835,1848,100,80), "AV C2","LW C5,AV C5"));
+		tile.addClearing(new Clearing(new Rectangle(1773,1742,100,80), "AV C1","RUINS C2,AV C4"));
+		tile.addClearing(new Clearing(new Rectangle(1835,1848,100,80), "AV C2","LW C5,AV C5"));
 		tile.addClearing(new Clearing(new Rectangle(1977,1741,100,80), "AV C4","AV C1"));
 		tile.addClearing(new Clearing(new Rectangle(1841,1627,100,80), "AV C5","AV C2,NW C2"));
 		for (Clearing clearing : tile.getClearings()){
@@ -187,7 +188,7 @@ public class MapBrain extends MouseAdapter{
 		
 		/* NUT WOODS CLEARINGS */
 		tile = new HexTile("NW");
-		tile.addClearing(new Clearing(new Rectangle(1802,1424,100,80), "NW C2","AV C2,NW C4"));
+		tile.addClearing(new Clearing(new Rectangle(1802,1424,100,80), "NW C2","AV C5,NW C4"));
 		tile.addClearing(new Clearing(new Rectangle(1644,1480,100,80), "NW C4","NW C2,RUINS C1"));
 		tile.addClearing(new Clearing(new Rectangle(1666,1300,100,80), "NW C5","MW C2,CV C4"));
 		tiles.add(tile);
@@ -232,7 +233,7 @@ public class MapBrain extends MouseAdapter{
 		tile.addClearing(new Clearing(new Rectangle(725,1431,100,80), "BV C4","CAVERN C1,MOUNTAIN C5,BV C1"));
 		tile.addClearing(new Clearing(new Rectangle(773,1255,100,80), "BV C5","BORDERLAND C1,BV C2"));
 		for (Clearing clearing : tile.getClearings()){
-			if (clearing.getName().equals("AV C5")){
+			if (clearing.getName().equals("BV C5")){
 				clearing.addChit(new Chit("House", null));
 			}
 		}
@@ -266,28 +267,20 @@ public class MapBrain extends MouseAdapter{
 		for (HexTile tile : tiles){
 			for (Clearing clearing : tile.getClearings()){
 				if (clearing.getArea().contains(p)){
-					if (e.getButton() == MouseEvent.BUTTON3){
-						currentClearing = clearing;
-						System.out.println(clearing.getName() + " set as current clearing");
-					}
-					else{
-						if (currentClearing != null){
-							if (clearing.isAdjacentTo(currentClearing.getName())){
-								System.out.println("You can move from " + currentClearing.getName() + " to " + clearing.getName() + "!");
-							}
-							else{
-								System.out.println("You CAN'T move from " + currentClearing.getName() + " to " + clearing.getName() + "!");
-							}
-						}
-						else{
-							System.out.println(clearing.getName());
-						}
-					}
-					break;
+					currentClearing = clearing;
+					System.out.println("Clearing " + clearing.getName() + " selected");
 				}
 			}
 		}
-		//generateHexTileCode(p);
+	}
+	
+	public Clearing getCurrentClearing(){
+		return currentClearing;
+		
+	}
+
+	public void clearCurrentClearing() {
+		currentClearing = null;
 	}
 
 

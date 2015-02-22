@@ -28,6 +28,7 @@ public class MagicRealmClient implements Runnable {
     String name;
     String character;
     Socket socket;
+    int turns;
     ArrayList<String> playableCharacters;
     
     public MagicRealmClient() {
@@ -51,6 +52,7 @@ public class MagicRealmClient implements Runnable {
 	}
     
     private void refreshMap(){
+    	gui.map.removeAll();
     	for (HexTile tile : gui.getMapBrain().getTiles()){
     		for (Clearing clearing : tile.getClearings()){
     			int offset = 0;
@@ -65,6 +67,8 @@ public class MagicRealmClient implements Runnable {
     		}
     	}
     	gui.addImage("board.png",0,0,2221,2439,1, false);
+    	gui.map.revalidate();
+    	gui.map.repaint();
     }
     
     private void placeCharacter(){
@@ -97,19 +101,98 @@ public class MagicRealmClient implements Runnable {
 		
 		gui.searchButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				// TODO Place function here.
+				turns--;
+				int searchChoice = gui.getSearchType();
+				if (searchChoice == 0){
+					switch((int)(Math.random()*6+1)){
+					case 1:
+						System.out.println("Pick any category!");
+					case 2:
+						System.out.println("Clues and Paths");
+					case 3:
+						System.out.println("Hidden enemies and Paths");
+					case 4:
+						System.out.println("Hidden enemies");
+					case 5:
+						System.out.println("Clues");
+					case 6:
+						System.out.println("You didn't find anything.");
+					default:
+						System.out.println("You didn't find anything.");
+					}
+				}
+				else{
+					switch((int)(Math.random()*6+1)){
+					case 1:
+						System.out.println("Pick any category!");
+					case 2:
+						System.out.println("You discovered passages and clues!");
+					case 3:
+						System.out.println("You discovered passages!");
+					case 4:
+						System.out.println("You discovered chits!");
+					case 5:
+						System.out.println("You didn't find anything.");
+					case 6:
+						System.out.println("You didn't find anything.");
+					default:
+						System.out.println("You didn't find anything.");
+					}
+				}
+				if (turns == 0){
+					gui.disableButtons();
+					try {
+						out.writeObject("COMPLETE");
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+					System.out.println("Day completed, waiting for others...");
+				}
 			}
 		});
 		
 		gui.moveButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				// TODO Place function here.
+				if (gui.getMapBrain().getCurrentClearing().getAdjacentClearings().contains(getPlayerClearing().getName())){
+					System.out.println("Moved to " + gui.getMapBrain().getCurrentClearing().getName());
+					player.getCharacter().setClearing(gui.getMapBrain().getCurrentClearing().getName());
+					placeCharacter();
+					turns--;
+					if (turns == 0){
+						gui.disableButtons();
+						try {
+							out.writeObject("COMPLETE");
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						}
+						System.out.println("Day completed, waiting for others...");
+					}
+				}
+				else{
+					System.out.println("Can't travel there!");
+				}
 			}
 		});
 		
 		gui.hideButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				// TODO Place function here.
+				turns--;
+				if (((int)Math.random()*6)+1 > 5){
+					System.out.println("Couldn't hide!");
+				}
+				else{
+					player.getCharacter().setHidden(true);
+					System.out.println("Managed to hide!");
+				}
+				if (turns == 0){
+					gui.disableButtons();
+					try {
+						out.writeObject("COMPLETE");
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+					System.out.println("Day completed, waiting for others...");
+				}
 			}
 		});
 		
@@ -125,6 +208,17 @@ public class MagicRealmClient implements Runnable {
 			}
 		});
     }
+
+	private Clearing getPlayerClearing() {
+		for (HexTile tile : gui.getMapBrain().getTiles()){
+    		for (Clearing clearing : tile.getClearings()){
+    			if (clearing.getName().equals(player.getCharacter().getClearing())){
+    				return clearing;
+    			}
+    		}
+    	}
+		return null;
+	}
 
 	/**
      * Connects to the server then enters the processing loop.
@@ -167,7 +261,6 @@ public class MagicRealmClient implements Runnable {
             	name = gui.getName();
             	try {
 					out.writeObject(name);
-	            	name = null;
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -186,6 +279,7 @@ public class MagicRealmClient implements Runnable {
 					e.printStackTrace();
 				}
             	player = new Player(name, character);
+            	name = null;
             	setCharacterActionListeners();
             	placeCharacter();
             	refreshMap();
@@ -197,7 +291,16 @@ public class MagicRealmClient implements Runnable {
             	gui.startGameButton.setEnabled(false);
             } else if (line.startsWith("GAMESTART")) {
             	System.out.println("The game is now starting!");
-            } else if (line.startsWith("ROUNDSTART")){
+            } else if (line.startsWith("ROUNDSTART:")){
+            	if (line.contains(player.getName())){
+                	System.out.println("It's your turn...");
+                	turns = 3;
+                	gui.enableButtons();
+            	}
+            	else{
+            		System.out.println("Waiting...");
+            	}
+            	
             } else if (line.startsWith("MESSAGE")){
             } else if (line.startsWith("Score:")){
             } else if (line.startsWith("Players Active:")){

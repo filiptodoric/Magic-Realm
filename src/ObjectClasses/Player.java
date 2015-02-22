@@ -2,10 +2,10 @@ package ObjectClasses;
 
 public class Player {
 	Character character;
-	String name;
+	String playerName;
 	
 	public Player(String inpName, String selectedCharacter){
-		name = inpName;
+		playerName = inpName;
 		character = new Character(selectedCharacter);
 	}
 	
@@ -14,6 +14,6 @@ public class Player {
 	}
 	
 	public String getName(){
-		return name;
+		return playerName;
 	}
 }

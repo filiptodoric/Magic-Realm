@@ -5,9 +5,12 @@ import java.util.ArrayList;
 public class Character extends Chit{
 	private ArrayList<Chit> inventory = new ArrayList<Chit>();
 	private String currentClearing;
+	private boolean isHidden;
+	
 	public Character(String selectedCharacter) {
 		super(selectedCharacter,null);
-		currentClearing = "AV C4";
+		currentClearing = "AV C5";
+		isHidden = false;
 		initInventory();
 	}
 	
@@ -65,6 +68,14 @@ public class Character extends Chit{
 	
 	public void trade(){
 		System.out.println("Character Class - trade");
+	}
+	
+	public void setClearing(String clearing){
+		currentClearing = clearing;
+	}
+
+	public void setHidden(boolean b) {
+		isHidden = b;
 	}
 
 }
