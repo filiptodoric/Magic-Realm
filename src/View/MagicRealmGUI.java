@@ -427,7 +427,7 @@ public class MagicRealmGUI {
 	public int getSearchType() {
 		String[] buttons = {"Peer", "Locate"};
 	    return JOptionPane.showOptionDialog(null, "What type of search do you want to perform?", "Search",
-	        JOptionPane.QUESTION_MESSAGE, 0, null, buttons, buttons[1]);
+	        JOptionPane.DEFAULT_OPTION, 0, null, buttons, buttons[1]);
 	}
 	
 } /* CLOSES CLASS */

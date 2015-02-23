@@ -9,7 +9,8 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
 
-import ListsAndLogic.ListOfSecretPaths;
+import ListsAndLogic.ListOfSecretRoutes;
+import ListsAndLogic.ListOfSecretRoutes;
 import ObjectClasses.Chit;
 import ObjectClasses.Clearing;
 import ObjectClasses.HexTile;
@@ -25,7 +26,7 @@ public class MagicRealmClient implements Runnable {
     ObjectInputStream in;
     ObjectOutputStream out;
     MagicRealmGUI gui;
-    ListOfSecretPaths secretPaths;
+    ListOfSecretRoutes secretRoutes;
     Player player;
     String name;
     String character;
@@ -35,7 +36,7 @@ public class MagicRealmClient implements Runnable {
     
     public MagicRealmClient() {
     	gui = new MagicRealmGUI();
-    	secretPaths = new ListOfSecretPaths();
+    	secretRoutes = new ListOfSecretRoutes();
     	setActionListeners();
     }
 
@@ -113,9 +114,21 @@ public class MagicRealmClient implements Runnable {
 						break;
 					case 2:
 						System.out.println("Clues and Paths");
+						for (String adjClearing : getPlayerClearing().getAdjacentClearings()){
+							if (secretRoutes.isSecretPath(getPlayerClearing().getName(), adjClearing)){
+								player.getCharacter().addDiscovery(getPlayerClearing().getName() + "," + adjClearing);
+								System.out.println("You found a secret route: " + getPlayerClearing().getName() + "," + adjClearing + "!");
+							}
+						}
 						break;
 					case 3:
 						System.out.println("Hidden enemies and Paths");
+						for (String adjClearing : getPlayerClearing().getAdjacentClearings()){
+							if (secretRoutes.isSecretPath(getPlayerClearing().getName(), adjClearing)){
+								player.getCharacter().addDiscovery(getPlayerClearing().getName() + "," + adjClearing);
+								System.out.println("You found a secret route: " + getPlayerClearing().getName() + "," + adjClearing + "!");
+							}
+						}
 						break;
 					case 4:
 						System.out.println("Hidden enemies");
@@ -138,9 +151,21 @@ public class MagicRealmClient implements Runnable {
 						break;
 					case 2:
 						System.out.println("You discovered passages and clues!");
+						for (String adjClearing : getPlayerClearing().getAdjacentClearings()){
+							if (secretRoutes.isSecretPassage(getPlayerClearing().getName(), adjClearing)){
+								player.getCharacter().addDiscovery(getPlayerClearing().getName() + "," + adjClearing);
+								System.out.println("You found a secret route: " + getPlayerClearing().getName() + "," + adjClearing + "!");
+							}
+						}
 						break;
 					case 3:
 						System.out.println("You discovered passages!");
+						for (String adjClearing : getPlayerClearing().getAdjacentClearings()){
+							if (secretRoutes.isSecretPassage(getPlayerClearing().getName(), adjClearing)){
+								player.getCharacter().addDiscovery(getPlayerClearing().getName() + "," + adjClearing);
+								System.out.println("You found a secret route: " + getPlayerClearing().getName() + "," + adjClearing + "!");
+							}
+						}
 						break;
 					case 4:
 						System.out.println("You discovered chits!");
@@ -170,8 +195,12 @@ public class MagicRealmClient implements Runnable {
 		
 		gui.moveButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
+				// If the selected clearing's adjacent clearings contains the player's current clearing, AND
+				// (If the pair of clearings is NOT in the list of secret routes, OR
+				// If the player has found this secret route)
 				if (gui.getMapBrain().getCurrentClearing().getAdjacentClearings().contains(getPlayerClearing().getName()) &&
-						!secretPaths.isSecretPath(gui.getMapBrain().getCurrentClearing().getName(),getPlayerClearing().getName())){
+						(!secretRoutes.isSecret(gui.getMapBrain().getCurrentClearing().getName(),getPlayerClearing().getName()) ||
+						player.getCharacter().hasFoundDiscovery(gui.getMapBrain().getCurrentClearing().getName() + "," + getPlayerClearing().getName()))){
 					System.out.println("Moved to " + gui.getMapBrain().getCurrentClearing().getName());
 					player.getCharacter().setClearing(gui.getMapBrain().getCurrentClearing().getName());
 					placeCharacter();

@@ -38,11 +38,11 @@ public class MapBrain extends MouseAdapter{
 		HexTile tile = new HexTile("CLIFF");
 		tile.addClearing(new Clearing(new Rectangle(560, 355, 100, 80), "CLIFF C1", "CLIFF C6,EV C2"));
 		tile.addClearing(new Clearing(new Rectangle(560, 355, 100, 80), "CLIFF C1", "CLIFF C6,EV C2"));
-		tile.addClearing(new Clearing(new Rectangle(690, 355, 100, 80), "CLIFF C2", "LEDGES C3,CLIFF C3"));
+		tile.addClearing(new Clearing(new Rectangle(690, 355, 100, 80), "CLIFF C2", "LEDGES C3,CLIFF C3,CLIFF C5"));
 		tile.addClearing(new Clearing(new Rectangle(625, 240, 100, 80), "CLIFF C3", "CLIFF C5,CLIFF C2,CLIFF C6"));
 		tile.addClearing(new Clearing(new Rectangle(560, 120, 100, 80), "CLIFF C4", "CLIFF C6"));
-		tile.addClearing(new Clearing(new Rectangle(700, 125, 100, 80), "CLIFF C5", "CLIFF C3"));
-		tile.addClearing(new Clearing(new Rectangle(500, 245, 100, 80), "CLIFF C6", "CLIFF C1,CLIFF C4"));
+		tile.addClearing(new Clearing(new Rectangle(700, 125, 100, 80), "CLIFF C5", "CLIFF C3,CLIFF C2"));
+		tile.addClearing(new Clearing(new Rectangle(500, 245, 100, 80), "CLIFF C6", "CLIFF C1,CLIFF C4,CLIFF C3"));
 		tiles.add(tile);
  		
  		/* EVIL VALLEY HOTSPOTS */
@@ -61,12 +61,12 @@ public class MapBrain extends MouseAdapter{
 		
 		/* LEDGES HOTSPOTS */
 		tile = new HexTile("LEDGES");
-		tile.addClearing(new Clearing(new Rectangle(867,522,100,80), "LEDGES C1", "LEDGES C6,LEDGES C4"));
+		tile.addClearing(new Clearing(new Rectangle(867,522,100,80), "LEDGES C1", "LEDGES C6,LEDGES C4,LEDGES C3"));
 		tile.addClearing(new Clearing(new Rectangle(707,611,100,80), "LEDGES C2", "LEDGES C5,EV C4"));
-		tile.addClearing(new Clearing(new Rectangle(753,507,100,80), "LEDGES C3", "LEDGES C6,CLIFF C2"));
-		tile.addClearing(new Clearing(new Rectangle(831,626,100,80), "LEDGES C4", "LEDGES C1,BORDERLAND C4"));
+		tile.addClearing(new Clearing(new Rectangle(753,507,100,80), "LEDGES C3", "LEDGES C6,CLIFF C2,LEDGES C1"));
+		tile.addClearing(new Clearing(new Rectangle(831,626,100,80), "LEDGES C4", "LEDGES C1,BORDERLAND C4,LEDGES C6"));
 		tile.addClearing(new Clearing(new Rectangle(871,742,100,80), "LEDGES C5", "LEDGES C2,OW C2"));
-		tile.addClearing(new Clearing(new Rectangle(970,536,100,80), "LEDGES C6", "LEDGES C1,LEDGES C3"));
+		tile.addClearing(new Clearing(new Rectangle(970,536,100,80), "LEDGES C6", "LEDGES C1,LEDGES C3,LEDGES C4"));
 		tiles.add(tile);
 		
 		/* HIGH PASS HOTSPOTS */
@@ -138,7 +138,7 @@ public class MapBrain extends MouseAdapter{
 		
 		/* RUINS CLEARINGS */
 		tile = new HexTile("RUINS");
-		tile.addClearing(new Clearing(new Rectangle(1545,1645,100,80), "RUINS C1","NW C4,RUINS C4,RUINS C2"));
+		tile.addClearing(new Clearing(new Rectangle(1545,1645,100,80), "RUINS C1","NW C4,RUINS C4,RUINS C2,RUINS C5"));
 		tile.addClearing(new Clearing(new Rectangle(1606,1809,100,80), "RUINS C2","RUINS C1,AV C1,LW C4"));
 		tile.addClearing(new Clearing(new Rectangle(1408,1858,100,80), "RUINS C3","RUINS C6,RUINS C5"));
 		tile.addClearing(new Clearing(new Rectangle(1435,1724,100,80), "RUINS C4","RUINS C1,RUINS C6"));

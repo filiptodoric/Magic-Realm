@@ -9,10 +9,6 @@ Features:
 - Finish adding natives over dwellings
 - Investigate resting (feasible to do without combat?)
 - Attempt to add trading
-- Implement discovery of hidden paths
-
-Testing:
-- Explore the map and ensure that the adjacency list doesn't have flaws (minor)
 
 Documentation:
 - We need documentation for the submission! We need someone to wrap this by Tuesday at 6 AM...
