@@ -9,6 +9,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
 
+import ListsAndLogic.ListOfSecretPaths;
 import ObjectClasses.Chit;
 import ObjectClasses.Clearing;
 import ObjectClasses.HexTile;
@@ -24,6 +25,7 @@ public class MagicRealmClient implements Runnable {
     ObjectInputStream in;
     ObjectOutputStream out;
     MagicRealmGUI gui;
+    ListOfSecretPaths secretPaths;
     Player player;
     String name;
     String character;
@@ -33,6 +35,7 @@ public class MagicRealmClient implements Runnable {
     
     public MagicRealmClient() {
     	gui = new MagicRealmGUI();
+    	secretPaths = new ListOfSecretPaths();
     	setActionListeners();
     }
 
@@ -167,7 +170,8 @@ public class MagicRealmClient implements Runnable {
 		
 		gui.moveButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				if (gui.getMapBrain().getCurrentClearing().getAdjacentClearings().contains(getPlayerClearing().getName())){
+				if (gui.getMapBrain().getCurrentClearing().getAdjacentClearings().contains(getPlayerClearing().getName()) &&
+						!secretPaths.isSecretPath(gui.getMapBrain().getCurrentClearing().getName(),getPlayerClearing().getName())){
 					System.out.println("Moved to " + gui.getMapBrain().getCurrentClearing().getName());
 					player.getCharacter().setClearing(gui.getMapBrain().getCurrentClearing().getName());
 					placeCharacter();

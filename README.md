@@ -12,7 +12,6 @@ Features:
 - Implement discovery of hidden paths
 
 Testing:
-- Test searching
 - Explore the map and ensure that the adjacency list doesn't have flaws (minor)
 
 Documentation:
