@@ -26,4 +26,8 @@ public class HexTile {
 	public String getName(){
 		return name;
 	}
+	
+	public void addChit(Chit chit){
+		chits.add(chit);
+	}
 }

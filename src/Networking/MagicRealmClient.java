@@ -168,7 +168,13 @@ public class MagicRealmClient implements Runnable {
 						}
 						break;
 					case 4:
-						System.out.println("You discovered chits!");
+						System.out.println("You discovered chits (treasure)!");
+						int foundGold = getPlayerClearing().plunderTreasure();
+						player.getCharacter().gainGold(foundGold);
+						if (foundGold > 0){
+							System.out.println("You found " + foundGold + " gold! You now have " + 
+						player.getCharacter().getGold() + " gold...");
+						}
 						break;
 					case 5:
 						System.out.println("You didn't find anything.");
@@ -343,6 +349,7 @@ public class MagicRealmClient implements Runnable {
                 	System.out.println("It's your turn...");
                 	turns = 3;
                 	gui.enableButtons();
+                	player.getCharacter().setHidden(false);
             	}
             	else{
             		System.out.println("Waiting...");

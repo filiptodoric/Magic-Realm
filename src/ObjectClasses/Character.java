@@ -8,6 +8,7 @@ public class Character extends Chit{
 	private String currentClearing;
 	private boolean isHidden;
 	private HashSet<String> discoveries;
+	private int gold;
 	
 	public Character(String selectedCharacter) {
 		super(selectedCharacter,null);
@@ -15,6 +16,7 @@ public class Character extends Chit{
 		isHidden = false;
 		discoveries = new HashSet<String>();
 		initInventory();
+		gold = 10;
 	}
 	
 	private void initInventory(){
@@ -91,6 +93,17 @@ public class Character extends Chit{
 		return false;
 	}
 
+	public void loseGold(int value) {
+		gold -= value;
+	}
+	
+	public void gainGold(int value) {
+		gold += value;
+	}
+	
+	public int getGold() {
+		return gold;
+	}
 
 	public void setHidden(boolean b) {
 		isHidden = b;
