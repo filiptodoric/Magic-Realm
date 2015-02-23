@@ -6,7 +6,7 @@ import java.awt.Color;
  * The map chit class. Implements a "Type" enum for each type of map chit, use this
  * for defining the type of map chit being created.
  */
-public class MapChits extends Chit{
+public class MapChit extends Chit{
 	Color colour;
 	Type type;
 	
@@ -16,7 +16,7 @@ public class MapChits extends Chit{
 		SITE
 	}
 	
-	public MapChits(String inputName, String inpLetter, Type inpType) {
+	public MapChit(String inputName, String inpLetter, Type inpType) {
 		super(inputName, inpLetter);
 		type = inpType;
 		if (type == Type.SOUND){
@@ -33,5 +33,9 @@ public class MapChits extends Chit{
 
 	public Color getColour(){
 		return colour;
+	}
+	
+	public Type getType(){
+		return type;
 	}
 }

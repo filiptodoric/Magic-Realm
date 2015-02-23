@@ -3,10 +3,9 @@
 Things we still need as a team:
 
 Features:
-- Add treasures (BASIC GOLD ONLY)
 - Add monsters
-- Add map chits (all of the above should be at random)
-- Investigate resting (feasible to do without combat?)
+- Add sound/site chits
+- Investigate resting (not necessary since nothing gets fatigued)
 - Attempt to add trading
 
 Documentation:
