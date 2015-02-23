@@ -23,6 +23,22 @@ public class ImageLookup {
 		lookupTable.put("Guard 1", "great_swordsman.gif");
 		lookupTable.put("Guard 2", "great_swordsman.gif");
 		lookupTable.put("Guard HQ", "great_swordsman.gif");
+		lookupTable.put("Order 1", "knight.gif");
+		lookupTable.put("Order 2", "knight.gif");
+		lookupTable.put("Order 3", "knight.gif");
+		lookupTable.put("Order HQ", "knight.gif");
+		lookupTable.put("Soldier 1", "pikeman.gif");
+		lookupTable.put("Soldier 2", "pikeman.gif");
+		lookupTable.put("Soldier 3", "crossbowman.gif");
+		lookupTable.put("Soldier HQ", "great_swordsman.gif");
+		lookupTable.put("Rogue 1", "great_axeman.gif");
+		lookupTable.put("Rogue 2", "great_axeman.gif");
+		lookupTable.put("Rogue 3", "short_swordsman.gif");
+		lookupTable.put("Rogue 4", "archer.gif");
+		lookupTable.put("Rogue 5", "assassin.gif");
+		lookupTable.put("Rogue 6", "swordsman.gif");
+		lookupTable.put("Rogue 7", "swordsman.gif");
+		lookupTable.put("Rogue HQ", "assassin.gif");
 	}
 	
 	public String getValue(String name){

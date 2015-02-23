@@ -6,7 +6,6 @@ Features:
 - Add treasures (BASIC GOLD ONLY)
 - Add monsters
 - Add map chits (all of the above should be at random)
-- Finish adding natives over dwellings
 - Investigate resting (feasible to do without combat?)
 - Attempt to add trading
 
