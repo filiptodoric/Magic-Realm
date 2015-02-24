@@ -20,6 +20,7 @@ public class MagicRealmGUI {
 	public JButton 	showCheatButton;
 	public JButton 	setupVRButton;
 	public JTable     turnsTable;
+	public JTextArea playerInfoArea;
 	public JLayeredPane map;
 	private MapBrain mapBrain;
 	private ImageLookup lookup;
@@ -304,15 +305,15 @@ public class MagicRealmGUI {
 		setupVRButton = new JButton("Setup VPs");
 		constraints.weightx = 0.5;
 		constraints.weighty = 8.0;
-		constraints.gridx   = 0;
-		constraints.gridy   = 2;
+		constraints.gridx   = 4;
+		constraints.gridy   = 4;
 		charInternalFrame.add(setupVRButton, constraints);
 		
 		// Show Card Button
 		showCardButton = new JButton("Show Card");
 		showCardButton.setToolTipText("Show Character's Card");
-		constraints.gridx = 0;
-		constraints.gridy = 1;
+		constraints.gridx = 2;
+		constraints.gridy = 4;
 		charInternalFrame.add(showCardButton, constraints);
 		
 		// Cheat Mode Button
@@ -320,7 +321,26 @@ public class MagicRealmGUI {
 		showCheatButton.setToolTipText("Enable cheat mode!");
 		constraints.gridx = 0;
 		constraints.gridy = 4;
-		charInternalFrame.add(showCardButton, constraints);
+		charInternalFrame.add(showCheatButton, constraints);
+		
+		// Player Info Area
+		playerInfoArea = new JTextArea();
+		playerInfoArea.setEditable(false);
+		constraints.gridx = 0;
+		constraints.gridy = 1;
+		constraints.fill = constraints.BOTH;
+		constraints.gridheight = 2;
+		constraints.gridwidth = 5;
+		JScrollPane infoScroll = new JScrollPane(playerInfoArea);
+		charInternalFrame.add(infoScroll, constraints);
+		constraints.gridheight = 1;
+		constraints.gridwidth = 1;
+		constraints.fill = constraints.NONE;
+		
+		showCheatButton.setToolTipText("Enable cheat mode!");
+		constraints.gridx = 0;
+		constraints.gridy = 4;
+		charInternalFrame.add(showCheatButton, constraints);
 		
 		// Hide Button
 		hideButton = new JButton();
