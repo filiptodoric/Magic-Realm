@@ -74,7 +74,15 @@ public class MagicRealmClient implements Runnable {
     	gui.refreshMapInternalFrame();
     }
     
+    private void peanuts(){
+    	
+    	player.getCharacter().setClearing(null);
+    }
+    
     private void placeCharacter(){
+    	if (player.getCharacter().getClearing() == null){
+    		player.getCharacter().setClearing(gui.getMapBrain().findInn());
+    	}
     	for (HexTile tile : gui.getMapBrain().getTiles()){
     		for (Clearing clearing : tile.getClearings()){
     			if (clearing.getName().equals(player.getCharacter().getClearing()) &&
@@ -100,6 +108,12 @@ public class MagicRealmClient implements Runnable {
 		gui.restButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				// TODO Place function here.
+			}
+		});
+		
+		gui.showCheatButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				gui.showCheatPanel();
 			}
 		});
 		
