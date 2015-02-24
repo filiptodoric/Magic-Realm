@@ -2,21 +2,11 @@
 
 Things we still need as a team:
 
-Bugs:
-- Fix GUI refresh for moving characters!
-
 Features:
-- Add treasures (BASIC GOLD ONLY)
 - Add monsters
-- Add map chits (all of the above should be at random)
-- Finish adding natives over dwellings
-- Investigate resting (feasible to do without combat?)
+- Add sound/site chits
+- Investigate resting (not necessary since nothing gets fatigued)
 - Attempt to add trading
-- Implement discovery of hidden paths
-
-Testing:
-- Test searching
-- Explore the map and ensure that the adjacency list doesn't have flaws (minor)
 
 Documentation:
 - We need documentation for the submission! We need someone to wrap this by Tuesday at 6 AM...

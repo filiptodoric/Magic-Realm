@@ -9,6 +9,8 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
 
+import ListsAndLogic.ListOfSecretRoutes;
+import ListsAndLogic.ListOfSecretRoutes;
 import ObjectClasses.Chit;
 import ObjectClasses.Clearing;
 import ObjectClasses.HexTile;
@@ -24,6 +26,7 @@ public class MagicRealmClient implements Runnable {
     ObjectInputStream in;
     ObjectOutputStream out;
     MagicRealmGUI gui;
+    ListOfSecretRoutes secretRoutes;
     Player player;
     String name;
     String character;
@@ -33,6 +36,7 @@ public class MagicRealmClient implements Runnable {
     
     public MagicRealmClient() {
     	gui = new MagicRealmGUI();
+    	secretRoutes = new ListOfSecretRoutes();
     	setActionListeners();
     }
 
@@ -67,8 +71,7 @@ public class MagicRealmClient implements Runnable {
     		}
     	}
     	gui.addImage("board.png",0,0,2221,2439,1, false);
-    	gui.map.revalidate();
-    	gui.map.repaint();
+    	gui.refreshMapInternalFrame();
     }
     
     private void placeCharacter(){
@@ -84,6 +87,7 @@ public class MagicRealmClient implements Runnable {
     			}
     		}
     	}
+    	refreshMap();
     }
     
     private void setCharacterActionListeners(){
@@ -107,36 +111,80 @@ public class MagicRealmClient implements Runnable {
 					switch((int)(Math.random()*6+1)){
 					case 1:
 						System.out.println("Pick any category!");
+						break;
 					case 2:
 						System.out.println("Clues and Paths");
+						for (String adjClearing : getPlayerClearing().getAdjacentClearings()){
+							if (secretRoutes.isSecretPath(getPlayerClearing().getName(), adjClearing)){
+								player.getCharacter().addDiscovery(getPlayerClearing().getName() + "," + adjClearing);
+								System.out.println("You found a secret route: " + getPlayerClearing().getName() + "," + adjClearing + "!");
+							}
+						}
+						break;
 					case 3:
 						System.out.println("Hidden enemies and Paths");
+						for (String adjClearing : getPlayerClearing().getAdjacentClearings()){
+							if (secretRoutes.isSecretPath(getPlayerClearing().getName(), adjClearing)){
+								player.getCharacter().addDiscovery(getPlayerClearing().getName() + "," + adjClearing);
+								System.out.println("You found a secret route: " + getPlayerClearing().getName() + "," + adjClearing + "!");
+							}
+						}
+						break;
 					case 4:
 						System.out.println("Hidden enemies");
+						break;
 					case 5:
 						System.out.println("Clues");
+						break;
 					case 6:
 						System.out.println("You didn't find anything.");
+						break;
 					default:
 						System.out.println("You didn't find anything.");
+						break;
 					}
 				}
 				else{
 					switch((int)(Math.random()*6+1)){
 					case 1:
 						System.out.println("Pick any category!");
+						break;
 					case 2:
 						System.out.println("You discovered passages and clues!");
+						for (String adjClearing : getPlayerClearing().getAdjacentClearings()){
+							if (secretRoutes.isSecretPassage(getPlayerClearing().getName(), adjClearing)){
+								player.getCharacter().addDiscovery(getPlayerClearing().getName() + "," + adjClearing);
+								System.out.println("You found a secret route: " + getPlayerClearing().getName() + "," + adjClearing + "!");
+							}
+						}
+						break;
 					case 3:
 						System.out.println("You discovered passages!");
+						for (String adjClearing : getPlayerClearing().getAdjacentClearings()){
+							if (secretRoutes.isSecretPassage(getPlayerClearing().getName(), adjClearing)){
+								player.getCharacter().addDiscovery(getPlayerClearing().getName() + "," + adjClearing);
+								System.out.println("You found a secret route: " + getPlayerClearing().getName() + "," + adjClearing + "!");
+							}
+						}
+						break;
 					case 4:
-						System.out.println("You discovered chits!");
+						System.out.println("You discovered chits (treasure)!");
+						int foundGold = getPlayerClearing().plunderTreasure();
+						player.getCharacter().gainGold(foundGold);
+						if (foundGold > 0){
+							System.out.println("You found " + foundGold + " gold! You now have " + 
+						player.getCharacter().getGold() + " gold...");
+						}
+						break;
 					case 5:
 						System.out.println("You didn't find anything.");
+						break;
 					case 6:
 						System.out.println("You didn't find anything.");
+						break;
 					default:
 						System.out.println("You didn't find anything.");
+						break;
 					}
 				}
 				if (turns == 0){
@@ -153,7 +201,12 @@ public class MagicRealmClient implements Runnable {
 		
 		gui.moveButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				if (gui.getMapBrain().getCurrentClearing().getAdjacentClearings().contains(getPlayerClearing().getName())){
+				// If the selected clearing's adjacent clearings contains the player's current clearing, AND
+				// (If the pair of clearings is NOT in the list of secret routes, OR
+				// If the player has found this secret route)
+				if (gui.getMapBrain().getCurrentClearing().getAdjacentClearings().contains(getPlayerClearing().getName()) &&
+						(!secretRoutes.isSecret(gui.getMapBrain().getCurrentClearing().getName(),getPlayerClearing().getName()) ||
+						player.getCharacter().hasFoundDiscovery(gui.getMapBrain().getCurrentClearing().getName() + "," + getPlayerClearing().getName()))){
 					System.out.println("Moved to " + gui.getMapBrain().getCurrentClearing().getName());
 					player.getCharacter().setClearing(gui.getMapBrain().getCurrentClearing().getName());
 					placeCharacter();
@@ -296,6 +349,7 @@ public class MagicRealmClient implements Runnable {
                 	System.out.println("It's your turn...");
                 	turns = 3;
                 	gui.enableButtons();
+                	player.getCharacter().setHidden(false);
             	}
             	else{
             		System.out.println("Waiting...");

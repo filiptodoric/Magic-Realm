@@ -10,11 +10,13 @@ public class Clearing {
 	private String name;
 	private ArrayList<String> adjacentClearings;
 	private ArrayList<Chit> chits;
+	private int treasure;
 	public Clearing(Rectangle inpLocationRect, String inpName, String adjacentClearingsStr){
 		chits = new ArrayList<Chit>();
 		adjacentClearings = new ArrayList<String>();
 		locationRect = inpLocationRect;
 		name = inpName;
+		generateTreasure();
 		for (String input : adjacentClearingsStr.split(",")){
 			adjacentClearings.add(input);
 		}
@@ -51,5 +53,22 @@ public class Clearing {
 	
 	public void removeChit(Chit chit) {
 		chits.remove(chit);
+	}
+	
+	public void generateTreasure(){
+		// ~30% chance of deploying gold
+		if ((Math.random()*10) > 7){
+			// Random amount of treasure from 0 to 10
+			treasure = (int)(Math.random()*10);
+		}
+		else{
+			treasure = 0;
+		}
+	}
+	
+	public int plunderTreasure(){
+		int treasureHold = treasure;
+		treasure = 0;
+		return treasureHold;
 	}
 }

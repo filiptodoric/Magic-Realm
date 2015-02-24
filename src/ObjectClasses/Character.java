@@ -1,17 +1,22 @@
 package ObjectClasses;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class Character extends Chit{
 	private ArrayList<Chit> inventory = new ArrayList<Chit>();
 	private String currentClearing;
 	private boolean isHidden;
+	private HashSet<String> discoveries;
+	private int gold;
 	
 	public Character(String selectedCharacter) {
 		super(selectedCharacter,null);
-		currentClearing = "AV C5";
+		currentClearing = "LEDGES C4";
 		isHidden = false;
+		discoveries = new HashSet<String>();
 		initInventory();
+		gold = 10;
 	}
 	
 	private void initInventory(){
@@ -72,6 +77,32 @@ public class Character extends Chit{
 	
 	public void setClearing(String clearing){
 		currentClearing = clearing;
+	}
+	
+	public void addDiscovery(String discovery){
+		discoveries.add(discovery);
+	}
+	
+	public boolean hasFoundDiscovery(String discovery){
+		String[] clearings = discovery.split(",");
+		for (String foundRoute : discoveries){
+			if (foundRoute.contains(clearings[0]) && foundRoute.contains(clearings[1])){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public void loseGold(int value) {
+		gold -= value;
+	}
+	
+	public void gainGold(int value) {
+		gold += value;
+	}
+	
+	public int getGold() {
+		return gold;
 	}
 
 	public void setHidden(boolean b) {

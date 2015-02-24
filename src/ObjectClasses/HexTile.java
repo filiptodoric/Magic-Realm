@@ -4,11 +4,12 @@ import java.util.ArrayList;
 
 public class HexTile {
 	private ArrayList<Clearing> clearings;
-	private ArrayList<Chit> chits;
+	private ArrayList<MapChit> chits;
 	private String name;
 	public HexTile(String inpName){
 		name = inpName;
 		clearings = new ArrayList<Clearing>();
+		chits = new ArrayList<MapChit>();
 	}
 	
 	public void addClearing(Clearing input){
@@ -19,11 +20,24 @@ public class HexTile {
 		return clearings;
 	}
 	
-	public ArrayList<Chit> getChit(){
+	public ArrayList<MapChit> getChits(){
 		return chits;
+	}
+	
+	public MapChit getWarningChit(){
+		for (MapChit chit : chits){
+			if(chit.getType().equals(MapChit.Type.WARNING)){
+				return chit;
+			}
+		}
+		return null;
 	}
 	
 	public String getName(){
 		return name;
+	}
+	
+	public void addChit(MapChit chit){
+		chits.add(chit);
 	}
 }

@@ -152,7 +152,7 @@ public class MagicRealmGUI {
 		
 		// mapScrollPane - holds the mapImageLabel 
 		JScrollPane mapScrollPane = new JScrollPane(getMap());
-		
+		mapScrollPane.setName("Map");
 		// mapInternalFrame - holds the mapScrollPane
 		JInternalFrame mapInternalFrame = new JInternalFrame("Magic Realm Map");
 		mapInternalFrame.setSize(700, 725);
@@ -162,6 +162,23 @@ public class MagicRealmGUI {
 		mapInternalFrame.setVisible    (true);
 		mapInternalFrame.add(mapScrollPane);
 		desktopPane.add(mapInternalFrame);
+	}
+	
+	public void refreshMapInternalFrame() {
+		for (Component component : desktopPane.getComponents()){
+			if (component.getName() != null && component.getName().equals("Magic Realm Map")){
+				desktopPane.remove(component);
+				JScrollPane mapScrollPane = new JScrollPane(map);
+				JInternalFrame mapInternalFrame = new JInternalFrame("Magic Realm Map");
+				mapInternalFrame.setSize(700, 725);
+				mapInternalFrame.setMaximizable(true);
+				mapInternalFrame.setIconifiable(true);
+				mapInternalFrame.setResizable  (true);
+				mapInternalFrame.setVisible    (true);
+				mapInternalFrame.add(mapScrollPane);
+				desktopPane.add(mapInternalFrame);
+			}
+		}
 	}
 	
 	
@@ -431,7 +448,7 @@ public class MagicRealmGUI {
 	public int getSearchType() {
 		String[] buttons = {"Peer", "Locate"};
 	    return JOptionPane.showOptionDialog(null, "What type of search do you want to perform?", "Search",
-	        JOptionPane.WARNING_MESSAGE, 0, null, buttons, buttons[1]);
+	        JOptionPane.DEFAULT_OPTION, 0, null, buttons, buttons[1]);
 	}
 	
 } /* CLOSES CLASS */
