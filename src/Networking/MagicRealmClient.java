@@ -264,7 +264,7 @@ public class MagicRealmClient implements Runnable {
 		gui.hideButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				turns--;
-				if (((int)Math.random()*6)+1 > 5){
+				if ((Math.random()*6)+1 > 5.0){
 					gui.playerInfoArea.append("\nCouldn't hide!");
 				}
 				else{
