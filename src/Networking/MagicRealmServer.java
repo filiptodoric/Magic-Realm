@@ -42,6 +42,11 @@ public class MagicRealmServer implements Runnable{
     private static int day;
     
     /**
+     * The boolean to check to see if the current player has finished their turn.
+     */
+    private static boolean playerFinished;
+    
+    /**
      * The server's copy of playable characters.
      */
     static ArrayList<String> playableCharacters;
@@ -69,6 +74,7 @@ public class MagicRealmServer implements Runnable{
      */
     private static class Handler extends Thread {
         private String name;
+        private String ownerName;
         private String charName;
         private Socket socket;
         private ObjectInputStream in;
@@ -166,6 +172,9 @@ public class MagicRealmServer implements Runnable{
                             writer.writeObject("MESSAGE:" + name + ": " + input.substring(8));
                         }
                     }
+                    else if (input.startsWith("COMPLETE")){
+                        playerFinished = true;
+                    }
             	}
             } catch (IOException e) {
                 System.out.println(e);
@@ -188,21 +197,25 @@ public class MagicRealmServer implements Runnable{
 			return temp.substring(0, temp.length()-1);
 		}
 
-		private void newRound() throws IOException, ClassNotFoundException{
-			for (String name : names) {
+		private void newRound() throws IOException, ClassNotFoundException, InterruptedException{
+			for (String currName : names) {
             	for (ObjectOutputStream writer : writers) {
             		// This uses the player name, not the character name
-					writer.writeObject("ROUNDSTART:"+name);
+					writer.writeObject("ROUNDSTART:"+currName);
             	}
-            	while(true){
-            		String input = (String) in.readObject();
-            		if (input.equals("COMPLETE")){
-            			System.out.println(name + " has completed their round!");
-            			break;
+            	if (currName.equals(name)){
+            		Object objIn = in.readObject();
+            	}
+            	else{
+            		playerFinished = false;
+            		while(!playerFinished){
+            			Thread.sleep(1000);
             		}
             	}
+            	System.out.println(currName + " has completed their round!");
 			}
 			if (day != 28){
+				day++;
 				newRound();
 			}
 		}

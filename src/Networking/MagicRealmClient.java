@@ -14,6 +14,7 @@ import ListsAndLogic.ListOfSecretRoutes;
 import ObjectClasses.Chit;
 import ObjectClasses.Clearing;
 import ObjectClasses.HexTile;
+import ObjectClasses.MapChit;
 import ObjectClasses.Player;
 import View.MagicRealmGUI;
 
@@ -32,12 +33,14 @@ public class MagicRealmClient implements Runnable {
     String character;
     Socket socket;
     int turns;
+    int day;
     ArrayList<String> playableCharacters;
     
     public MagicRealmClient() {
     	gui = new MagicRealmGUI();
     	secretRoutes = new ListOfSecretRoutes();
     	setActionListeners();
+    	day = 1;
     }
 
     private void setActionListeners() {
@@ -116,6 +119,7 @@ public class MagicRealmClient implements Runnable {
 			public void actionPerformed(ActionEvent e){
 				turns--;
 				int searchChoice = gui.getSearchType();
+				String temp = "";
 				if (searchChoice == 0){
 					switch((int)(Math.random()*6+1)){
 					case 1:
@@ -129,6 +133,10 @@ public class MagicRealmClient implements Runnable {
 								gui.playerInfoArea.append("\nYou found a secret route: " + getPlayerClearing().getName() + "," + adjClearing + "!");
 							}
 						}
+						for (MapChit chit : getPlayerTile().getChits()){
+							temp += (chit.getName() + ",");
+						}
+						gui.playerInfoArea.append("\n Clues:" + temp);
 						break;
 					case 3:
 						gui.playerInfoArea.append("\nHidden enemies and Paths");
@@ -144,6 +152,10 @@ public class MagicRealmClient implements Runnable {
 						break;
 					case 5:
 						gui.playerInfoArea.append("\nClues");
+						for (MapChit chit : getPlayerTile().getChits()){
+							temp += (chit.getName() + ",");
+						}
+						gui.playerInfoArea.append("\n Clues:" + temp);
 						break;
 					case 6:
 						gui.playerInfoArea.append("\nYou didn't find anything.");
@@ -166,6 +178,10 @@ public class MagicRealmClient implements Runnable {
 								gui.playerInfoArea.append("\nYou found a secret route: " + getPlayerClearing().getName() + "," + adjClearing + "!");
 							}
 						}
+						for (MapChit chit : getPlayerTile().getChits()){
+							temp += (chit.getName() + ",");
+						}
+						gui.playerInfoArea.append("\n Clues:" + temp);
 						break;
 					case 3:
 						gui.playerInfoArea.append("\nYou discovered passages!");
@@ -205,6 +221,15 @@ public class MagicRealmClient implements Runnable {
 					}
 					gui.playerInfoArea.append("\nDay completed, waiting for others...");
 				}
+			}
+
+			private HexTile getPlayerTile(){
+				for (HexTile tile : gui.getMapBrain().getTiles()){
+					if (tile.getClearings().contains(getPlayerClearing())){
+						return tile;
+					}
+				}
+				return null;
 			}
 		});
 		
@@ -353,6 +378,7 @@ public class MagicRealmClient implements Runnable {
             	gui.startGameButton.setEnabled(false);
             } else if (line.startsWith("GAMESTART")) {
             	gui.playerInfoArea.append("\nThe game is now starting! Please wait for your turn...");
+            	gui.startGameButton.setEnabled(false);
             } else if (line.startsWith("ROUNDSTART:")){
             	if (line.contains(player.getName())){
             		try {
@@ -361,7 +387,8 @@ public class MagicRealmClient implements Runnable {
 						e.printStackTrace();
 					}
             		gui.playerInfoArea.setText("");
-                	gui.playerInfoArea.append("It's your turn...");
+                	gui.playerInfoArea.append("Day " + day + ": It's your turn...");
+                	day++;
                 	turns = 3;
                 	gui.enableButtons();
                 	player.getCharacter().setHidden(false);
