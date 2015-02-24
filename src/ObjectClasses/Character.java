@@ -12,7 +12,7 @@ public class Character extends Chit{
 	
 	public Character(String selectedCharacter) {
 		super(selectedCharacter,null);
-		currentClearing = "LEDGES C4";
+		currentClearing = null;
 		isHidden = false;
 		discoveries = new HashSet<String>();
 		initInventory();

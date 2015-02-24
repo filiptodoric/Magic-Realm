@@ -14,6 +14,7 @@ import ListsAndLogic.ListOfSecretRoutes;
 import ObjectClasses.Chit;
 import ObjectClasses.Clearing;
 import ObjectClasses.HexTile;
+import ObjectClasses.MapChit;
 import ObjectClasses.Player;
 import View.MagicRealmGUI;
 
@@ -32,12 +33,14 @@ public class MagicRealmClient implements Runnable {
     String character;
     Socket socket;
     int turns;
+    int day;
     ArrayList<String> playableCharacters;
     
     public MagicRealmClient() {
     	gui = new MagicRealmGUI();
     	secretRoutes = new ListOfSecretRoutes();
     	setActionListeners();
+    	day = 1;
     }
 
     private void setActionListeners() {
@@ -75,6 +78,9 @@ public class MagicRealmClient implements Runnable {
     }
     
     private void placeCharacter(){
+    	if (player.getCharacter().getClearing() == null){
+    		player.getCharacter().setClearing(gui.getMapBrain().findInn());
+    	}
     	for (HexTile tile : gui.getMapBrain().getTiles()){
     		for (Clearing clearing : tile.getClearings()){
     			if (clearing.getName().equals(player.getCharacter().getClearing()) &&
@@ -103,87 +109,106 @@ public class MagicRealmClient implements Runnable {
 			}
 		});
 		
+		gui.showCheatButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				gui.showCheatPanel();
+			}
+		});
+		
 		gui.searchButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				turns--;
 				int searchChoice = gui.getSearchType();
+				String temp = "";
 				if (searchChoice == 0){
 					switch((int)(Math.random()*6+1)){
 					case 1:
-						System.out.println("Pick any category!");
+						gui.playerInfoArea.append("\nPick any category!");
 						break;
 					case 2:
-						System.out.println("Clues and Paths");
+						gui.playerInfoArea.append("\nClues and Paths");
 						for (String adjClearing : getPlayerClearing().getAdjacentClearings()){
 							if (secretRoutes.isSecretPath(getPlayerClearing().getName(), adjClearing)){
 								player.getCharacter().addDiscovery(getPlayerClearing().getName() + "," + adjClearing);
-								System.out.println("You found a secret route: " + getPlayerClearing().getName() + "," + adjClearing + "!");
+								gui.playerInfoArea.append("\nYou found a secret route: " + getPlayerClearing().getName() + "," + adjClearing + "!");
 							}
 						}
+						for (MapChit chit : getPlayerTile().getChits()){
+							temp += (chit.getName() + ",");
+						}
+						gui.playerInfoArea.append("\n Clues:" + temp);
 						break;
 					case 3:
-						System.out.println("Hidden enemies and Paths");
+						gui.playerInfoArea.append("\nHidden enemies and Paths");
 						for (String adjClearing : getPlayerClearing().getAdjacentClearings()){
 							if (secretRoutes.isSecretPath(getPlayerClearing().getName(), adjClearing)){
 								player.getCharacter().addDiscovery(getPlayerClearing().getName() + "," + adjClearing);
-								System.out.println("You found a secret route: " + getPlayerClearing().getName() + "," + adjClearing + "!");
+								gui.playerInfoArea.append("\nYou found a secret route: " + getPlayerClearing().getName() + "," + adjClearing + "!");
 							}
 						}
 						break;
 					case 4:
-						System.out.println("Hidden enemies");
+						gui.playerInfoArea.append("\nHidden enemies");
 						break;
 					case 5:
-						System.out.println("Clues");
+						gui.playerInfoArea.append("\nClues");
+						for (MapChit chit : getPlayerTile().getChits()){
+							temp += (chit.getName() + ",");
+						}
+						gui.playerInfoArea.append("\n Clues:" + temp);
 						break;
 					case 6:
-						System.out.println("You didn't find anything.");
+						gui.playerInfoArea.append("\nYou didn't find anything.");
 						break;
 					default:
-						System.out.println("You didn't find anything.");
+						gui.playerInfoArea.append("\nYou didn't find anything.");
 						break;
 					}
 				}
 				else{
 					switch((int)(Math.random()*6+1)){
 					case 1:
-						System.out.println("Pick any category!");
+						gui.playerInfoArea.append("\nPick any category!");
 						break;
 					case 2:
-						System.out.println("You discovered passages and clues!");
+						gui.playerInfoArea.append("\nYou discovered passages and clues!");
 						for (String adjClearing : getPlayerClearing().getAdjacentClearings()){
 							if (secretRoutes.isSecretPassage(getPlayerClearing().getName(), adjClearing)){
 								player.getCharacter().addDiscovery(getPlayerClearing().getName() + "," + adjClearing);
-								System.out.println("You found a secret route: " + getPlayerClearing().getName() + "," + adjClearing + "!");
+								gui.playerInfoArea.append("\nYou found a secret route: " + getPlayerClearing().getName() + "," + adjClearing + "!");
 							}
 						}
+						for (MapChit chit : getPlayerTile().getChits()){
+							temp += (chit.getName() + ",");
+						}
+						gui.playerInfoArea.append("\n Clues:" + temp);
 						break;
 					case 3:
-						System.out.println("You discovered passages!");
+						gui.playerInfoArea.append("\nYou discovered passages!");
 						for (String adjClearing : getPlayerClearing().getAdjacentClearings()){
 							if (secretRoutes.isSecretPassage(getPlayerClearing().getName(), adjClearing)){
 								player.getCharacter().addDiscovery(getPlayerClearing().getName() + "," + adjClearing);
-								System.out.println("You found a secret route: " + getPlayerClearing().getName() + "," + adjClearing + "!");
+								gui.playerInfoArea.append("\nYou found a secret route: " + getPlayerClearing().getName() + "," + adjClearing + "!");
 							}
 						}
 						break;
 					case 4:
-						System.out.println("You discovered chits (treasure)!");
+						gui.playerInfoArea.append("\nYou discovered chits (treasure)!");
 						int foundGold = getPlayerClearing().plunderTreasure();
 						player.getCharacter().gainGold(foundGold);
 						if (foundGold > 0){
-							System.out.println("You found " + foundGold + " gold! You now have " + 
+							gui.playerInfoArea.append("\nYou found " + foundGold + " gold! You now have " + 
 						player.getCharacter().getGold() + " gold...");
 						}
 						break;
 					case 5:
-						System.out.println("You didn't find anything.");
+						gui.playerInfoArea.append("\nYou didn't find anything.");
 						break;
 					case 6:
-						System.out.println("You didn't find anything.");
+						gui.playerInfoArea.append("\nYou didn't find anything.");
 						break;
 					default:
-						System.out.println("You didn't find anything.");
+						gui.playerInfoArea.append("\nYou didn't find anything.");
 						break;
 					}
 				}
@@ -194,8 +219,17 @@ public class MagicRealmClient implements Runnable {
 					} catch (IOException e1) {
 						e1.printStackTrace();
 					}
-					System.out.println("Day completed, waiting for others...");
+					gui.playerInfoArea.append("\nDay completed, waiting for others...");
 				}
+			}
+
+			private HexTile getPlayerTile(){
+				for (HexTile tile : gui.getMapBrain().getTiles()){
+					if (tile.getClearings().contains(getPlayerClearing())){
+						return tile;
+					}
+				}
+				return null;
 			}
 		});
 		
@@ -207,7 +241,7 @@ public class MagicRealmClient implements Runnable {
 				if (gui.getMapBrain().getCurrentClearing().getAdjacentClearings().contains(getPlayerClearing().getName()) &&
 						(!secretRoutes.isSecret(gui.getMapBrain().getCurrentClearing().getName(),getPlayerClearing().getName()) ||
 						player.getCharacter().hasFoundDiscovery(gui.getMapBrain().getCurrentClearing().getName() + "," + getPlayerClearing().getName()))){
-					System.out.println("Moved to " + gui.getMapBrain().getCurrentClearing().getName());
+					gui.playerInfoArea.append("\nMoved to " + gui.getMapBrain().getCurrentClearing().getName());
 					player.getCharacter().setClearing(gui.getMapBrain().getCurrentClearing().getName());
 					placeCharacter();
 					turns--;
@@ -218,11 +252,11 @@ public class MagicRealmClient implements Runnable {
 						} catch (IOException e1) {
 							e1.printStackTrace();
 						}
-						System.out.println("Day completed, waiting for others...");
+						gui.playerInfoArea.append("\nDay completed, waiting for others...");
 					}
 				}
 				else{
-					System.out.println("Can't travel there!");
+					gui.playerInfoArea.append("\nCan't travel there!");
 				}
 			}
 		});
@@ -230,12 +264,12 @@ public class MagicRealmClient implements Runnable {
 		gui.hideButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				turns--;
-				if (((int)Math.random()*6)+1 > 5){
-					System.out.println("Couldn't hide!");
+				if ((Math.random()*6)+1 > 5.0){
+					gui.playerInfoArea.append("\nCouldn't hide!");
 				}
 				else{
 					player.getCharacter().setHidden(true);
-					System.out.println("Managed to hide!");
+					gui.playerInfoArea.append("\nManaged to hide!");
 				}
 				if (turns == 0){
 					gui.disableButtons();
@@ -244,7 +278,7 @@ public class MagicRealmClient implements Runnable {
 					} catch (IOException e1) {
 						e1.printStackTrace();
 					}
-					System.out.println("Day completed, waiting for others...");
+					gui.playerInfoArea.append("\nDay completed, waiting for others...");
 				}
 			}
 		});
@@ -343,18 +377,22 @@ public class MagicRealmClient implements Runnable {
             } else if (line.startsWith("GAMECAN'TSTART")){
             	gui.startGameButton.setEnabled(false);
             } else if (line.startsWith("GAMESTART")) {
-            	System.out.println("The game is now starting!");
+            	gui.playerInfoArea.append("\nThe game is now starting! Please wait for your turn...");
+            	gui.startGameButton.setEnabled(false);
             } else if (line.startsWith("ROUNDSTART:")){
             	if (line.contains(player.getName())){
-                	System.out.println("It's your turn...");
+            		try {
+						Thread.sleep(3000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+            		gui.playerInfoArea.setText("");
+                	gui.playerInfoArea.append("Day " + day + ": It's your turn...");
+                	day++;
                 	turns = 3;
                 	gui.enableButtons();
                 	player.getCharacter().setHidden(false);
             	}
-            	else{
-            		System.out.println("Waiting...");
-            	}
-            	
             } else if (line.startsWith("MESSAGE")){
             } else if (line.startsWith("Score:")){
             } else if (line.startsWith("Players Active:")){

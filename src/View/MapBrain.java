@@ -41,6 +41,7 @@ public class MapBrain extends MouseAdapter{
 		/* CLIFF HOTSPOTS */
 		HexTile tile = new HexTile("CLIFF");
 		tile.addChit(mapChits.getRandomWarningChit("M"));
+		tile.addChit(mapChits.getRandomSiteSoundChit(tile));
 		tile.addClearing(new Clearing(new Rectangle(560, 355, 100, 80), "CLIFF C1", "CLIFF C6,EV C2"));
 		tile.addClearing(new Clearing(new Rectangle(560, 355, 100, 80), "CLIFF C1", "CLIFF C6,EV C2"));
 		tile.addClearing(new Clearing(new Rectangle(690, 355, 100, 80), "CLIFF C2", "LEDGES C3,CLIFF C3,CLIFF C5"));
@@ -63,6 +64,7 @@ public class MapBrain extends MouseAdapter{
 		/* LEDGES HOTSPOTS */
 		tile = new HexTile("LEDGES");
 		tile.addChit(mapChits.getRandomWarningChit("M"));
+		tile.addChit(mapChits.getRandomSiteSoundChit(tile));
 		tile.addClearing(new Clearing(new Rectangle(867,522,100,80), "LEDGES C1", "LEDGES C6,LEDGES C4,LEDGES C3"));
 		tile.addClearing(new Clearing(new Rectangle(707,611,100,80), "LEDGES C2", "LEDGES C5,EV C4"));
 		tile.addClearing(new Clearing(new Rectangle(753,507,100,80), "LEDGES C3", "LEDGES C6,CLIFF C2,LEDGES C1"));
@@ -74,6 +76,7 @@ public class MapBrain extends MouseAdapter{
 		/* HIGH PASS HOTSPOTS */
 		tile = new HexTile("HP");
 		tile.addChit(mapChits.getRandomWarningChit("C"));
+		tile.addChit(mapChits.getRandomSiteSoundChit(tile));
 		tile.addClearing(new Clearing(new Rectangle(156,1081,100,80), "HP C1", "HP C5,HP C4"));
 		tile.addClearing(new Clearing(new Rectangle(324,988,100,80), "HP C2", "HP C4,BORDERLAND C1"));
 		tile.addClearing(new Clearing(new Rectangle(259,1095,100,80), "HP C3", "HP C6,CAVERN C5"));
@@ -85,6 +88,7 @@ public class MapBrain extends MouseAdapter{
 		/* BORDERLAND HOTSPOTS */
 		tile = new HexTile("BORDERLAND");
 		tile.addChit(mapChits.getRandomWarningChit("C"));
+		tile.addChit(mapChits.getRandomSiteSoundChit(tile));
 		tile.addClearing(new Clearing(new Rectangle(484,1073,100,80), "BORDERLAND C1", "HP C2,BV C5,BORDERLAND C6"));
 		tile.addClearing(new Clearing(new Rectangle(611,856,100,80), "BORDERLAND C2", "EV C4,OW C2,BORDERLAND C3"));
 		tile.addClearing(new Clearing(new Rectangle(503,926,100,80), "BORDERLAND C3", "BORDERLAND C2,BORDERLAND C5,BORDERLAND C6"));
@@ -104,6 +108,7 @@ public class MapBrain extends MouseAdapter{
 		/* CRAG CLEARINGS */
 		tile = new HexTile("CRAG");
 		tile.addChit(mapChits.getRandomWarningChit("M"));
+		tile.addChit(mapChits.getRandomSiteSoundChit(tile));
 		tile.addClearing(new Clearing(new Rectangle(1208,477,100,80), "CRAG C1","CRAG C6,CRAG C4"));
 		tile.addClearing(new Clearing(new Rectangle(1330,731,100,80), "CRAG C2","CRAG C3,CRAG C5,DW C1"));
 		tile.addClearing(new Clearing(new Rectangle(1352,615,100,80), "CRAG C3","CRAG C6,CRAG C5,CRAG C2"));
@@ -115,6 +120,7 @@ public class MapBrain extends MouseAdapter{
 		/* CAVERN CLEARINGS */
 		tile = new HexTile("CAVERN");
 		tile.addChit(mapChits.getRandomWarningChit("C"));
+		tile.addChit(mapChits.getRandomSiteSoundChit(tile));
 		tile.addClearing(new Clearing(new Rectangle(549,1359,100,80), "CAVERN C1","BV C4,CAVERN C3,CAVERN C4"));
 		tile.addClearing(new Clearing(new Rectangle(474,1245,100,80), "CAVERN C2","BORDERLAND C4,CAVERN C3"));
 		tile.addClearing(new Clearing(new Rectangle(420,1332,100,80), "CAVERN C3","CAVERN C5,CAVERN C6,CAVERN C1,CAVERN C2"));
@@ -126,6 +132,7 @@ public class MapBrain extends MouseAdapter{
 		/* MOUNTAIN CLEARINGS */
 		tile = new HexTile("MOUNTAIN");
 		tile.addChit(mapChits.getRandomWarningChit("M"));
+		tile.addChit(mapChits.getRandomSiteSoundChit(tile));
 		tile.addClearing(new Clearing(new Rectangle(578,1815,100,80), "MOUNTAIN C1","MOUNTAIN C3"));
 		tile.addClearing(new Clearing(new Rectangle(697,1864,100,80), "MOUNTAIN C2","MOUNTAIN C4,MOUNTAIN C5,PW C4"));
 		tile.addClearing(new Clearing(new Rectangle(694,1748,100,80), "MOUNTAIN C3","MOUNTAIN C1,MOUNTAIN C6"));
@@ -137,6 +144,7 @@ public class MapBrain extends MouseAdapter{
 		/* CAVES CLEARINGS */
 		tile = new HexTile("CAVES");
 		tile.addChit(mapChits.getRandomWarningChit("C"));
+		tile.addChit(mapChits.getRandomSiteSoundChit(tile));
 		tile.addClearing(new Clearing(new Rectangle(980,1852,100,80), "CAVES C1","PW C5,CAVES C6"));
 		tile.addClearing(new Clearing(new Rectangle(984,1623,100,80), "CAVES C2","BV C2,CAVES C3,CAVES C4"));
 		tile.addClearing(new Clearing(new Rectangle(1046,1718,100,80), "CAVES C3","CAVES C2,CAVES C5"));
@@ -148,6 +156,7 @@ public class MapBrain extends MouseAdapter{
 		/* RUINS CLEARINGS */
 		tile = new HexTile("RUINS");
 		tile.addChit(mapChits.getRandomWarningChit("C"));
+		tile.addChit(mapChits.getRandomSiteSoundChit(tile));
 		tile.addClearing(new Clearing(new Rectangle(1545,1645,100,80), "RUINS C1","NW C4,RUINS C4,RUINS C2,RUINS C5"));
 		tile.addClearing(new Clearing(new Rectangle(1606,1809,100,80), "RUINS C2","RUINS C1,AV C1,LW C4"));
 		tile.addClearing(new Clearing(new Rectangle(1408,1858,100,80), "RUINS C3","RUINS C6,RUINS C5"));
@@ -159,6 +168,7 @@ public class MapBrain extends MouseAdapter{
 		/* DEEP WOODS CLEARINGS */
 		tile = new HexTile("DW");
 		tile.addChit(mapChits.getRandomWarningChit("M"));
+		tile.addChit(mapChits.getRandomSiteSoundChit(tile));
 		tile.addClearing(new Clearing(new Rectangle(1349,939,100,80), "DW C1","CRAG C2,OW C4,DW C4,DW C6"));
 		tile.addClearing(new Clearing(new Rectangle(1593,927,100,80), "DW C2","DV C5,CV C2,DW C3"));
 		tile.addClearing(new Clearing(new Rectangle(1593,1082,100,80), "DW C3","DW C2,DW C6,DW C5"));
@@ -316,6 +326,19 @@ public class MapBrain extends MouseAdapter{
 				}
 			}
 		}
+	}
+	
+	public String findInn(){
+		for (HexTile tile : tiles){
+			for (Clearing clearing : tile.getClearings()){
+				for (Chit chit : clearing.getChits()){
+					if (chit.getName().equals("Inn")){
+						return clearing.getName();
+					}
+				}
+			}
+		}
+		return null;
 	}
 	
 	public Clearing getCurrentClearing(){
