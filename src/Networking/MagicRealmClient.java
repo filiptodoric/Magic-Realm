@@ -35,10 +35,12 @@ public class MagicRealmClient implements Runnable {
     int turns;
     int day;
     ArrayList<String> playableCharacters;
+    ArrayList<Chit> dwellingChits;
     
     public MagicRealmClient() {
     	gui = new MagicRealmGUI();
     	secretRoutes = new ListOfSecretRoutes();
+    	dwellingChits = gui.getMapBrain().findDwellings();
     	setActionListeners();
     	day = 1;
     }
@@ -79,7 +81,7 @@ public class MagicRealmClient implements Runnable {
     
     private void placeCharacter(){
     	if (player.getCharacter().getClearing() == null){
-    		player.getCharacter().setClearing(gui.getMapBrain().findInn());
+    		player.getCharacter().setClearing(gui.getMapBrain().findDwellings().get(0).getLetter());
     	}
     	for (HexTile tile : gui.getMapBrain().getTiles()){
     		for (Clearing clearing : tile.getClearings()){
@@ -365,9 +367,10 @@ public class MagicRealmClient implements Runnable {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-            	player = new Player(name, character);
+            	player = new Player(name, character, dwellingChits);
             	name = null;
             	setCharacterActionListeners();
+            	player.getCharacter().setClearing(gui.getStartLocation(player.getCharacter().getStartLocations()));
             	placeCharacter();
             	refreshMap();
             } else if (line.startsWith("INVALIDNAME")){

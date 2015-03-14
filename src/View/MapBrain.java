@@ -256,7 +256,7 @@ public class MapBrain extends MouseAdapter{
 			for (Clearing clearing : tile.getClearings()){
 				if (clearing.getName().contains("C5")){
 					if (warning.getName().equals("SMOKE")){
-						clearing.addChit(new Chit("House", null));
+						clearing.addChit(new Chit("House", clearing.getName()));
 						clearing.addChit(new Native("Soldier 1", "H", true, 6, 4, "S"));
 						clearing.addChit(new Native("Soldier 2", "H", true, 6, 4, "S"));
 						clearing.addChit(new Native("Soldier 3", "H", false, 6, 5, "S"));
@@ -267,13 +267,13 @@ public class MapBrain extends MouseAdapter{
 						clearing.addChit(new Denizen("Ghost", "H", false, 4, 4));
 					}
 					else if (warning.getName().equals("RUINS")){
-						clearing.addChit(new Chit("Guard", null));
+						clearing.addChit(new Chit("Guard", clearing.getName()));
 						clearing.addChit(new Native("Guard 1", "H", true, 5, 5, "G"));
 						clearing.addChit(new Native("Guard 2", "H", true, 5, 5, "G"));
 						clearing.addChit(new Native("Guard HQ", "H", true, 5, 5, "G"));
 					}
 					else if (warning.getName().equals("STINK")){
-						clearing.addChit(new Chit("Inn", null));
+						clearing.addChit(new Chit("Inn", clearing.getName()));
 						clearing.addChit(new Native("Rogue 1", "H", true, 5, 4, "R"));
 						clearing.addChit(new Native("Rogue 2", "H", true, 5, 4, "R"));
 						clearing.addChit(new Native("Rogue 3", "M", true, 5, 3, "R"));
@@ -284,7 +284,7 @@ public class MapBrain extends MouseAdapter{
 						clearing.addChit(new Native("Rogue HQ", "H", true, 6, 4, "R"));
 					}
 					else if (warning.getName().equals("DANK")){
-						clearing.addChit(new Chit("Chapel", null));
+						clearing.addChit(new Chit("Chapel", clearing.getName()));
 						clearing.addChit(new Native("Order 1", "H", true, 4, 6, "G"));
 						clearing.addChit(new Native("Order 2", "H", true, 5, 5, "G"));
 						clearing.addChit(new Native("Order 3", "H", true, 4, 6, "G"));
@@ -328,17 +328,19 @@ public class MapBrain extends MouseAdapter{
 		}
 	}
 	
-	public String findInn(){
+	public ArrayList<Chit> findDwellings(){
+		ArrayList<Chit> dwellings = new ArrayList<Chit>();
 		for (HexTile tile : tiles){
 			for (Clearing clearing : tile.getClearings()){
 				for (Chit chit : clearing.getChits()){
-					if (chit.getName().equals("Inn")){
-						return clearing.getName();
+					if (chit.getName().equals("Inn") || chit.getName().equals("House") || chit.getName().equals("Guard") ||
+							chit.getName().equals("Chapel")){
+						dwellings.add(chit);
 					}
 				}
 			}
 		}
-		return null;
+		return dwellings;
 	}
 	
 	public Clearing getCurrentClearing(){

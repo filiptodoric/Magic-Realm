@@ -2,9 +2,12 @@ package View;
 
 import javax.swing.*;
 
+import ObjectClasses.Chit;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class MagicRealmGUI {
 		
@@ -456,6 +459,20 @@ public class MagicRealmGUI {
 		String[] buttons = {"Peer", "Locate"};
 	    return JOptionPane.showOptionDialog(null, "What type of search do you want to perform?", "Search",
 	        JOptionPane.DEFAULT_OPTION, 0, null, buttons, buttons[1]);
+	}
+	
+	public String getStartLocation(ArrayList<Chit> dwellings) {
+		ArrayList<String> dwellingNames = new ArrayList<String>();
+		for (Chit dwelling : dwellings){
+			dwellingNames.add(dwelling.getName());
+		}
+		String[] options = new String[dwellingNames.size()];
+		for (int j = 0; j < options.length; j++){
+			options[j] = dwellingNames.get(j);
+		}
+	    int i = JOptionPane.showOptionDialog(null, "Select your starting location...", "Starting Location",
+	        JOptionPane.DEFAULT_OPTION, 0, null, options, options[0]);
+	    return dwellings.get(i).getLetter();
 	}
 
 	public void showCheatPanel() {

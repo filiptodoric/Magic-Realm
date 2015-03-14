@@ -9,13 +9,16 @@ public class Character extends Chit{
 	private boolean isHidden;
 	private HashSet<String> discoveries;
 	private int gold;
+	private ArrayList<Chit> startClearings;
 	
-	public Character(String selectedCharacter) {
+	public Character(String selectedCharacter, ArrayList<Chit> dwellingLocations) {
 		super(selectedCharacter,null);
 		currentClearing = null;
 		isHidden = false;
 		discoveries = new HashSet<String>();
+		startClearings = new ArrayList<Chit>();
 		initInventory();
+		initStartClearings(dwellingLocations);
 		gold = 10;
 	}
 	
@@ -43,6 +46,43 @@ public class Character extends Chit{
 			inventory.add(new Weapon("Mace", "L", false, 3, false, 0));
 			inventory.add(new Armour("Suit of Armor", "T"));
 			inventory.add(new Armour("Shield", "M"));
+		}
+	}
+	
+	private void initStartClearings(ArrayList<Chit> dwellings){
+		for (Chit dwelling : dwellings){
+			switch(name){
+			case "Captain":
+				if ((dwelling.getName() == "Inn") || (dwelling.getName() == "House") || (dwelling.getName() == "Guard")){
+					startClearings.add(dwelling);
+				}
+				break;
+			case "Swordsman":
+				if ((dwelling.getName() == "Inn")){
+					startClearings.add(dwelling);
+				}
+				break;
+			case "Amazon":
+				if ((dwelling.getName() == "Inn")){
+					startClearings.add(dwelling);
+				}
+				break;
+			case "Dwarf":
+				if ((dwelling.getName() == "Inn") || (dwelling.getName() == "Guard")){
+					startClearings.add(dwelling);
+				}
+				break;
+			case "Elf":
+				if ((dwelling.getName() == "Inn")){
+					startClearings.add(dwelling);
+				}
+				break;
+			case "Black Knight":
+				if ((dwelling.getName() == "Inn")){
+					startClearings.add(dwelling);
+				}
+				break;
+			}
 		}
 	}
 	
@@ -107,6 +147,10 @@ public class Character extends Chit{
 
 	public void setHidden(boolean b) {
 		isHidden = b;
+	}
+
+	public ArrayList<Chit> getStartLocations() {
+		return startClearings;
 	}
 
 }
