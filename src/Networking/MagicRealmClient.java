@@ -17,6 +17,7 @@ import ObjectClasses.HexTile;
 import ObjectClasses.MapChit;
 import ObjectClasses.Player;
 import View.MagicRealmGUI;
+import View.MapBrain;
 
 /**
  * The main controller for the client side of the game. Incorporates networking 
@@ -332,8 +333,18 @@ public class MagicRealmClient implements Runnable {
         // Process all messages from server, according to the protocol.
         while (true) {
         	String line = "";
+        	Object obj;
         	try {
-        		line = (String) in.readObject();
+        		obj = in.readObject();
+        		if (obj instanceof MapBrain){
+        			// If we read in a MapBrain from the server at any time, we assign
+        			// it to our map (update from another client), and refresh.
+        			gui.setMapBrain((MapBrain) obj);
+        			refreshMap();
+        		}
+        		else{
+            		line = (String) obj;
+        		}
         	}
         	catch (IOException ioe){
         		System.out.println("The server has been shut down unexpectedly! The game is now over.");
@@ -397,7 +408,15 @@ public class MagicRealmClient implements Runnable {
                 	player.getCharacter().setHidden(false);
             	}
             } else if (line.startsWith("MESSAGE")){
-            } else if (line.startsWith("Score:")){
+            } else if (line.startsWith("SENDMAP:")){
+            	if (line.contains(player.getName())){
+            		try {
+						out.writeObject(gui.getMapBrain());
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+            	}
+            }else if (line.startsWith("Score:")){
             } else if (line.startsWith("Players Active:")){
             } else if (line.startsWith("DENIED")){
             } else if (line.startsWith("LOCKCATEGORY:")){

@@ -480,6 +480,10 @@ public class MagicRealmGUI {
 		
 	}
 	
+	public void setMapBrain(MapBrain newMapBrain){
+		mapBrain = newMapBrain;
+	}
+	
 } /* CLOSES CLASS */
 
 

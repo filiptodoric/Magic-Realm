@@ -3,6 +3,7 @@ package View;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.io.*;
 
 import javax.swing.*;
 
@@ -14,7 +15,7 @@ import ObjectClasses.HexTile;
 import ObjectClasses.MapChit;
 import ObjectClasses.Native;
 
-public class MapBrain extends MouseAdapter{
+public class MapBrain extends MouseAdapter implements Serializable{
 
 	JLayeredPane label;
 	ArrayList<HexTile> tiles;

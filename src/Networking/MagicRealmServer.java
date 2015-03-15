@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
+import View.MapBrain;
+
 /**
  * The main controller for the server side of the game. Spawns Handler objects 
  * (aka threads) for each new client that connects, and also does the processing 
@@ -23,6 +25,13 @@ public class MagicRealmServer implements Runnable{
      * already in use.
      */
     private static HashSet<String> names = new HashSet<String>();
+    
+    /**
+     * The set of all names of players on the server.  Maintained
+     * so that we can check that new clients are not registering name
+     * already in use.
+     */
+    private static MapBrain centralMap;
 
     /**
      * The set of all the print writers for all the clients.  This
@@ -151,6 +160,20 @@ public class MagicRealmServer implements Runnable{
                     for (ObjectOutputStream writer : writers) {
                         writer.writeObject("GAMECANSTART");
                     }
+                }
+                // When the first player joins the game, they set the map for all players,
+                // and subsequent players receive the map from the server...
+                if (centralMap == null){
+                	for (ObjectOutputStream writer : writers) {
+                        writer.writeObject("SENDMAP:"+name);
+                        Object objIn = in.readObject();
+                        if (objIn != null){
+                        	centralMap = (MapBrain) objIn;
+                        }
+                    }
+                }
+                else{
+                	out.writeObject(centralMap);
                 }
                 // Main loop for processing commands sent from the client!
                 while (true) {

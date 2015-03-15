@@ -1,11 +1,12 @@
 package ObjectClasses;
 
 import java.awt.Rectangle;
+import java.io.Serializable;
 import java.util.ArrayList;
 /**
  * The clearing class, used to contain information about a clearing on the map.
  */
-public class Clearing {
+public class Clearing implements Serializable{
 	private Rectangle locationRect;
 	private String name;
 	private ArrayList<String> adjacentClearings;
