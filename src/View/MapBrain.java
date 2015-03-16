@@ -22,7 +22,6 @@ public class MapBrain extends MouseAdapter implements Serializable{
 	int counter;
 	String hexName;
 	String inpAdjTiles;
-	// Demo variable!
 	Clearing currentClearing;
 	BoxOfMapChits mapChits;
 	
@@ -33,7 +32,7 @@ public class MapBrain extends MouseAdapter implements Serializable{
 		counter = 0;
 		initClearings();	
 	}
-	
+
 	public ArrayList<HexTile> getTiles(){
 		return tiles;
 	}

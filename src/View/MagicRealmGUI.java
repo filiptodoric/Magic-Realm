@@ -169,7 +169,7 @@ public class MagicRealmGUI {
 		for (Component component : desktopPane.getComponents()){
 			if (component.getName() != null && component.getName().equals("Magic Realm Map")){
 				desktopPane.remove(component);
-				JScrollPane mapScrollPane = new JScrollPane(map);
+				JScrollPane mapScrollPane = new JScrollPane(getMap());
 				JInternalFrame mapInternalFrame = new JInternalFrame("Magic Realm Map");
 				mapInternalFrame.setSize(700, 725);
 				mapInternalFrame.setMaximizable(true);
@@ -481,7 +481,9 @@ public class MagicRealmGUI {
 	}
 	
 	public void setMapBrain(MapBrain newMapBrain){
+		map.removeMouseListener(mapBrain);
 		mapBrain = newMapBrain;
+		map.addMouseListener(mapBrain);
 	}
 	
 } /* CLOSES CLASS */

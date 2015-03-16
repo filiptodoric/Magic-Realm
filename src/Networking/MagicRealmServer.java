@@ -166,19 +166,26 @@ public class MagicRealmServer implements Runnable{
                 if (centralMap == null){
                 	for (ObjectOutputStream writer : writers) {
                         writer.writeObject("SENDMAP:"+name);
-                        Object objIn = in.readObject();
-                        if (objIn != null){
-                        	centralMap = (MapBrain) objIn;
-                        }
+                    }
+                    Object objIn = in.readObject();
+                    if (objIn != null){
+                    	centralMap = (MapBrain) objIn;
                     }
                 }
                 else{
                 	out.writeObject(centralMap);
+                	out.reset();
                 }
                 // Main loop for processing commands sent from the client!
                 while (true) {
                 	Object objIn = in.readObject();
-                    String input = (String)objIn;
+                	String input = null;
+                	if (objIn instanceof MapBrain){
+                		syncMap(objIn);
+                	}
+                	else{
+                        input = (String)objIn;
+                	}
                     if (input == null) {
                         return;
                     }
@@ -235,12 +242,27 @@ public class MagicRealmServer implements Runnable{
             			Thread.sleep(1000);
             		}
             	}
+            	for (ObjectOutputStream writer : writers) {
+					writer.writeObject("SENDMAP:"+currName);
+            	}
+            	Object objIn = in.readObject();
+            	syncMap(objIn);
             	System.out.println(currName + " has completed their round!");
 			}
 			if (day != 28){
 				day++;
 				newRound();
 			}
+		}
+
+		private void syncMap(Object objIn) throws IOException {
+    		centralMap = (MapBrain) objIn;
+        	for (ObjectOutputStream writer : writers) {
+        		if (centralMap != null){
+    				out.writeObject(centralMap);
+    				out.reset();
+        		}
+        	}
 		}
 
 		private void handleGameOver(){
