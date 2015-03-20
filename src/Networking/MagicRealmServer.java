@@ -120,6 +120,7 @@ public class MagicRealmServer implements Runnable{
                 // Create character streams for the socket.
                 out = new ObjectOutputStream(socket.getOutputStream());
                 out.flush();
+                writers.add(out);
                 in = new ObjectInputStream(socket.getInputStream());
 
                 // Request a name from this client.  Keep requesting until
@@ -140,6 +141,20 @@ public class MagicRealmServer implements Runnable{
                     }
                 }
 
+                // When the first player joins the game, they set the map for all players,
+                // and subsequent players receive the map from the server...
+                if (centralMap == null){
+                	out.writeObject("SENDMAP:"+name);
+                    Object objIn = in.readObject();
+                    if (objIn != null){
+                    	centralMap = (MapBrain) objIn;
+                    }
+                }
+                else{
+                	out.writeObject(centralMap);
+                	out.reset();
+                }
+
 
                 while (true) {
                     out.writeObject("CHOOSECHARACTER:" + getAvailableCharacterString());
@@ -154,7 +169,6 @@ public class MagicRealmServer implements Runnable{
                         }
                     }
                 }
-                writers.add(out);
                 System.out.println("User " + name + " connected and communicating on port " + socket.getPort());
                 for (ObjectOutputStream writer : writers) {
                 	writer.writeObject("MESSAGE " + name + " has now joined the server, playing as " + charName);
@@ -165,21 +179,6 @@ public class MagicRealmServer implements Runnable{
                     for (ObjectOutputStream writer : writers) {
                         writer.writeObject("GAMECANSTART");
                     }
-                }
-                // When the first player joins the game, they set the map for all players,
-                // and subsequent players receive the map from the server...
-                if (centralMap == null){
-                	for (ObjectOutputStream writer : writers) {
-                        writer.writeObject("SENDMAP:"+name);
-                    }
-                    Object objIn = in.readObject();
-                    if (objIn != null){
-                    	centralMap = (MapBrain) objIn;
-                    }
-                }
-                else{
-                	out.writeObject(centralMap);
-                	out.reset();
                 }
                 // Main loop for processing commands sent from the client!
                 while (true) {

@@ -42,7 +42,6 @@ public class MagicRealmClient implements Runnable {
     public MagicRealmClient() {
     	gui = new MagicRealmGUI();
     	secretRoutes = new ListOfSecretRoutes();
-    	dwellingChits = gui.getMapBrain().findDwellings();
     	setActionListeners();
     	day = 1;
     }
@@ -387,8 +386,8 @@ public class MagicRealmClient implements Runnable {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+            	dwellingChits = gui.getMapBrain().findDwellings();
             	player = new Player(name, character, dwellingChits);
-            	name = null;
             	setCharacterActionListeners();
             	placeCharacter(gui.getStartLocation(player.getCharacter().getStartLocations()));
             	refreshMap();
@@ -415,7 +414,7 @@ public class MagicRealmClient implements Runnable {
             	}
             } else if (line.startsWith("MESSAGE")){
             } else if (line.startsWith("SENDMAP:")){
-            	if (line.contains(player.getName())){
+            	if (line.contains(name)){
             		try {
 						out.writeObject(gui.getMapBrain());
 						out.reset();

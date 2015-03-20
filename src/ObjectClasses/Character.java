@@ -53,27 +53,27 @@ public class Character extends Chit{
 		for (Chit dwelling : dwellings){
 			switch(name){
 			case "Captain":
-				if ((dwelling.getName() == "Inn") || (dwelling.getName() == "House") || (dwelling.getName() == "Guard")){
+				if ((dwelling.getName().equals("Inn")) || (dwelling.getName().equals("House")) || (dwelling.getName().equals("Guard"))){
 					startClearings.add(dwelling);
 				}
 				break;
 			case "Swordsman":
-				if ((dwelling.getName() == "Inn")){
+				if ((dwelling.getName().equals("Inn"))){
 					startClearings.add(dwelling);
 				}
 				break;
 			case "Amazon":
-				if ((dwelling.getName() == "Inn")){
+				if ((dwelling.getName().equals("Inn"))){
 					startClearings.add(dwelling);
 				}
 				break;
 			case "Dwarf":
-				if ((dwelling.getName() == "Inn") || (dwelling.getName() == "Guard")){
+				if ((dwelling.getName().equals("Inn")) || (dwelling.getName().equals("Guard"))){
 					startClearings.add(dwelling);
 				}
 				break;
 			case "Elf":
-				if ((dwelling.getName() == "Inn")){
+				if (dwelling.getName().equals("Inn")){
 					startClearings.add(dwelling);
 				}
 				break;
