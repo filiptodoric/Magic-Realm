@@ -472,7 +472,12 @@ public class MagicRealmGUI {
 		}
 	    int i = JOptionPane.showOptionDialog(null, "Select your starting location...", "Starting Location",
 	        JOptionPane.DEFAULT_OPTION, 0, null, options, options[0]);
-	    return dwellings.get(i).getLetter();
+	    for (Chit dwelling : dwellings){
+			if (dwelling.getName().equals(options[i])){
+				return dwelling.getLetter();
+			}
+		}
+	    return null;
 	}
 
 	public void showCheatPanel() {

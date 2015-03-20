@@ -68,9 +68,6 @@ public class MagicRealmClient implements Runnable {
     		for (Clearing clearing : tile.getClearings()){
     			int offset = 0;
     			for (Chit chit : clearing.getChits()){
-    				if (chit.getName().equals("Amazon")){
-    					System.out.println("Amazon found!");
-    				}
     				gui.addImage(chit.getName(), 
     						(int)clearing.getArea().getX() - offset, 
     						(int)clearing.getArea().getY() - offset, 
@@ -395,8 +392,6 @@ public class MagicRealmClient implements Runnable {
             	setCharacterActionListeners();
             	placeCharacter(gui.getStartLocation(player.getCharacter().getStartLocations()));
             	refreshMap();
-            } else if (line.startsWith("INVALIDNAME")){
-            } else if (line.startsWith("NAMEACCEPTED")){
             } else if (line.startsWith("GAMECANSTART")){
             	gui.startGameButton.setEnabled(true);
             } else if (line.startsWith("GAMECAN'TSTART")){
@@ -428,14 +423,6 @@ public class MagicRealmClient implements Runnable {
 						e.printStackTrace();
 					}
             	}
-            }else if (line.startsWith("Score:")){
-            } else if (line.startsWith("Players Active:")){
-            } else if (line.startsWith("DENIED")){
-            } else if (line.startsWith("LOCKCATEGORY:")){
-            } else if (line.startsWith("GAMEOVER")){
-            } else if (line.startsWith("WINNER:")){
-            } else if (line.startsWith("REMOVE:")){
-            	
             }
         }
     }

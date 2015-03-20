@@ -59,6 +59,11 @@ public class MagicRealmServer implements Runnable{
      * The server's copy of playable characters.
      */
     static ArrayList<String> playableCharacters;
+    
+    /**
+     * A tracker to see if the map has been recently synced.
+     */
+    private static boolean isSynced;
 
     /**
      * The application main method, which just listens on a port and
@@ -179,32 +184,28 @@ public class MagicRealmServer implements Runnable{
                 // Main loop for processing commands sent from the client!
                 while (true) {
                 	Object objIn = in.readObject();
-                	String input = null;
                 	if (objIn instanceof MapBrain){
                 		syncMap(objIn);
                 	}
                 	else{
-                        input = (String)objIn;
+                        String input = (String)objIn;
+                        if (input.equals("STARTGAME")){
+                        	for (ObjectOutputStream writer : writers) {
+                                writer.writeObject("GAMESTART");
+                                gameInProgress = true;
+                                day = 1;
+                                newRound();
+                            }
+                        }
+                        else if (input.startsWith("MESSAGE:")){
+                            for (ObjectOutputStream writer : writers) {
+                                writer.writeObject("MESSAGE:" + name + ": " + input.substring(8));
+                            }
+                        }
+                        else if (input.startsWith("COMPLETE")){
+                            playerFinished = true;
+                        }
                 	}
-                    if (input == null) {
-                        return;
-                    }
-                    if (input.equals("STARTGAME")){
-                    	for (ObjectOutputStream writer : writers) {
-                            writer.writeObject("GAMESTART");
-                            gameInProgress = true;
-                            day = 1;
-                            newRound();
-                        }
-                    }
-                    else if (input.startsWith("MESSAGE:")){
-                        for (ObjectOutputStream writer : writers) {
-                            writer.writeObject("MESSAGE:" + name + ": " + input.substring(8));
-                        }
-                    }
-                    else if (input.startsWith("COMPLETE")){
-                        playerFinished = true;
-                    }
             	}
             } catch (IOException e) {
                 System.out.println(e);
@@ -242,11 +243,19 @@ public class MagicRealmServer implements Runnable{
             			Thread.sleep(1000);
             		}
             	}
+            	isSynced = false;
             	for (ObjectOutputStream writer : writers) {
 					writer.writeObject("SENDMAP:"+currName);
             	}
-            	Object objIn = in.readObject();
-            	syncMap(objIn);
+            	if (currName.equals(name)){
+            		Object objIn = in.readObject();
+            		syncMap(objIn);
+            	}
+            	else{
+                	while(!isSynced){
+            			Thread.sleep(1000);
+            		}
+            	}
             	System.out.println(currName + " has completed their round!");
 			}
 			if (day != 28){
@@ -259,10 +268,11 @@ public class MagicRealmServer implements Runnable{
     		centralMap = (MapBrain) objIn;
         	for (ObjectOutputStream writer : writers) {
         		if (centralMap != null){
-    				out.writeObject(centralMap);
-    				out.reset();
+    				writer.writeObject(centralMap);
+    				writer.reset();
         		}
         	}
+        	isSynced = true;
 		}
 
 		private void handleGameOver(){
