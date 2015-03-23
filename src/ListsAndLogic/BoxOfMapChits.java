@@ -1,5 +1,6 @@
 package ListsAndLogic;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -7,7 +8,7 @@ import ObjectClasses.Chit;
 import ObjectClasses.HexTile;
 import ObjectClasses.MapChit;
 
-public class BoxOfMapChits {
+public class BoxOfMapChits implements Serializable{
 	private HashSet<MapChit> warningChits;
 	private HashSet<MapChit> siteSoundChits;
 	

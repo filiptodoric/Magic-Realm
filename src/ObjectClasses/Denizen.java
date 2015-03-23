@@ -1,9 +1,11 @@
 package ObjectClasses;
 
+import java.io.Serializable;
+
 /**
  * The denizen class. Extends chit for common variables and classes.
  */
-public class Denizen extends Chit{
+public class Denizen extends Chit implements Serializable{
 	boolean sharpnessStar;
 	int moveTime;
 	int attackTime;

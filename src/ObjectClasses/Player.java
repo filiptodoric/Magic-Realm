@@ -1,12 +1,14 @@
 package ObjectClasses;
 
+import java.util.ArrayList;
+
 public class Player {
 	Character character;
 	String playerName;
 	
-	public Player(String inpName, String selectedCharacter){
+	public Player(String inpName, String selectedCharacter, ArrayList<Chit> startClearings){
 		playerName = inpName;
-		character = new Character(selectedCharacter);
+		character = new Character(selectedCharacter, startClearings);
 	}
 	
 	public Character getCharacter(){

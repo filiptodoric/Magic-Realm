@@ -1,12 +1,13 @@
 package ObjectClasses;
 
 import java.awt.Color;
+import java.io.Serializable;
 
 /**
  * The map chit class. Implements a "Type" enum for each type of map chit, use this
  * for defining the type of map chit being created.
  */
-public class MapChit extends Chit{
+public class MapChit extends Chit implements Serializable{
 	Color colour;
 	Type type;
 	

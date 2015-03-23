@@ -5,9 +5,12 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import ObjectClasses.TurnsTableModel;
 
+import ObjectClasses.Chit;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class MagicRealmGUI {
 		
@@ -170,7 +173,7 @@ public class MagicRealmGUI {
 		for (Component component : desktopPane.getComponents()){
 			if (component.getName() != null && component.getName().equals("Magic Realm Map")){
 				desktopPane.remove(component);
-				JScrollPane mapScrollPane = new JScrollPane(map);
+				JScrollPane mapScrollPane = new JScrollPane(getMap());
 				JInternalFrame mapInternalFrame = new JInternalFrame("Magic Realm Map");
 				mapInternalFrame.setSize(700, 725);
 				mapInternalFrame.setMaximizable(true);
@@ -478,10 +481,35 @@ public class MagicRealmGUI {
 	    return JOptionPane.showOptionDialog(null, "What type of search do you want to perform?", "Search",
 	        JOptionPane.DEFAULT_OPTION, 0, null, buttons, buttons[1]);
 	}
+	
+	public String getStartLocation(ArrayList<Chit> dwellings) {
+		ArrayList<String> dwellingNames = new ArrayList<String>();
+		for (Chit dwelling : dwellings){
+			dwellingNames.add(dwelling.getName());
+		}
+		String[] options = new String[dwellingNames.size()];
+		for (int j = 0; j < options.length; j++){
+			options[j] = dwellingNames.get(j);
+		}
+	    int i = JOptionPane.showOptionDialog(null, "Select your starting location...", "Starting Location",
+	        JOptionPane.DEFAULT_OPTION, 0, null, options, options[0]);
+	    for (Chit dwelling : dwellings){
+			if (dwelling.getName().equals(options[i])){
+				return dwelling.getLetter();
+			}
+		}
+	    return null;
+	}
 
 	public void showCheatPanel() {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public void setMapBrain(MapBrain newMapBrain){
+		map.removeMouseListener(mapBrain);
+		mapBrain = newMapBrain;
+		map.addMouseListener(mapBrain);
 	}
 	
 } /* CLOSES CLASS */

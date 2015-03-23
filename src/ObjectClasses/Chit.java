@@ -1,8 +1,11 @@
 package ObjectClasses;
+
+import java.io.Serializable;
+
 /**
  * The base class for chits.
  */
-public class Chit {
+public class Chit implements Serializable{
 	String name = null;
 	String letter = null;
 	

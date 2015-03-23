@@ -1,6 +1,8 @@
 package ObjectClasses;
 
-public class Native extends Denizen{
+import java.io.Serializable;
+
+public class Native extends Denizen implements Serializable{
 	String id;
 	public Native(String inputName, String inpLetter, boolean isSharp,
 			int inpMoveTime, int inpAtkTime, String inpID) {

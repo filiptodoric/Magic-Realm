@@ -1,8 +1,9 @@
 package ObjectClasses;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class HexTile {
+public class HexTile implements Serializable{
 	private ArrayList<Clearing> clearings;
 	private ArrayList<MapChit> chits;
 	private String name;

@@ -8,6 +8,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import ListsAndLogic.ListOfSecretRoutes;
 import ListsAndLogic.ListOfSecretRoutes;
@@ -17,6 +18,7 @@ import ObjectClasses.HexTile;
 import ObjectClasses.MapChit;
 import ObjectClasses.Player;
 import View.MagicRealmGUI;
+import View.MapBrain;
 
 /**
  * The main controller for the client side of the game. Incorporates networking 
@@ -35,6 +37,7 @@ public class MagicRealmClient implements Runnable {
     int turns;
     int day;
     ArrayList<String> playableCharacters;
+    ArrayList<Chit> dwellingChits;
     
     public MagicRealmClient() {
     	gui = new MagicRealmGUI();
@@ -77,22 +80,31 @@ public class MagicRealmClient implements Runnable {
     	gui.refreshMapInternalFrame();
     }
     
-    private void placeCharacter(){
+    private void placeCharacter(String targetClearing){
     	if (player.getCharacter().getClearing() == null){
-    		player.getCharacter().setClearing(gui.getMapBrain().findInn());
+    		player.getCharacter().setClearing(targetClearing);
     	}
-    	for (HexTile tile : gui.getMapBrain().getTiles()){
-    		for (Clearing clearing : tile.getClearings()){
-    			if (clearing.getName().equals(player.getCharacter().getClearing()) &&
-    					!clearing.getChits().contains(player.getCharacter())){
-    				clearing.addChit(player.getCharacter());
-    			}
-    			else if (!clearing.getName().equals(player.getCharacter().getClearing()) &&
-    					clearing.getChits().contains(player.getCharacter())){
-    				clearing.removeChit(player.getCharacter());
-    			}
-    		}
+    	else{
+        	// Remove the player's chit(s) from any clearing that isn't the target clearing,
+    		// and add it to the target clearing
+        	for (HexTile tile : gui.getMapBrain().getTiles()){
+        		for (Clearing clearing : tile.getClearings()){
+        			if (clearing.getName().equals(targetClearing)){
+        				clearing.addChit(player.getCharacter());
+        			}
+        			else if (!clearing.getName().equals(targetClearing)){
+        				Iterator<Chit> iter = clearing.getChits().iterator();
+        				while (iter.hasNext()){
+        					if(iter.next().getName().equals(player.getCharacter().getName())){
+        						iter.remove();
+        					}
+        				}
+        			}
+        		}
+        	}
     	}
+    	// Set the player's new clearing
+    	player.getCharacter().setClearing(targetClearing);
     	refreshMap();
     }
     
@@ -242,8 +254,7 @@ public class MagicRealmClient implements Runnable {
 						(!secretRoutes.isSecret(gui.getMapBrain().getCurrentClearing().getName(),getPlayerClearing().getName()) ||
 						player.getCharacter().hasFoundDiscovery(gui.getMapBrain().getCurrentClearing().getName() + "," + getPlayerClearing().getName()))){
 					gui.playerInfoArea.append("\nMoved to " + gui.getMapBrain().getCurrentClearing().getName());
-					player.getCharacter().setClearing(gui.getMapBrain().getCurrentClearing().getName());
-					placeCharacter();
+					placeCharacter(gui.getMapBrain().getCurrentClearing().getName());
 					turns--;
 					if (turns == 0){
 						gui.disableButtons();
@@ -330,8 +341,18 @@ public class MagicRealmClient implements Runnable {
         // Process all messages from server, according to the protocol.
         while (true) {
         	String line = "";
+        	Object obj;
         	try {
-        		line = (String) in.readObject();
+        		obj = in.readObject();
+        		if (obj instanceof MapBrain){
+        			// If we read in a MapBrain from the server at any time, we assign
+        			// it to our map (update from another client), and refresh.
+        			gui.setMapBrain((MapBrain) obj);
+        			refreshMap();
+        		}
+        		else{
+            		line = (String) obj;
+        		}
         	}
         	catch (IOException ioe){
         		System.out.println("The server has been shut down unexpectedly! The game is now over.");
@@ -365,13 +386,11 @@ public class MagicRealmClient implements Runnable {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-            	player = new Player(name, character);
-            	name = null;
+            	dwellingChits = gui.getMapBrain().findDwellings();
+            	player = new Player(name, character, dwellingChits);
             	setCharacterActionListeners();
-            	placeCharacter();
+            	placeCharacter(gui.getStartLocation(player.getCharacter().getStartLocations()));
             	refreshMap();
-            } else if (line.startsWith("INVALIDNAME")){
-            } else if (line.startsWith("NAMEACCEPTED")){
             } else if (line.startsWith("GAMECANSTART")){
             	gui.startGameButton.setEnabled(true);
             } else if (line.startsWith("GAMECAN'TSTART")){
@@ -394,14 +413,15 @@ public class MagicRealmClient implements Runnable {
                 	player.getCharacter().setHidden(false);
             	}
             } else if (line.startsWith("MESSAGE")){
-            } else if (line.startsWith("Score:")){
-            } else if (line.startsWith("Players Active:")){
-            } else if (line.startsWith("DENIED")){
-            } else if (line.startsWith("LOCKCATEGORY:")){
-            } else if (line.startsWith("GAMEOVER")){
-            } else if (line.startsWith("WINNER:")){
-            } else if (line.startsWith("REMOVE:")){
-            	
+            } else if (line.startsWith("SENDMAP:")){
+            	if (line.contains(name)){
+            		try {
+						out.writeObject(gui.getMapBrain());
+						out.reset();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+            	}
             }
         }
     }
