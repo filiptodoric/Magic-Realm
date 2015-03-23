@@ -404,7 +404,7 @@ public class MagicRealmGUI {
 		constraints.gridx = 0;
 		constraints.gridy = 4;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		charInternalFrame.add(turnsTableScrollPane, constraints);
+		//charInternalFrame.add(turnsTableScrollPane, constraints);
 		//constraints.gridx = 0;
 		//constraints.gridy = 4;
 		//constraints.fill = GridBagConstraints.HORIZONTAL;
