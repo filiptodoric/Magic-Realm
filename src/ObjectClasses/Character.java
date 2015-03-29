@@ -9,6 +9,8 @@ public class Character extends Chit{
 	private boolean isHidden;
 	private HashSet<String> discoveries;
 	private int gold;
+	private int notority;
+	private int fame;
 	private ArrayList<Chit> startClearings;
 	
 	public Character(String selectedCharacter, ArrayList<Chit> dwellingLocations) {
@@ -151,6 +153,22 @@ public class Character extends Chit{
 
 	public ArrayList<Chit> getStartLocations() {
 		return startClearings;
+	}
+
+	public void gainNotority(int i) {
+		notority += i;
+	}
+
+	public void gainFame(int i) {
+		fame += i;
+	}
+
+	public int getNotority() {
+		return notority;
+	}
+	
+	public int getFame() {
+		return fame;
 	}
 
 }

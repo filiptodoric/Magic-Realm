@@ -206,12 +206,14 @@ public class MagicRealmClient implements Runnable {
 						break;
 					case 4:
 						gui.playerInfoArea.append("\nYou discovered chits (treasure)!");
-						int foundGold = getPlayerClearing().plunderTreasure();
-						player.getCharacter().gainGold(foundGold);
-						if (foundGold > 0){
-							gui.playerInfoArea.append("\nYou found " + foundGold + " gold! You now have " + 
-						player.getCharacter().getGold() + " gold...");
-						}
+						int[] foundTreasure = getPlayerClearing().plunderTreasure();
+						player.getCharacter().gainGold(foundTreasure[0]);
+						player.getCharacter().gainNotority(foundTreasure[1]);
+						player.getCharacter().gainFame(foundTreasure[2]);
+						 gui.playerInfoArea.append("\nYou found " + foundTreasure[0] + " gold, gained " +
+						foundTreasure[1] + " notority, and gained " + foundTreasure[2] + " fame! You now have " + 
+									player.getCharacter().getGold() + " gold, " + player.getCharacter().getNotority() +
+									" notority, and " + player.getCharacter().getFame() + " fame.");
 						break;
 					case 5:
 						gui.playerInfoArea.append("\nYou didn't find anything.");

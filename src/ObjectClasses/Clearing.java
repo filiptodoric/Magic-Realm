@@ -12,6 +12,8 @@ public class Clearing implements Serializable{
 	private ArrayList<String> adjacentClearings;
 	private ArrayList<Chit> chits;
 	private int treasure;
+	private int notority;
+	private int fame;
 	public Clearing(Rectangle inpLocationRect, String inpName, String adjacentClearingsStr){
 		chits = new ArrayList<Chit>();
 		adjacentClearings = new ArrayList<String>();
@@ -49,6 +51,9 @@ public class Clearing implements Serializable{
 	}
 	
 	public void addChit(Chit chit){
+		if (chit.getName().equals("LOST CITY") || chit.getName().equals("LOST CASTLE")){
+			treasure = (int)(Math.random()*10) + 40;
+		}
 		chits.add(chit);
 	}
 	
@@ -57,19 +62,17 @@ public class Clearing implements Serializable{
 	}
 	
 	public void generateTreasure(){
-		// ~30% chance of deploying gold
-		if ((Math.random()*10) > 7){
-			// Random amount of treasure from 0 to 10
-			treasure = (int)(Math.random()*10);
-		}
-		else{
-			treasure = 0;
-		}
+		treasure = (int)(Math.random()*29) + 10;
+		notority = (int)(Math.random()*19) + 1;
+		fame = (-5) + (int)(Math.random()*35);
 	}
 	
-	public int plunderTreasure(){
+	public int[] plunderTreasure(){
 		int treasureHold = treasure;
+		int notorityHold = notority;
+		int fameHold = fame;
+		int[] returnArray = {treasureHold, notorityHold, fameHold};
 		treasure = 0;
-		return treasureHold;
+		return returnArray;
 	}
 }
