@@ -29,14 +29,27 @@ public class MagicRealmClient implements Runnable {
     ObjectInputStream in;
     ObjectOutputStream out;
     MagicRealmGUI gui;
+    /** A specialized object of secret routes on the map.*/
     ListOfSecretRoutes secretRoutes;
+    /** An object representing the player associated with this client.*/
     Player player;
+    /** The player's name.*/
     String name;
+    /** Name of the player's character.*/
     String character;
+    /** The client's communication socket.*/
     Socket socket;
+    /** An integer count of the player's number of turns.*/
     int turns;
+    /** The current day in the game.*/
     int day;
+    /**A variable for checking the previous use of a character's special ability (move, phase, etc).*/
+    boolean playerSpecialAbility;
+    /**A variable for checking the enabling of cheat mode.*/
+    boolean cheatMode;
+    /**The client's list of available characters to display for the player's selection.*/
     ArrayList<String> playableCharacters;
+    /** A quick reference for the client to have dwelling chits on hand.*/
     ArrayList<Chit> dwellingChits;
     
     public MagicRealmClient() {
@@ -108,10 +121,35 @@ public class MagicRealmClient implements Runnable {
     	refreshMap();
     }
     
+    private int rollDice(){
+    	if (cheatMode){
+    		return gui.getDieRoll();
+    	}
+    	else if (player.getCharacter().getName().equals("Dwarf")){
+    		return (int)(Math.random()*5+1);
+    	}
+    	else{
+    		return Math.max((int)(Math.random()*5+1), (int)(Math.random()*5+1));
+    	}
+    }
+    
     private void setCharacterActionListeners(){
 		gui.tradeButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				// TODO Place function here.
+			}
+		});
+		
+		gui.showCheatButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				if (cheatMode == false){
+					cheatMode = true;
+					gui.playerInfoArea.append("\nCheat mode enabled!");
+				}
+				else{
+					cheatMode = false;
+					gui.playerInfoArea.append("\nCheat mode disabled!");
+				}
 			}
 		});
 		
@@ -121,19 +159,14 @@ public class MagicRealmClient implements Runnable {
 			}
 		});
 		
-		gui.showCheatButton.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				gui.showCheatPanel();
-			}
-		});
-		
 		gui.searchButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				turns--;
 				int searchChoice = gui.getSearchType();
 				String temp = "";
+				int dice = rollDice();
 				if (searchChoice == 0){
-					switch((int)(Math.random()*6+1)){
+					switch(dice){
 					case 1:
 						gui.playerInfoArea.append("\nPick any category!");
 						break;
@@ -178,7 +211,7 @@ public class MagicRealmClient implements Runnable {
 					}
 				}
 				else{
-					switch((int)(Math.random()*6+1)){
+					switch(dice){
 					case 1:
 						gui.playerInfoArea.append("\nPick any category!");
 						break;
@@ -257,7 +290,12 @@ public class MagicRealmClient implements Runnable {
 						player.getCharacter().hasFoundDiscovery(gui.getMapBrain().getCurrentClearing().getName() + "," + getPlayerClearing().getName()))){
 					gui.playerInfoArea.append("\nMoved to " + gui.getMapBrain().getCurrentClearing().getName());
 					placeCharacter(gui.getMapBrain().getCurrentClearing().getName());
-					turns--;
+					if (player.getCharacter().getName().equals("Amazon") && playerSpecialAbility == false){
+						playerSpecialAbility = true;
+					}
+					else{
+						turns--;
+					}
 					if (turns == 0){
 						gui.disableButtons();
 						try {
@@ -410,7 +448,23 @@ public class MagicRealmClient implements Runnable {
             		gui.playerInfoArea.setText("");
                 	gui.playerInfoArea.append("Day " + day + ": It's your turn...");
                 	day++;
-                	turns = 3;
+                	playerSpecialAbility = false;
+                	if (player.getCharacter().getName().equals("Captain")){
+                		for (Chit chit : gui.getMapBrain().findDwellings()){
+                			if (chit.getLetter().equals(player.getCharacter().getClearing())){
+                				turns = 4;
+                			}
+                		}
+                		if (turns != 4){
+                			turns = 3;
+                		}
+					}
+                	else if (player.getCharacter().getName().equals("Dwarf")){
+                		turns = 2;
+                	}
+					else{
+	                	turns = 3;
+					}
                 	gui.enableButtons();
                 	player.getCharacter().setHidden(false);
             	}
