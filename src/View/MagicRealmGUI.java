@@ -511,6 +511,12 @@ public class MagicRealmGUI {
 		mapBrain = newMapBrain;
 		map.addMouseListener(mapBrain);
 	}
+
+	public int getDieRoll() {
+			String[] options = {"1", "2", "3", "4", "5", "6"};
+		    return (JOptionPane.showOptionDialog(null, "Select the dice result!", "*CHEAT MODE* - Dice Roll",
+		        JOptionPane.DEFAULT_OPTION, 0, null, options, options[0])) + 1;
+	}
 	
 } /* CLOSES CLASS */
 
