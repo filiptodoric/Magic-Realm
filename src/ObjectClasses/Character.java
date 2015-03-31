@@ -80,7 +80,7 @@ public class Character extends Chit{
 				}
 				break;
 			case "Black Knight":
-				if ((dwelling.getName() == "Inn")){
+				if (dwelling.getName().equals("Inn")){
 					startClearings.add(dwelling);
 				}
 				break;
