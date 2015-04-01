@@ -3,10 +3,16 @@ package ObjectClasses;
 import java.awt.Rectangle;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.awt.*;
+import java.awt.event.*;
+
+import javax.swing.*;
+
+
 /**
  * The clearing class, used to contain information about a clearing on the map.
  */
-public class Clearing implements Serializable{
+public class Clearing extends MouseAdapter implements Serializable{
 	private Rectangle locationRect;
 	private String name;
 	private ArrayList<String> adjacentClearings;
@@ -20,12 +26,14 @@ public class Clearing implements Serializable{
 		locationRect = inpLocationRect;
 		name = inpName;
 		generateTreasure();
+		//mapBrain = new MapBrain;
+		//this.addMouseListener(MagicRealmGUI.mapBrain);
 		for (String input : adjacentClearingsStr.split(",")){
 			adjacentClearings.add(input);
 		}
 	}
 	/**
-	 * Returns true if a clearing is connected to the current clearing.
+	 * @return Returns true if a clearing is connected to the current clearing.
 	 */
 	public boolean isAdjacentTo(String locationName){
 		if (adjacentClearings.contains(locationName)){
@@ -75,4 +83,65 @@ public class Clearing implements Serializable{
 		treasure = 0;
 		return returnArray;
 	}
+	
+	
+	
+	
+/**************************************************************************************************
+* FUNCTION: hasChits
+* @param  - N/A 
+* @return - boolean (true/false)
+**************************************************************************************************/
+	public boolean hasChits(){
+		if(!(chits.isEmpty())){
+			return true;
+		}
+		return false; 
+	}
+	
+	
+	
+	
+/**************************************************************************************************
+* FUNCTION
+**************************************************************************************************/
+	public void mouseEntered(MouseEvent event){
+		System.out.println("hover action");
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

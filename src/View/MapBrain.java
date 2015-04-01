@@ -17,6 +17,12 @@ import ObjectClasses.Native;
 
 public class MapBrain extends MouseAdapter implements Serializable{
 
+/*-----------------------------------------------------------------------------
+ * FUN FACT: MouseAdapter already implements MouseListener, it makes life 
+ *           easier in that you only need to override the methods that you
+ *           need.  
+ ----------------------------------------------------------------------------*/
+	
 	JLayeredPane label;
 	ArrayList<HexTile> tiles;
 	int counter;
@@ -25,14 +31,17 @@ public class MapBrain extends MouseAdapter implements Serializable{
 	Clearing currentClearing;
 	BoxOfMapChits mapChits;
 	
+	
+	
 	public MapBrain(JLayeredPane mapImage){
 		this.label = mapImage;
-		tiles = new ArrayList<HexTile>();
-		mapChits = new BoxOfMapChits();
-		counter = 0;
+		tiles      = new ArrayList<HexTile>();
+		mapChits   = new BoxOfMapChits();
+		counter    = 0;
 		initClearings();	
 	}
 
+	
 	public ArrayList<HexTile> getTiles(){
 		return tiles;
 	}
@@ -60,6 +69,7 @@ public class MapBrain extends MouseAdapter implements Serializable{
 		tile.addClearing(new Clearing(new Rectangle(350, 720, 100, 80), "EV C5", "EV C2,HP C6"));
 		exchangeValleyChits(tile);
 		tiles.add(tile);
+		
 		
 		/* LEDGES HOTSPOTS */
 		tile = new HexTile("LEDGES");
@@ -295,6 +305,8 @@ public class MapBrain extends MouseAdapter implements Serializable{
 		}
 	}
 	
+	
+	
 	public void generateHexTileCode(Point p){
 		if (counter > 0 && counter < 7){
 			inpAdjTiles = JOptionPane.showInputDialog("Input connected tiles:");
@@ -315,6 +327,23 @@ public class MapBrain extends MouseAdapter implements Serializable{
 			counter = 0;
 		}
 	}
+	/*
+	public void addlisteners(){
+	for (HexTile tile : tiles){
+		for (Clearing clearing : tile.getClearings()){
+			((Rectangle) clearing.getArea()).addMouseListener(this);
+		}
+	}
+	}
+	
+	Handlerclass handler = new Handlerclass();
+	
+	private class Handlerclass extends MouseAdapter{
+		public void mouseClicked(MouseEvent event){
+			System.out.println("kobe");
+		}
+	}
+	*/
 	
 	public void mousePressed(MouseEvent e){
 		Point p = e.getPoint();
@@ -328,6 +357,17 @@ public class MapBrain extends MouseAdapter implements Serializable{
 		}
 	}
 	
+	public void mouseEntered(MouseEvent e){
+	Point p = e.getPoint();
+	for (HexTile tile : tiles){
+		for (Clearing clearing : tile.getClearings()){
+			if (clearing.getArea().contains(p)){
+				currentClearing = clearing;
+				System.out.println("Clearing " + clearing.getName() + " Hovering");
+			}
+		}
+	}
+	}
 	public ArrayList<Chit> findDwellings(){
 		ArrayList<Chit> dwellings = new ArrayList<Chit>();
 		for (HexTile tile : tiles){

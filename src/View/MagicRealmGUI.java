@@ -28,7 +28,7 @@ public class MagicRealmGUI {
 	public JTable     turnsTable;
 	public JTextArea playerInfoArea;
 	public JLayeredPane map;
-	private MapBrain mapBrain;
+	public MapBrain mapBrain;
 	private ImageLookup lookup;
 	private JScrollPane turnsTableScrollPane;
 	
@@ -93,7 +93,7 @@ public class MagicRealmGUI {
 * CONTEXT:  - buildWindow() calls this function. 
 ****************************************************************************************/
 	public JLayeredPane getMap(){
-		map = new JLayeredPane();
+		map      = new JLayeredPane();
 		mapBrain = new MapBrain(map);
 		map.addMouseListener(mapBrain);
 		map.setLayout(new BorderLayout());
