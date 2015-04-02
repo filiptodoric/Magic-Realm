@@ -36,8 +36,8 @@ public class ImageLookup {
 		lookupTable.put("Rogue 3", "short_swordsman.gif");
 		lookupTable.put("Rogue 4", "archer.gif");
 		lookupTable.put("Rogue 5", "assassin.gif");
-		lookupTable.put("Rogue 6", "swordsman.gif");
-		lookupTable.put("Rogue 7", "swordsman.gif");
+		lookupTable.put("Rogue 6", "short_swordsman.gif");
+		lookupTable.put("Rogue 7", "short_swordsman.gif");
 		lookupTable.put("Rogue HQ", "assassin.gif");
 	}
 	
