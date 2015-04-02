@@ -3,10 +3,8 @@ package ObjectClasses;
 import java.awt.Rectangle;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.awt.*;
 import java.awt.event.*;
 
-import javax.swing.*;
 
 
 /**
@@ -16,7 +14,7 @@ public class Clearing extends MouseAdapter implements Serializable{
 	private Rectangle locationRect;
 	private String name;
 	private ArrayList<String> adjacentClearings;
-	private ArrayList<Chit> chits;
+	public ArrayList<Chit> chits;
 	private int treasure;
 	private int notority;
 	private int fame;
@@ -26,8 +24,6 @@ public class Clearing extends MouseAdapter implements Serializable{
 		locationRect = inpLocationRect;
 		name = inpName;
 		generateTreasure();
-		//mapBrain = new MapBrain;
-		//this.addMouseListener(MagicRealmGUI.mapBrain);
 		for (String input : adjacentClearingsStr.split(",")){
 			adjacentClearings.add(input);
 		}
@@ -89,8 +85,8 @@ public class Clearing extends MouseAdapter implements Serializable{
 	
 /**************************************************************************************************
 * FUNCTION: hasChits
-* @param  - N/A 
 * @return - boolean (true/false)
+* PURPOSE:  - Checks if a particular clearing has chits. 
 **************************************************************************************************/
 	public boolean hasChits(){
 		if(!(chits.isEmpty())){
@@ -99,16 +95,10 @@ public class Clearing extends MouseAdapter implements Serializable{
 		return false; 
 	}
 	
+
 	
-	
-	
-/**************************************************************************************************
-* FUNCTION
-**************************************************************************************************/
-	public void mouseEntered(MouseEvent event){
-		System.out.println("hover action");
-	}
-}
+
+} /* CLOSES CLASS */
 
 
 

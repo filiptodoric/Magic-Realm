@@ -14,23 +14,23 @@ import java.util.HashSet;
 
 public class MagicRealmGUI {
 		
-	JFrame       	window;
-	JDesktopPane 	desktopPane;
-	public JButton	startGameButton;
-	public JButton 	tradeButton;
-	public JButton 	restButton;
-	public JButton 	searchButton;
-	public JButton 	moveButton;
-	public JButton 	hideButton;
-	public JButton 	showCardButton;
-	public JButton 	showCheatButton;
-	public JButton 	setupVRButton;
-	public JTable     turnsTable;
-	public JTextArea playerInfoArea;
-	public JLayeredPane map;
-	public MapBrain mapBrain;
-	private ImageLookup lookup;
-	private JScrollPane turnsTableScrollPane;
+	public static JFrame      window;
+	JDesktopPane 	        desktopPane;
+	public JButton	        startGameButton;
+	public JButton 	        tradeButton;
+	public JButton 	        restButton;
+	public JButton 	        searchButton;
+	public JButton 	        moveButton;
+	public JButton 	        hideButton;
+	public JButton 	        showCardButton;
+	public JButton 	        showCheatButton;
+	public JButton 	        setupVRButton;
+	public JTable             turnsTable;
+	public JTextArea          playerInfoArea;
+	public JLayeredPane       map;
+	public MapBrain           mapBrain;
+	public static ImageLookup lookup;
+	private JScrollPane       turnsTableScrollPane;
 	
 	
 /****************************************************************************************

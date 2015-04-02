@@ -327,24 +327,14 @@ public class MapBrain extends MouseAdapter implements Serializable{
 			counter = 0;
 		}
 	}
-	/*
-	public void addlisteners(){
-	for (HexTile tile : tiles){
-		for (Clearing clearing : tile.getClearings()){
-			((Rectangle) clearing.getArea()).addMouseListener(this);
-		}
-	}
-	}
 	
-	Handlerclass handler = new Handlerclass();
 	
-	private class Handlerclass extends MouseAdapter{
-		public void mouseClicked(MouseEvent event){
-			System.out.println("kobe");
-		}
-	}
-	*/
 	
+	
+	
+/**************************************************************************************************
+* FUNCTION: mousePressed
+**************************************************************************************************/
 	public void mousePressed(MouseEvent e){
 		Point p = e.getPoint();
 		for (HexTile tile : tiles){
@@ -352,22 +342,52 @@ public class MapBrain extends MouseAdapter implements Serializable{
 				if (clearing.getArea().contains(p)){
 					currentClearing = clearing;
 					System.out.println("Clearing " + clearing.getName() + " selected");
+					showChits(clearing);
 				}
 			}
 		}
 	}
 	
-	public void mouseEntered(MouseEvent e){
-	Point p = e.getPoint();
-	for (HexTile tile : tiles){
-		for (Clearing clearing : tile.getClearings()){
-			if (clearing.getArea().contains(p)){
-				currentClearing = clearing;
-				System.out.println("Clearing " + clearing.getName() + " Hovering");
+	
+	
+	
+	
+/**************************************************************************************************
+* FUNCTION: showChits                                                                     April. 01
+* @param    thisClearing (Clearing) 
+* PURPOSE:  - To clearly show the chits stacked on a clearing, via a pop up window. 
+* CONTEXT:  - mousePressed() calls this function.
+**************************************************************************************************/
+	
+	public void showChits(Clearing thisClearing){
+		
+		System.out.println("-- In showChits().");
+		
+		if(thisClearing.hasChits()){
+			JPanel chitsPanel = new JPanel();
+			chitsPanel.setLayout(new GridLayout(6,6));
+			for(Chit chit : thisClearing.chits){
+				System.out.println(chit.getName());
+				chitsPanel.add(new JLabel(new ImageIcon(getClass().getResource(
+				MagicRealmGUI.lookup.getValue(chit.getName())))));
 			}
+			String title = thisClearing.getName();
+			JOptionPane.showMessageDialog(MagicRealmGUI.window, chitsPanel,
+					title + "'s Current Chits", JOptionPane.PLAIN_MESSAGE);
+		}
+		else{
+			System.out.println("This clearing does not have chits.");
+			return;
 		}
 	}
-	}
+	
+	
+	
+	
+	
+/**************************************************************************************************
+* FUNCTION: findDwellings
+***************************************************************************************************/
 	public ArrayList<Chit> findDwellings(){
 		ArrayList<Chit> dwellings = new ArrayList<Chit>();
 		for (HexTile tile : tiles){
