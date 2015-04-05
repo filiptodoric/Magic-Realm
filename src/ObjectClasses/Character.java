@@ -11,7 +11,10 @@ public class Character extends Chit{
 	private int gold;
 	private int notority;
 	private int fame;
-	private ArrayList<Chit> startClearings;
+	public ArrayList<Chit> startClearings;
+	public ArrayList<ActionChit> activeActionChits;
+	public ArrayList<ActionChit> woundedActionChits;
+	public ArrayList<ActionChit> fatiguedActionChits;
 	
 	public Character(String selectedCharacter, ArrayList<Chit> dwellingLocations) {
 		super(selectedCharacter,null);
@@ -19,8 +22,12 @@ public class Character extends Chit{
 		isHidden = false;
 		discoveries = new HashSet<String>();
 		startClearings = new ArrayList<Chit>();
+		activeActionChits = new ArrayList<ActionChit>();
+		woundedActionChits = new ArrayList<ActionChit>();
+		fatiguedActionChits = new ArrayList<ActionChit>();
 		initInventory();
 		initStartClearings(dwellingLocations);
+		initStartChits();
 		gold = 10;
 	}
 	
@@ -52,39 +59,130 @@ public class Character extends Chit{
 	}
 	
 	private void initStartClearings(ArrayList<Chit> dwellings){
-		for (Chit dwelling : dwellings){
-			switch(name){
-			case "Captain":
-				if ((dwelling.getName().equals("Inn")) || (dwelling.getName().equals("House")) || (dwelling.getName().equals("Guard"))){
-					startClearings.add(dwelling);
+		if (dwellings != null){
+			for (Chit dwelling : dwellings){
+				switch(name){
+				case "Captain":
+					if ((dwelling.getName().equals("Inn")) || (dwelling.getName().equals("House")) || (dwelling.getName().equals("Guard"))){
+						startClearings.add(dwelling);
+					}
+					break;
+				case "Swordsman":
+					if ((dwelling.getName().equals("Inn"))){
+						startClearings.add(dwelling);
+					}
+					break;
+				case "Amazon":
+					if ((dwelling.getName().equals("Inn"))){
+						startClearings.add(dwelling);
+					}
+					break;
+				case "Dwarf":
+					if ((dwelling.getName().equals("Inn")) || (dwelling.getName().equals("Guard"))){
+						startClearings.add(dwelling);
+					}
+					break;
+				case "Elf":
+					if (dwelling.getName().equals("Inn")){
+						startClearings.add(dwelling);
+					}
+					break;
+				case "Black Knight":
+					if (dwelling.getName().equals("Inn")){
+						startClearings.add(dwelling);
+					}
+					break;
 				}
-				break;
-			case "Swordsman":
-				if ((dwelling.getName().equals("Inn"))){
-					startClearings.add(dwelling);
-				}
-				break;
-			case "Amazon":
-				if ((dwelling.getName().equals("Inn"))){
-					startClearings.add(dwelling);
-				}
-				break;
-			case "Dwarf":
-				if ((dwelling.getName().equals("Inn")) || (dwelling.getName().equals("Guard"))){
-					startClearings.add(dwelling);
-				}
-				break;
-			case "Elf":
-				if (dwelling.getName().equals("Inn")){
-					startClearings.add(dwelling);
-				}
-				break;
-			case "Black Knight":
-				if (dwelling.getName().equals("Inn")){
-					startClearings.add(dwelling);
-				}
-				break;
 			}
+		}
+	}
+	
+	private void initStartChits(){
+		switch(name){
+		case "Captain":
+			activeActionChits.add(new ActionChit("MOVE", "M", 4, 1));
+			activeActionChits.add(new ActionChit("MOVE", "M", 5, 0));
+			activeActionChits.add(new ActionChit("FIGHT", "H", 5, 1));
+			activeActionChits.add(new ActionChit("FIGHT", "M", 5, 0));
+			activeActionChits.add(new ActionChit("FIGHT", "M", 3, 2));
+			activeActionChits.add(new ActionChit("MOVE", "M", 3, 2));
+			activeActionChits.add(new ActionChit("MOVE", "M", 4, 1));
+			activeActionChits.add(new ActionChit("FIGHT", "H", 5, 1));
+			activeActionChits.add(new ActionChit("FIGHT", "M", 4, 1));
+			activeActionChits.add(new ActionChit("MOVE", "M", 4, 1));
+			activeActionChits.add(new ActionChit("FIGHT", "H", 6, 0));
+			activeActionChits.add(new ActionChit("MOVE", "M", 4, 1));
+			break;
+		case "Swordsman":
+			activeActionChits.add(new ActionChit("MOVE", "L", 4, 0));
+			activeActionChits.add(new ActionChit("MOVE", "L", 3, 1));
+			activeActionChits.add(new ActionChit("FIGHT", "L", 3, 1));
+			activeActionChits.add(new ActionChit("MOVE", "L", 3, 1));
+			activeActionChits.add(new ActionChit("FIGHT", "L", 2, 2));
+			activeActionChits.add(new ActionChit("MOVE", "L", 2, 2));
+			activeActionChits.add(new ActionChit("MOVE", "M", 4, 1));
+			activeActionChits.add(new ActionChit("FIGHT", "M", 4, 1));
+			activeActionChits.add(new ActionChit("FIGHT", "M", 3, 2));
+			activeActionChits.add(new ActionChit("FIGHT", "L", 4, 0));
+			activeActionChits.add(new ActionChit("MOVE", "M", 5, 0));
+			activeActionChits.add(new ActionChit("FIGHT", "L", 2, 2));
+			break;
+		case "Amazon":
+			activeActionChits.add(new ActionChit("MOVE", "M", 4, 0));
+			activeActionChits.add(new ActionChit("MOVE", "M", 3, 1));
+			activeActionChits.add(new ActionChit("FIGHT", "L", 4, 0));
+			activeActionChits.add(new ActionChit("MOVE", "M", 4, 0));
+			activeActionChits.add(new ActionChit("FIGHT", "M", 5, 0));
+			activeActionChits.add(new ActionChit("FIGHT", "M", 4, 1));
+			activeActionChits.add(new ActionChit("MOVE", "M", 3, 1));
+			activeActionChits.add(new ActionChit("FIGHT", "M", 3, 2));
+			activeActionChits.add(new ActionChit("FIGHT", "H", 4, 2));
+			activeActionChits.add(new ActionChit("FIGHT", "M", 4, 1));
+			activeActionChits.add(new ActionChit("FIGHT", "M", 3, 2));
+			activeActionChits.add(new ActionChit("MOVE", "M", 3, 1));
+			break;
+		case "Dwarf":
+			activeActionChits.add(new ActionChit("DUCK", "T", 3, 1));
+			activeActionChits.add(new ActionChit("MOVE", "H", 6, 0));
+			activeActionChits.add(new ActionChit("FIGHT", "H", 5, 1));
+			activeActionChits.add(new ActionChit("MOVE", "T", 6, 1));
+			activeActionChits.add(new ActionChit("FIGHT", "H", 6, 0));
+			activeActionChits.add(new ActionChit("FIGHT", "H", 4, 2));
+			activeActionChits.add(new ActionChit("MOVE", "H", 5, 1));
+			activeActionChits.add(new ActionChit("FIGHT", "T", 6, 1));
+			activeActionChits.add(new ActionChit("FIGHT", "H", 4, 2));
+			activeActionChits.add(new ActionChit("MOVE", "T", 5, 2));
+			activeActionChits.add(new ActionChit("FIGHT", "T", 5, 2));
+			activeActionChits.add(new ActionChit("FIGHT", "T", 5, 2));
+			break;
+		case "Elf":
+			activeActionChits.add(new ActionChit("MAGIC", "III", 3, 1));
+			activeActionChits.add(new ActionChit("MAGIC", "III", 4, 1));
+			activeActionChits.add(new ActionChit("MAGIC", "VII", 4, 1));
+			activeActionChits.add(new ActionChit("MAGIC", "VII", 3, 1));
+			activeActionChits.add(new ActionChit("MAGIC", "III", 3, 1));
+			activeActionChits.add(new ActionChit("MAGIC", "III", 2, 1));
+			activeActionChits.add(new ActionChit("MOVE", "L", 3, 1));
+			activeActionChits.add(new ActionChit("FIGHT", "L", 3, 1));
+			activeActionChits.add(new ActionChit("MOVE", "L", 2, 1));
+			activeActionChits.add(new ActionChit("MOVE", "M", 4, 0));
+			activeActionChits.add(new ActionChit("FIGHT", "M", 3, 1));
+			activeActionChits.add(new ActionChit("FIGHT", "M", 4, 0));
+			break;
+		case "Black Knight":
+			activeActionChits.add(new ActionChit("MOVE", "M", 5, 0));
+			activeActionChits.add(new ActionChit("MOVE", "H", 5, 1));
+			activeActionChits.add(new ActionChit("FIGHT", "H", 5, 1));
+			activeActionChits.add(new ActionChit("MOVE", "H", 6, 0));
+			activeActionChits.add(new ActionChit("MOVE", "M", 4, 1));
+			activeActionChits.add(new ActionChit("FIGHT", "H", 6, 0));
+			activeActionChits.add(new ActionChit("FIGHT", "M", 4, 1));
+			activeActionChits.add(new ActionChit("FIGHT", "M", 4, 1));
+			activeActionChits.add(new ActionChit("FIGHT", "M", 5, 0));
+			activeActionChits.add(new ActionChit("MOVE", "H", 4, 2));
+			activeActionChits.add(new ActionChit("FIGHT", "H", 4, 2));
+			activeActionChits.add(new ActionChit("FIGHT", "M", 3, 2));
+			break;
 		}
 	}
 	
