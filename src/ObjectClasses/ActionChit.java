@@ -18,5 +18,13 @@ public class ActionChit extends Chit{
 	public int numAsterisks(){
 		return asteriskCount;
 	}
+	
+	public String toString(){
+		String chitString = getName() + " " + getLetter() + getTime();
+		for (int i = 0; i < numAsterisks(); i++){
+			chitString += "*";
+		}
+		return chitString;
+	}
 
 }

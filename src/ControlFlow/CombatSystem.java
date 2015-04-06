@@ -11,6 +11,7 @@ import java.util.HashSet;
 
 import ObjectClasses.Chit;
 import ObjectClasses.Character;
+import ObjectClasses.Weapon;
 
 public class CombatSystem{
 	CombatSystemGUI gui;
@@ -42,9 +43,7 @@ public class CombatSystem{
 		gui.fleeButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
 				if (checkFlee()){
-					gui.flee();
-					fatigueChit();
-					gui.close();
+					gui.flee(playerCharacter, enemies);
 				}
 			}
 		});
@@ -67,8 +66,16 @@ public class CombatSystem{
 			int index = gui.getTarget(enemies);
 			// Play a fight chit, activate and/or deactivate one belonging, or abandon belongings
 			String choice = (String) gui.getEncounterAction();
-			if (choice.contains("Fight")){
-				Chit fightChit = gui.getFightChit(playerCharacter, enemies);
+			if (choice.contains("Alert")){
+				Chit fightChit1 = gui.getFightChit(playerCharacter, enemies, true);
+				if (fightChit1 != null){
+					String alertedWeapon = gui.getWeaponToAlert(playerCharacter);
+					for (Chit chit : playerCharacter.getInventory()){
+						if (chit.getName().contains(alertedWeapon)){
+							((Weapon) chit).setAlerted(true);
+						}
+					}
+				}
 			}
 			else if (choice.contains("Activate")){
 				gui.activateDeactivateItems(playerCharacter);

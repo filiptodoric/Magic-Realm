@@ -32,5 +32,9 @@ public class Weapon extends Chit{
 	public boolean isValuable(){
 		return valuable;
 	}
+	
+	public void setAlerted(boolean alert){
+		alerted = alert;
+	}
 
 }

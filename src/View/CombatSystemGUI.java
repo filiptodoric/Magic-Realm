@@ -6,12 +6,15 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.*;
 
+import ListsAndLogic.ListOfMonsters;
 import ObjectClasses.ActionChit;
 import ObjectClasses.Character;
 import ObjectClasses.Chit;
+import ObjectClasses.Weapon;
 
 public class CombatSystemGUI{
 	
@@ -25,9 +28,11 @@ public class CombatSystemGUI{
 	private ArrayList<JLabel> enemyLabels;
 	public JButton fleeButton;
 	public JButton fightButton;
+	private ListOfMonsters monsterList;
 	
 	public CombatSystemGUI() {
 		lookup = new ImageLookup();
+		monsterList = new ListOfMonsters();
 		constraints = new GridBagConstraints();
 		constraints.anchor = GridBagConstraints.LINE_START;
 		constraints.fill   = GridBagConstraints.BOTH;
@@ -128,8 +133,21 @@ public class CombatSystemGUI{
 		window.pack();
 	}
 
-	public void flee() {
-		JOptionPane.showMessageDialog(null, "You successfully managed to flee!");
+	public void flee(Character playerCharacter, ArrayList<Chit> enemies) {
+		int maxMoveTime = 999;
+		for (Chit enemy : enemies){
+			HashMap<String, String> values = monsterList.monsters.get(enemy.getName());
+			if (maxMoveTime > Integer.parseInt(values.get("moveSpeed"))){
+				maxMoveTime = Integer.parseInt(values.get("moveSpeed"));
+			}
+		}
+		for (ActionChit chit : playerCharacter.activeActionChits){
+			if (chit.getTime() < maxMoveTime){
+				JOptionPane.showMessageDialog(null, "You successfully managed to flee!");
+				close();
+			}
+		}
+		JOptionPane.showMessageDialog(null, "You can't flee! (No move chits fast enough)");
 	}
 
 	public void close() {
@@ -160,7 +178,7 @@ public class CombatSystemGUI{
 	}
 
 	public Object getEncounterAction() {
-		Object[] options = {"Play a Fight Chit", "Activate/Deactivate Belongings", "Abandon belongings"};
+		Object[] options = {"Alert Weapon", "Activate/Deactivate Belongings", "Abandon belongings"};
 		return JOptionPane.showInputDialog(window, 
 		        "Perform an action:",
 		        "Action Turn",
@@ -180,13 +198,46 @@ public class CombatSystemGUI{
 		
 	}
 
-	public Chit getFightChit(Character playerCharacter, ArrayList<Chit> enemies) {
-		int 
-		ArrayList<String> fightChits = new ArrayList<String>();
+	public Chit getFightChit(Character playerCharacter, ArrayList<Chit> enemies, boolean isEncounterStep) {
+		int maxMoveTime = 999;
+		for (Chit enemy : enemies){
+			HashMap<String, String> values = monsterList.monsters.get(enemy.getName());
+			if (maxMoveTime > Integer.parseInt(values.get("moveSpeed"))){
+				maxMoveTime = Integer.parseInt(values.get("moveSpeed"));
+			}
+		}
+		ArrayList<String> availableChits = new ArrayList<String>();
 		for (ActionChit chit : playerCharacter.activeActionChits){
+			if (isEncounterStep){
+				if ((chit.getTime() < maxMoveTime) && (chit.getName().equals("FIGHT"))){
+					availableChits.add(chit.toString());
+				}
+			}
+			else{
+				if ((chit.getName().equals("FIGHT"))){
+					availableChits.add(chit.getName());
+				}
+			}
 			
 		}
-		
+		Object[] options = availableChits.toArray();
+		if (options.length > 0){
+			String selectedValue = (String) JOptionPane.showInputDialog(window, 
+			        "Select a fight chit:",
+			        "Fight Chit",
+			        JOptionPane.QUESTION_MESSAGE, 
+			        null, 
+			        options, 
+			        options[0]);
+			for (ActionChit chit : playerCharacter.activeActionChits){
+				if (chit.getName().equals(selectedValue)){
+					return chit;
+				}
+			}
+		}
+		else{
+			JOptionPane.showMessageDialog(null, "You can't alert your weapon! (No fight chits fast enough)");
+		}
 		return null;
 	}
 
@@ -221,5 +272,22 @@ public class CombatSystemGUI{
 			}
 		}
 		return directions;
+	}
+
+	public String getWeaponToAlert(Character playerCharacter) {
+		ArrayList<String> availableChits = new ArrayList<String>();
+		for (Chit chit : playerCharacter.getInventory()){
+			if (chit instanceof Weapon){
+				availableChits.add(chit.getName());
+			}
+		}
+		Object[] options = availableChits.toArray();
+		return (String) JOptionPane.showInputDialog(window, 
+		        "Select a weapon to alert:",
+		        "Weapon Selection",
+		        JOptionPane.QUESTION_MESSAGE, 
+		        null, 
+		        options, 
+		        options[0]);
 	}
 }

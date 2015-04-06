@@ -9,7 +9,6 @@ public class ListOfMonsters {
 	 * The list of all monsters, organized in the form of "(name, (variable, value))"
 	 */
 	public static HashMap<String, HashMap<String, String>> monsters = new HashMap<String, HashMap<String, String>>();
-	private static HashMap<String, String> values = new HashMap<String,String>();
 	
 	public ListOfMonsters(){
 		initMonster("Tremendous Flying Dragon", "Tremendous and armored", 
@@ -66,6 +65,7 @@ public class ListOfMonsters {
 	
 	private void initMonster(String str1, String str2, String str3, String str4,
 			String str5, String str6, String str7){
+		HashMap<String, String> values = new HashMap<String,String>();
 		values.put("size", str2);
 		values.put("bounty", str3);
 		values.put("weapon", str4);
@@ -73,6 +73,5 @@ public class ListOfMonsters {
 		values.put("moveSpeed", str6);
 		values.put("attackSpeed", str7);
 		monsters.put(str1, values);
-		values.clear();
 	}
 }
