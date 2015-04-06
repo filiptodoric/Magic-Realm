@@ -9,6 +9,8 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
+import ObjectClasses.ActionChit;
+import ObjectClasses.Character;
 import ObjectClasses.Chit;
 
 public class CombatSystemGUI{
@@ -22,6 +24,7 @@ public class CombatSystemGUI{
 	private ArrayList<JLabel> protagonistLabels;
 	private ArrayList<JLabel> enemyLabels;
 	public JButton fleeButton;
+	public JButton fightButton;
 	
 	public CombatSystemGUI() {
 		lookup = new ImageLookup();
@@ -114,7 +117,7 @@ public class CombatSystemGUI{
 		constraints.gridy = 1;
 		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
-		JButton fightButton = new JButton("Fight!");
+		fightButton = new JButton("Fight!");
 		optionPanel.add(fightButton, constraints);
 		constraints.gridx = 2;
 		constraints.gridy = 1;
@@ -131,5 +134,92 @@ public class CombatSystemGUI{
 
 	public void close() {
 		window.dispose();
+	}
+
+	public int getTarget(ArrayList<Chit> enemies) {
+		ArrayList<String> temp = new ArrayList<String>();
+		for (Chit chit : enemies){
+			temp.add(chit.getName());
+		}
+		Object[] enemyList = temp.toArray();
+		
+		Object selectedEnemy = JOptionPane.showInputDialog(window, 
+		        "Select the enemy to attack:",
+		        "Target",
+		        JOptionPane.QUESTION_MESSAGE, 
+		        null, 
+		        enemyList, 
+		        enemyList[0]);
+		
+		for(int i = 0; i < enemyList.length; i++){
+			if (enemyList[i].equals(selectedEnemy)){
+				return i;
+			}
+		}
+		return 0;
+	}
+
+	public Object getEncounterAction() {
+		Object[] options = {"Play a Fight Chit", "Activate/Deactivate Belongings", "Abandon belongings"};
+		return JOptionPane.showInputDialog(window, 
+		        "Perform an action:",
+		        "Action Turn",
+		        JOptionPane.QUESTION_MESSAGE, 
+		        null, 
+		        options, 
+		        options[0]);
+	}
+
+	public void activateDeactivateItems(Character playerCharacter) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void abandonItems(Character playerCharacter) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public Chit getFightChit(Character playerCharacter, ArrayList<Chit> enemies) {
+		int 
+		ArrayList<String> fightChits = new ArrayList<String>();
+		for (ActionChit chit : playerCharacter.activeActionChits){
+			
+		}
+		
+		return null;
+	}
+
+	public String[] getDirections(Character playerCharacter) {
+		String[] directions = new String[3];
+		Object[] options = {"Thrust Ahead", "Swing to Side", "Smash Down"};
+		directions[0] =  (String) JOptionPane.showInputDialog(window, 
+		        "Select an attack direction:",
+		        "Weapon Direction",
+		        JOptionPane.QUESTION_MESSAGE, 
+		        null, 
+		        options, 
+		        options[0]);
+		options = new Object[]{"Charge Ahead", "Dodge To Side", "Duck Down"};
+		directions[1] =  (String) JOptionPane.showInputDialog(window, 
+		        "Select a maneuver direction:",
+		        "Maneuver Direction",
+		        JOptionPane.QUESTION_MESSAGE, 
+		        null, 
+		        options, 
+		        options[0]);
+		for (Chit item : playerCharacter.getInventory()){
+			if (item.getName().contains("Shield")){
+				options = new Object[]{"Thrust", "Swing", "Smash"};
+				directions[2] =  (String) JOptionPane.showInputDialog(window, 
+				        "Select a shield direction (Protect against):",
+				        "Shield Direction",
+				        JOptionPane.QUESTION_MESSAGE, 
+				        null, 
+				        options, 
+				        options[0]);
+			}
+		}
+		return directions;
 	}
 }

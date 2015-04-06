@@ -4,6 +4,8 @@ import View.CombatSystemGUI;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -13,14 +15,26 @@ import ObjectClasses.Character;
 public class CombatSystem{
 	CombatSystemGUI gui;
 	Character playerCharacter;
-	public CombatSystem() {
+	ObjectInputStream in;
+    ObjectOutputStream out;
+    boolean AIopponent = false;
+    boolean attacker = false;
+    ArrayList<Chit> allies;
+    ArrayList<Chit> enemies;
+	public CombatSystem(ObjectInputStream input, ObjectOutputStream output) {
+		in = input;
+		out = output;
 		gui = new CombatSystemGUI();
 	}
 	
-	public void initFight(ArrayList<Chit> side1, ArrayList<Chit> side2, Character player){
+	public void initFight(ArrayList<Chit> side1, ArrayList<Chit> side2, Character player, boolean isAI, boolean isAttacker){
 		playerCharacter = player;
-		gui.addCharacters(side1, side2);
-		gui.setupOptions(side2);
+		AIopponent = isAI;
+		attacker = isAttacker;
+		allies = side1;
+		enemies = side2;
+		gui.addCharacters(allies, enemies);
+		gui.setupOptions(enemies);
 		setActionListeners();
 	}
 	
@@ -34,8 +48,42 @@ public class CombatSystem{
 				}
 			}
 		});
+		
+		gui.fightButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0) {
+				startCombat();
+			}
+		});
+		
+		if(!attacker){
+			gui.fightButton.setEnabled(false);
+		}
 	}
 	
+	protected void startCombat() {
+		// TODO Auto-generated method stub
+		if (AIopponent){
+			// Select the enemy
+			int index = gui.getTarget(enemies);
+			// Play a fight chit, activate and/or deactivate one belonging, or abandon belongings
+			String choice = (String) gui.getEncounterAction();
+			if (choice.contains("Fight")){
+				Chit fightChit = gui.getFightChit(playerCharacter, enemies);
+			}
+			else if (choice.contains("Activate")){
+				gui.activateDeactivateItems(playerCharacter);
+			}
+			else{
+				gui.abandonItems(playerCharacter);
+			}
+			// Place attack, maneuver, and shield directions (if applicable)
+			String[] directions = gui.getDirections(playerCharacter);
+		}
+		else{
+			
+		}
+	}
+
 	protected void fatigueChit() {
 		// TODO Auto-generated method stub
 		// Get chit to fatigue, fatigue it!
