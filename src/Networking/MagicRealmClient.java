@@ -201,14 +201,16 @@ public class MagicRealmClient implements Runnable {
       	        			if (clearing.getName().equals(targetClearing)){
       	        				//clearing.addChit(player.getCharacter());
       	        				clearing.addChit(new Chit(monsterName, ""));
+      	        				refreshMap();
       	        			}
       	        			else if (!clearing.getName().equals(targetClearing)){
-      	        				Iterator<Chit> iter = clearing.getChits().iterator();
-      	        				while (iter.hasNext()){
-      	        					if(iter.next().getName().equals(player.getCharacter().getName())){
-      	        						iter.remove();
-      	        					}
-      	        				}
+//      	        				Iterator<Chit> iter = clearing.getChits().iterator();
+//      	        				while (iter.hasNext()){
+//      	        					if(iter.next().getName().equals(player.getCharacter().getName())){
+//      	        						iter.remove();
+//      	        					}
+//      	        				}
+      	        				System.out.println("in the else ----- shit");
       	        			}
       	        		}
       	        	}
