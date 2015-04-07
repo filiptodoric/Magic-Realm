@@ -304,7 +304,7 @@ public class CombatSystemGUI{
 					for (ActionChit chit : playerCharacter.activeActionChits){
 						if (chit.getName().equals(targetValue)){
 							// 2 effort limit as per 21.3/1b
-							if ((chit.numAsterisks() + effortAsterisks) <= 2){
+							if ((chit.numAsterisks() + effortAsterisks) < 2){
 								flag = true;
 							}
 							else{
@@ -355,5 +355,13 @@ public class CombatSystemGUI{
 		        null, 
 		        options, 
 		        options[0]);
+	}
+
+	public void showVictorious() {
+		JOptionPane.showMessageDialog(null, "You are victorious!");
+	}
+
+	public void showDefeat() {
+		JOptionPane.showMessageDialog(null, "You were defeated!");
 	}
 }

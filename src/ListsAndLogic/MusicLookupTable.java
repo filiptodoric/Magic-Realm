@@ -6,7 +6,9 @@ public class MusicLookupTable {
 	public HashMap<String, String> table = new HashMap<String, String>();
 	
 	public MusicLookupTable(){
-		table.put("Wolf", "dogGrowling.mp3");
-		table.put("Viper", "snakeHiss.mp3");
+		table.put("Wolf", "music/dogGrowling.mp3");
+		table.put("Viper", "music/snakeHiss.mp3");
+		table.put("battleSuccess", "music/battleSuccess.mp3");
+		table.put("mainTheme", "music/mainTheme.mp3");
 	}
 }

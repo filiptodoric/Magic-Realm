@@ -160,6 +160,7 @@ public class CombatSystem{
 			}
 			if (allies.size() == 0){
 				gui.infoText.setText("You were defeated!");
+				gui.showDefeat();
 				try {
 					Thread.sleep(3000);
 				} catch (InterruptedException e) {
@@ -168,6 +169,11 @@ public class CombatSystem{
 			}
 			else{
 				gui.infoText.setText("You were victorious!");
+				Media hit = new Media(Paths.get(musicLookup.table.get("battleSuccess")).toUri().toString());
+				MediaPlayer mediaPlayer = new MediaPlayer(hit);
+				mediaPlayer.play();
+				gui.showVictorious();
+				gui.close();
 				try {
 					Thread.sleep(3000);
 				} catch (InterruptedException e) {
