@@ -139,39 +139,84 @@ public class MagicRealmClient implements Runnable {
     	    System.out.println("-- In summonMonster().");
     	    
     	    String chitName;
+    	    String clearingPlacement;
+    	    int soundNum;
     	    
     	    HexTile currentTile = gui.mapBrain.getCurrentTile();
     	    
     	    String warningChitLetter = currentTile.getWarningChit().getLetter();
+    	    System.out.println("Warning Letter: " + warningChitLetter);
+    	    
     	    
     	    if (currentTile.hasSoundChit()){
+    		    System.out.println("-- Tile has sound chit!");
     		    chitName = currentTile.getSoundChit().getName();
-    		    int soundNum = currentTile.getSoundNumber();
+    		    System.out.println(chitName);
+    		    soundNum = currentTile.getSoundNumber();
+    		    System.out.println(soundNum);
     	    }else{
+    		    System.out.println("-- Tile does NOT have sound chit!");
     		    chitName = currentTile.getWarningChit().getName();
+    		    System.out.println(chitName);
+    		    soundNum = 1;
     	    }
     	   
+    	    clearingPlacement = currentTile.getName() + " C" + soundNum;
     	    
-    	    
+    	    System.out.println("-- Before switch statement.");
     	    switch(dice){
     			case 1:
-    				if (warningChitLetter.equals("M") && chitName.equals("SMOKE")){
-    					ListOfMonsters.monsters.get("Tremendous Flying Dragon");
+    				System.out.println("-- before if in switch");
+    				if (warningChitLetter.equals("M") /*&& chitName.equals("SMOKE")*/){
+    					System.out.println("-- after if in switch");
+    					placeMonster(clearingPlacement, "Dragon");
     				}
-    			case 2:
-    				
-    			case 3:
-    				
-    			case 4:
-    			
-    			case 5:
-    				
-    			case 6:	
+    				/*else if(warningChitLetter.equals("M") && chitName.equals("FLUTTER")){
+    					placeMonster(clearingPlacement, "Dragon");
+    				}*/
+    				break;
+    			default:
+    				break;
     	    }
         }
         
         
         
+        
+ /**************************************************************************************************
+ * FUNCTION: summonMonster()                                                                 Apr. 06
+ * @param:   dice (int) 
+ **************************************************************************************************/     
+        private void placeMonster(String targetClearing, String monsterName){
+      	  	System.out.println("-- In placeMonster().");
+      	  	String playerClearing = player.getCharacter().getClearing();
+      	    	if (player.getCharacter().getClearing() == null){
+      	    		player.getCharacter().setClearing(targetClearing);
+      	    	}
+      	    	else{
+      	        	// Remove the player's chit(s) from any clearing that isn't the target clearing,
+      	    		// and add it to the target clearing
+      	        	for (HexTile tile : gui.getMapBrain().getTiles()){
+      	        		for (Clearing clearing : tile.getClearings()){
+      	        			if (clearing.getName().equals(targetClearing)){
+      	        				//clearing.addChit(player.getCharacter());
+      	        				clearing.addChit(new Chit(monsterName, ""));
+      	        			}
+      	        			else if (!clearing.getName().equals(targetClearing)){
+      	        				Iterator<Chit> iter = clearing.getChits().iterator();
+      	        				while (iter.hasNext()){
+      	        					if(iter.next().getName().equals(player.getCharacter().getName())){
+      	        						iter.remove();
+      	        					}
+      	        				}
+      	        			}
+      	        		}
+      	        	}
+      	    	}
+      	    	// Set the player's new clearing
+      	    	player.getCharacter().setClearing(playerClearing);
+      	    	refreshMap();
+      	    }
      
     
     
