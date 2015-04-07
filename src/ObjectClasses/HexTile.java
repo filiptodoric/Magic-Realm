@@ -34,6 +34,24 @@ public class HexTile implements Serializable{
 		return null;
 	}
 	
+	public MapChit getSoundChit(){
+		for (MapChit chit : chits){
+			if(chit.getType().equals(MapChit.Type.SOUND)){
+				return chit;
+			}
+		}
+		return null;
+	}
+
+	public MapChit getSiteChit(){
+		for (MapChit chit : chits){
+			if(chit.getType().equals(MapChit.Type.SITE)){
+				return chit;
+			}
+		}
+		return null;
+	}
+	
 	public String getName(){
 		return name;
 	}
