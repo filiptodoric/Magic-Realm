@@ -125,31 +125,41 @@ public class MagicRealmClient implements Runnable {
     
     
     
-/**************************************************************************************************
-* FUNCTION: summonMonster()                                                                 Apr. 06
-* @param:   dice (int) 
-**************************************************************************************************/
-    
-    private void summonMonster(int dice){
-	    
-	    System.out.println("-- In summonMonster().");
-	    
-	    HexTile currentTile = gui.mapBrain.getCurrentTile();
-	    switch(dice){
-			case 1:
-				
-			case 2:
-				
-			case 3:
-				
-			case 4:
-			
-			case 5:
-				
-			case 6:
-				
-	    }
-    }
+    /**************************************************************************************************
+    * FUNCTION: summonMonster()                                                                 Apr. 06
+    * @param:   dice (int) 
+    **************************************************************************************************/
+        
+        private void summonMonster(int dice){
+    	    
+    	    System.out.println("-- In summonMonster().");
+    	    
+    	    String chitName;
+    	    
+    	    HexTile currentTile = gui.mapBrain.getCurrentTile();
+    	    
+    	    String warningChitLetter = currentTile.getWarningChit().getLetter();
+    	    
+    	    if (currentTile.hasSoundChit()){
+    		    chitName = currentTile.getSoundChit().getName();
+    	    }else{
+    		    chitName = currentTile.getWarningChit().getName();
+    	    }
+    	   
+    	    switch(dice){
+    			case 1:
+    				
+    			case 2:
+    				
+    			case 3:
+    				
+    			case 4:
+    			
+    			case 5:
+    				
+    			case 6:	
+    	    }
+        }
     
     
     

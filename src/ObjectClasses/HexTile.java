@@ -65,4 +65,18 @@ public class HexTile implements Serializable{
 	public void addChit(MapChit chit){
 		chits.add(chit);
 	}
-}
+	
+	
+	/**************************************************************************************************
+	* FUNCTION: hasSoundChit()
+	**************************************************************************************************/
+		public boolean hasSoundChit(){
+			if (getSoundChit() == null){
+				return false;
+			}
+			else
+				return true;
+		}
+		
+	}
+
