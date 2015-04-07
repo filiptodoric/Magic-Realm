@@ -75,6 +75,7 @@ public class CombatSystemGUI{
 
 	public void addCharacters(ArrayList<Chit> side1, ArrayList<Chit> side2) {
 		int characterCount = 0;
+		combatPanel.removeAll();
 		for (Chit chit : side1){
 			ImageIcon imageIcon = 
 					new ImageIcon(getClass().getResource(lookup.getValue(chit.getName())));
@@ -300,11 +301,11 @@ public class CombatSystemGUI{
 					        null, 
 					        options, 
 					        options[0]);
-					String targetValue = directions[1].split(" ")[0];
+					String[] targetValue = directions[1].split(" ");
 					for (ActionChit chit : playerCharacter.activeActionChits){
-						if (chit.getName().equals(targetValue)){
+						if (chit.getName().equals(targetValue[0]) && chit.getLetter().equals(targetValue[1]) && chit.getTime() == Integer.parseInt(targetValue[2])){
 							// 2 effort limit as per 21.3/1b
-							if ((chit.numAsterisks() + effortAsterisks) < 2){
+							if ((chit.numAsterisks() + effortAsterisks) <= 2){
 								flag = true;
 							}
 							else{

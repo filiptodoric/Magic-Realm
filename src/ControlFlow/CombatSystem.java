@@ -34,6 +34,7 @@ import ObjectClasses.Weapon;
 public class CombatSystem{
 	CombatSystemGUI gui;
 	Character playerCharacter;
+	Character enemyCharacter;
 	ObjectInputStream in;
     ObjectOutputStream out;
     boolean AIopponent = false;
@@ -71,6 +72,17 @@ public class CombatSystem{
 		setActionListeners();
 	}
 	
+	public void initFightPlayers(Character player, Character targetPlayer, boolean isAttacker){
+		playerCharacter = player;
+		enemyCharacter = targetPlayer;
+		attacker = isAttacker;
+		allies.add(playerCharacter);
+		enemies.add(enemyCharacter);
+		gui.addCharacters(allies, enemies);
+		gui.setupOptions(enemies);
+		setActionListeners();
+	}
+	
 	public void setActionListeners(){
 		Media hit = new Media(Paths.get(musicLookup.table.get(enemies.get(0).getName())).toUri().toString());
 		MediaPlayer mediaPlayer = new MediaPlayer(hit);
@@ -97,8 +109,8 @@ public class CombatSystem{
 	}
 	
 	protected void startCombat() {
-		// TODO Auto-generated method stub
 		if (AIopponent){
+			// AI combat (PvE)
 			while((allies.size() > 0) && (enemies.size() > 0)){
 				round++;
 				ActionChit fightChit1 = null;
@@ -160,6 +172,7 @@ public class CombatSystem{
 			}
 			if (allies.size() == 0){
 				gui.infoText.setText("You were defeated!");
+				gui.addCharacters(allies, enemies);
 				gui.showDefeat();
 				try {
 					Thread.sleep(3000);
@@ -169,6 +182,7 @@ public class CombatSystem{
 			}
 			else{
 				gui.infoText.setText("You were victorious!");
+				gui.addCharacters(allies, enemies);
 				Media hit = new Media(Paths.get(musicLookup.table.get("battleSuccess")).toUri().toString());
 				MediaPlayer mediaPlayer = new MediaPlayer(hit);
 				mediaPlayer.play();
@@ -183,6 +197,96 @@ public class CombatSystem{
 		}
 		else{
 			//PvP, whole other can of worms...
+			while((allies.size() > 0) && (enemies.size() > 0)){
+				round++;
+				ActionChit fightChit1 = null;
+				int effortAsterisks = 0;
+				// Select the enemy
+				int index = gui.getTarget(enemies);
+				// Play a fight chit, activate and/or deactivate one belonging, or abandon belongings
+				String choice = (String) gui.getEncounterAction();
+				if (choice.contains("Alert")){
+					fightChit1 = gui.getFightChit(playerCharacter, enemies, true, null, effortAsterisks);
+					if (fightChit1 != null){
+						effortAsterisks += fightChit1.numAsterisks();
+						String alertedWeapon = gui.getWeaponToAlert(playerCharacter);
+						for (Chit chit : playerCharacter.getInventory()){
+							if (chit.getName().contains(alertedWeapon)){
+								((Weapon) chit).setAlerted(true);
+							}
+						}
+					}
+				}
+				else if (choice.contains("Activate")){
+					// Player can choose to activate armor here
+					gui.activateDeactivateItems(playerCharacter);
+				}
+				else{
+					// Player can abandon items here...not a priority since no weight cap
+					gui.abandonItems(playerCharacter);
+				}
+				// Get fight chit for combat
+				ActionChit fightChit2 = gui.getFightChit(playerCharacter, enemies, false, fightChit1, effortAsterisks);
+				effortAsterisks += fightChit2.numAsterisks();
+				// Place attack, maneuver, and shield directions (if applicable)
+				String[] directions = gui.getDirections(playerCharacter, effortAsterisks);
+				// Attack!
+				gui.infoText.setText("Combat begins!");
+				// Receive enemy if you're the attacker, or send if you're the defender
+				if(attacker){
+					//in.readObject();
+				}
+				else{
+					//out.writeObject("COMBAT:"+enemyCharacter.getName()+"");
+				}
+				ArrayList<String> turns = getTurns(enemies, playerCharacter, fightChit2);
+				ArrayList<Chit> allChits = new ArrayList<Chit>();
+				ArrayList<Chit> deadChits = new ArrayList<Chit>();
+				ArrayList<Integer> enemyManeuvers = initEnemyMoves(enemies);
+				allChits.addAll(allies);
+				allChits.addAll(enemies);
+				for (String characterToPlay : turns){
+					for (Chit chit : allChits){
+						if (chit.getName().equals(characterToPlay)){
+							if (chit.getName().equals(playerCharacter.getName())){
+								playerAttack(fightChit2, index, directions[0], enemyManeuvers.get(index));
+							}
+							else if (enemies.contains(chit)){
+								playEnemyAITurn(chit, allies, directions, enemyManeuvers.get(index));
+							}
+							else if(allies.contains(chit)){
+								// This is incredibly optimistic, but here's the functionality for
+								// allowing allies to fight!
+								playAlliedAITurn(chit);
+							}
+						}
+					}
+				}
+			}
+			if (allies.size() == 0){
+				gui.infoText.setText("You were defeated!");
+				gui.addCharacters(allies, enemies);
+				gui.showDefeat();
+				try {
+					Thread.sleep(3000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			else{
+				gui.infoText.setText("You were victorious!");
+				gui.addCharacters(allies, enemies);
+				Media hit = new Media(Paths.get(musicLookup.table.get("battleSuccess")).toUri().toString());
+				MediaPlayer mediaPlayer = new MediaPlayer(hit);
+				mediaPlayer.play();
+				gui.showVictorious();
+				gui.close();
+				try {
+					Thread.sleep(3000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 	
