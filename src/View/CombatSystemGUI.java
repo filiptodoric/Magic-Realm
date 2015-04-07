@@ -28,6 +28,7 @@ public class CombatSystemGUI{
 	private ArrayList<JLabel> enemyLabels;
 	public JButton fleeButton;
 	public JButton fightButton;
+	public JLabel infoText;
 	private ListOfMonsters monsterList;
 	
 	public CombatSystemGUI() {
@@ -106,7 +107,7 @@ public class CombatSystemGUI{
 	}
 	
 	public void setupOptions(ArrayList<Chit> side2) {
-		JLabel infoText = new JLabel();
+		infoText = new JLabel();
 		String enemies = "A hostile encounter: ";
 		for (Chit enemy : side2){
 			enemies += enemy.getName() + ", ";
@@ -198,7 +199,7 @@ public class CombatSystemGUI{
 		
 	}
 
-	public Chit getFightChit(Character playerCharacter, ArrayList<Chit> enemies, boolean isEncounterStep) {
+	public ActionChit getFightChit(Character playerCharacter, ArrayList<Chit> enemies, boolean isEncounterStep, Chit prevFightChit, int effortAsterisks) {
 		int maxMoveTime = 999;
 		for (Chit enemy : enemies){
 			HashMap<String, String> values = monsterList.monsters.get(enemy.getName());
@@ -207,31 +208,62 @@ public class CombatSystemGUI{
 			}
 		}
 		ArrayList<String> availableChits = new ArrayList<String>();
-		for (ActionChit chit : playerCharacter.activeActionChits){
-			if (isEncounterStep){
-				if ((chit.getTime() < maxMoveTime) && (chit.getName().equals("FIGHT"))){
-					availableChits.add(chit.toString());
-				}
+		if (prevFightChit != null){
+			ArrayList<ActionChit> newChits = new ArrayList<ActionChit>();
+			for (ActionChit chit : playerCharacter.activeActionChits){
+				newChits.add(chit);
 			}
-			else{
-				if ((chit.getName().equals("FIGHT"))){
-					availableChits.add(chit.getName());
+			newChits.remove(prevFightChit);
+			for (ActionChit chit : newChits){
+				if (isEncounterStep){
+					if ((chit.getTime() < maxMoveTime) && (chit.getName().equals("FIGHT"))){
+						availableChits.add(chit.toString());
+					}
 				}
+				else{
+					if ((chit.getName().equals("FIGHT"))){
+						availableChits.add(chit.toString());
+					}
+				}
+				
 			}
-			
+		}
+		else{
+			for (ActionChit chit : playerCharacter.activeActionChits){
+				if (isEncounterStep){
+					if ((chit.getTime() < maxMoveTime) && (chit.getName().equals("FIGHT"))){
+						availableChits.add(chit.toString());
+					}
+				}
+				else{
+					if ((chit.getName().equals("FIGHT"))){
+						availableChits.add(chit.toString());
+					}
+				}
+				
+			}
 		}
 		Object[] options = availableChits.toArray();
 		if (options.length > 0){
-			String selectedValue = (String) JOptionPane.showInputDialog(window, 
-			        "Select a fight chit:",
-			        "Fight Chit",
-			        JOptionPane.QUESTION_MESSAGE, 
-			        null, 
-			        options, 
-			        options[0]);
-			for (ActionChit chit : playerCharacter.activeActionChits){
-				if (chit.getName().equals(selectedValue)){
-					return chit;
+			while(true){
+				String selectedValue = (String) JOptionPane.showInputDialog(window, 
+				        "Select a fight chit:",
+				        "Fight Chit",
+				        JOptionPane.QUESTION_MESSAGE, 
+				        null, 
+				        options, 
+				        options[0]);
+				String[] targetValue = selectedValue.split(" ");
+				for (ActionChit chit : playerCharacter.activeActionChits){
+					if (chit.getName().equals(targetValue[0]) && chit.getLetter().equals(targetValue[1]) && chit.getTime() == Integer.parseInt(targetValue[2])){
+						// 2 effort limit as per 21.3/1b
+						if ((chit.numAsterisks() + effortAsterisks) <= 2){
+							return chit;
+						}
+						else{
+							JOptionPane.showMessageDialog(null, "You can't select this chit...not enough energy! (Asterisk limit)");
+						}
+					}
 				}
 			}
 		}
@@ -241,8 +273,8 @@ public class CombatSystemGUI{
 		return null;
 	}
 
-	public String[] getDirections(Character playerCharacter) {
-		String[] directions = new String[3];
+	public String[] getDirections(Character playerCharacter, int effortAsterisks) {
+		String[] directions = new String[4];
 		Object[] options = {"Thrust Ahead", "Swing to Side", "Smash Down"};
 		directions[0] =  (String) JOptionPane.showInputDialog(window, 
 		        "Select an attack direction:",
@@ -251,18 +283,52 @@ public class CombatSystemGUI{
 		        null, 
 		        options, 
 		        options[0]);
-		options = new Object[]{"Charge Ahead", "Dodge To Side", "Duck Down"};
-		directions[1] =  (String) JOptionPane.showInputDialog(window, 
-		        "Select a maneuver direction:",
-		        "Maneuver Direction",
-		        JOptionPane.QUESTION_MESSAGE, 
-		        null, 
-		        options, 
-		        options[0]);
+		ArrayList<String> availableChits = new ArrayList<String>();
+		for (ActionChit chit : playerCharacter.activeActionChits){
+			if ((chit.getName().equals("MOVE"))){
+					availableChits.add(chit.toString());
+			}
+		}
+		options = availableChits.toArray();
+		if (options.length > 0){
+				while(true){
+					boolean flag = false;
+					directions[1] = (String) JOptionPane.showInputDialog(window, 
+					        "Select a move chit for maneuvering:",
+					        "Move Chit",
+					        JOptionPane.QUESTION_MESSAGE, 
+					        null, 
+					        options, 
+					        options[0]);
+					String targetValue = directions[1].split(" ")[0];
+					for (ActionChit chit : playerCharacter.activeActionChits){
+						if (chit.getName().equals(targetValue)){
+							// 2 effort limit as per 21.3/1b
+							if ((chit.numAsterisks() + effortAsterisks) <= 2){
+								flag = true;
+							}
+							else{
+								JOptionPane.showMessageDialog(null, "You can't select this chit...not enough energy! (Asterisk limit)");
+							}
+						}
+					}
+					if (flag == true){
+						break;
+					}
+				}
+				options = new Object[]{"Charge Ahead", "Dodge To Side", "Duck Down"};
+				directions[2] =  (String) JOptionPane.showInputDialog(window, 
+				        "Select a maneuver direction:",
+				        "Maneuver Direction",
+				        JOptionPane.QUESTION_MESSAGE, 
+				        null, 
+				        options, 
+				        options[0]);
+		}
 		for (Chit item : playerCharacter.getInventory()){
 			if (item.getName().contains("Shield")){
 				options = new Object[]{"Thrust", "Swing", "Smash"};
-				directions[2] =  (String) JOptionPane.showInputDialog(window, 
+				directions[3] =  (String) JOptionPane.showInputDialog(window, 
 				        "Select a shield direction (Protect against):",
 				        "Shield Direction",
 				        JOptionPane.QUESTION_MESSAGE, 
