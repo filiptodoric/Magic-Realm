@@ -128,18 +128,17 @@ public class MagicRealmClient implements Runnable {
     
     
     
-    
-    /**************************************************************************************************
-    * FUNCTION: summonMonster()                                                                 Apr. 06
-    * @param:   dice (int) 
-    **************************************************************************************************/
+/**************************************************************************************************
+* FUNCTION: summonMonster()                                                                 Apr. 06
+* @param:   dice (int) 
+**************************************************************************************************/
         
         private void summonMonster(int dice){
     	    
     	    System.out.println("-- In summonMonster().");
     	    
     	    String chitName;
-    	    String clearingPlacement;
+    	    String onThisClearing;
     	    int soundNum;
     	    
     	    HexTile currentTile = gui.mapBrain.getCurrentTile();
@@ -161,7 +160,8 @@ public class MagicRealmClient implements Runnable {
     		    soundNum = 1;
     	    }
     	   
-    	    clearingPlacement = currentTile.getName() + " C" + soundNum;
+    	    onThisClearing = currentTile.getName() + " C" + soundNum;
+    	    System.out.println("-- Monster being placed on: " + onThisClearing);
     	    
     	    System.out.println("-- Before switch statement.");
     	    switch(dice){
@@ -169,7 +169,7 @@ public class MagicRealmClient implements Runnable {
     				System.out.println("-- before if in switch");
     				if (warningChitLetter.equals("M") /*&& chitName.equals("SMOKE")*/){
     					System.out.println("-- after if in switch");
-    					placeMonster(clearingPlacement, "Dragon");
+    					placeTheMonster("Dragon", onThisClearing);
     				}
     				/*else if(warningChitLetter.equals("M") && chitName.equals("FLUTTER")){
     					placeMonster(clearingPlacement, "Dragon");
@@ -187,7 +187,7 @@ public class MagicRealmClient implements Runnable {
  * FUNCTION: summonMonster()                                                                 Apr. 06
  * @param:   dice (int) 
  **************************************************************************************************/     
-        private void placeMonster(String targetClearing, String monsterName){
+        private void placeTheMonster(String monsterName, String targetClearing){
       	  	System.out.println("-- In placeMonster().");
       	  	String playerClearing = player.getCharacter().getClearing();
       	    	if (player.getCharacter().getClearing() == null){
