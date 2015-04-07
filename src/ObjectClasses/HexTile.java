@@ -52,6 +52,12 @@ public class HexTile implements Serializable{
 		return null;
 	}
 	
+	public int getSoundNumber()	{
+		MapChit soundChit = getSoundChit();
+		int soundChitNumber = Integer.parseInt(soundChit.getLetter());
+		return soundChitNumber;
+	}
+	
 	public String getName(){
 		return name;
 	}
