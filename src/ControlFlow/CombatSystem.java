@@ -72,13 +72,13 @@ public class CombatSystem{
 	}
 	
 	public void setActionListeners(){
-		//Media hit = new Media(Paths.get(musicLookup.table.get(enemies.get(0).getName())).toUri().toString());
-		//MediaPlayer mediaPlayer = new MediaPlayer(hit);
-		//mediaPlayer.play();
+		Media hit = new Media(Paths.get(musicLookup.table.get(enemies.get(0).getName())).toUri().toString());
+		MediaPlayer mediaPlayer = new MediaPlayer(hit);
+		mediaPlayer.play();
 		gui.fleeButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
 				if (checkFlee()){
-					//mediaPlayer.stop();
+					mediaPlayer.stop();
 					gui.flee(playerCharacter, enemies);
 				}
 			}
@@ -86,7 +86,7 @@ public class CombatSystem{
 		
 		gui.fightButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
-				//mediaPlayer.stop();
+				mediaPlayer.stop();
 				startCombat();
 			}
 		});
