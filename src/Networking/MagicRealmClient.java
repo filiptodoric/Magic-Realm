@@ -12,6 +12,7 @@ import java.util.Iterator;
 
 import ListsAndLogic.ListOfSecretRoutes;
 import ListsAndLogic.ListOfSecretRoutes;
+import ListsAndLogic.ListOfMonsters;
 import ObjectClasses.Chit;
 import ObjectClasses.Clearing;
 import ObjectClasses.HexTile;
@@ -19,6 +20,7 @@ import ObjectClasses.MapChit;
 import ObjectClasses.Player;
 import View.MagicRealmGUI;
 import View.MapBrain;
+
 
 /**
  * The main controller for the client side of the game. Incorporates networking 
@@ -29,6 +31,7 @@ public class MagicRealmClient implements Runnable {
     ObjectInputStream in;
     ObjectOutputStream out;
     MagicRealmGUI gui;
+    ListOfMonsters monsterList;
     /** A specialized object of secret routes on the map.*/
     ListOfSecretRoutes secretRoutes;
     /** An object representing the player associated with this client.*/
@@ -54,6 +57,7 @@ public class MagicRealmClient implements Runnable {
     
     public MagicRealmClient() {
     	gui = new MagicRealmGUI();
+    	monsterList = new ListOfMonsters();
     	secretRoutes = new ListOfSecretRoutes();
     	setActionListeners();
     	day = 1;
@@ -121,6 +125,106 @@ public class MagicRealmClient implements Runnable {
     	refreshMap();
     }
     
+    
+    
+    
+    
+    /**************************************************************************************************
+    * FUNCTION: summonMonster()                                                                 Apr. 06
+    * @param:   dice (int) 
+    **************************************************************************************************/
+        
+        private void summonMonster(int dice){
+    	    
+    	    System.out.println("-- In summonMonster().");
+    	    
+    	    String chitName;
+    	    String clearingPlacement;
+    	    int soundNum;
+    	    
+    	    HexTile currentTile = gui.mapBrain.getCurrentTile();
+    	    
+    	    String warningChitLetter = currentTile.getWarningChit().getLetter();
+    	    System.out.println("Warning Letter: " + warningChitLetter);
+    	    
+    	    
+    	    if (currentTile.hasSoundChit()){
+    		    System.out.println("-- Tile has sound chit!");
+    		    chitName = currentTile.getSoundChit().getName();
+    		    System.out.println(chitName);
+    		    soundNum = currentTile.getSoundNumber();
+    		    System.out.println(soundNum);
+    	    }else{
+    		    System.out.println("-- Tile does NOT have sound chit!");
+    		    chitName = currentTile.getWarningChit().getName();
+    		    System.out.println(chitName);
+    		    soundNum = 1;
+    	    }
+    	   
+    	    clearingPlacement = currentTile.getName() + " C" + soundNum;
+    	    
+    	    System.out.println("-- Before switch statement.");
+    	    switch(dice){
+    			case 1:
+    				System.out.println("-- before if in switch");
+    				if (warningChitLetter.equals("M") /*&& chitName.equals("SMOKE")*/){
+    					System.out.println("-- after if in switch");
+    					placeMonster(clearingPlacement, "Dragon");
+    				}
+    				/*else if(warningChitLetter.equals("M") && chitName.equals("FLUTTER")){
+    					placeMonster(clearingPlacement, "Dragon");
+    				}*/
+    				break;
+    			default:
+    				break;
+    	    }
+        }
+        
+        
+        
+        
+ /**************************************************************************************************
+ * FUNCTION: summonMonster()                                                                 Apr. 06
+ * @param:   dice (int) 
+ **************************************************************************************************/     
+        private void placeMonster(String targetClearing, String monsterName){
+      	  	System.out.println("-- In placeMonster().");
+      	  	String playerClearing = player.getCharacter().getClearing();
+      	    	if (player.getCharacter().getClearing() == null){
+      	    		player.getCharacter().setClearing(targetClearing);
+      	    	}
+      	    	else{
+      	        	// Remove the player's chit(s) from any clearing that isn't the target clearing,
+      	    		// and add it to the target clearing
+      	        	for (HexTile tile : gui.getMapBrain().getTiles()){
+      	        		for (Clearing clearing : tile.getClearings()){
+      	        			if (clearing.getName().equals(targetClearing)){
+      	        				//clearing.addChit(player.getCharacter());
+      	        				clearing.addChit(new Chit(monsterName, ""));
+      	        				refreshMap();
+      	        			}
+      	        			else if (!clearing.getName().equals(targetClearing)){
+//      	        				Iterator<Chit> iter = clearing.getChits().iterator();
+//      	        				while (iter.hasNext()){
+//      	        					if(iter.next().getName().equals(player.getCharacter().getName())){
+//      	        						iter.remove();
+//      	        					}
+//      	        				}
+      	        				System.out.println("in the else ----- shit");
+      	        			}
+      	        		}
+      	        	}
+      	    	}
+      	    	// Set the player's new clearing
+      	    	player.getCharacter().setClearing(playerClearing);
+      	    	refreshMap();
+      	    }
+     
+    
+    
+    
+    
+    
     private int rollDice(){
     	if (cheatMode){
     		return gui.getDieRoll();
@@ -132,6 +236,7 @@ public class MagicRealmClient implements Runnable {
     		return Math.max((int)(Math.random()*5+1), (int)(Math.random()*5+1));
     	}
     }
+    
     
     private void setCharacterActionListeners(){
 		gui.tradeButton.addActionListener(new ActionListener(){
@@ -165,6 +270,7 @@ public class MagicRealmClient implements Runnable {
 				int searchChoice = gui.getSearchType();
 				String temp = "";
 				int dice = rollDice();
+				summonMonster(dice);
 				if (searchChoice == 0){
 					switch(dice){
 					case 1:

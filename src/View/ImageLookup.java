@@ -41,6 +41,8 @@ public class ImageLookup {
 		lookupTable.put("Rogue HQ", "assassin.gif");
 		lookupTable.put("Wolf", "wolf.gif");
 		lookupTable.put("Viper", "serpent.gif");
+		lookupTable.put("Dragon", "dragon.gif");
+		
 	}
 	
 	public String getValue(String name){
