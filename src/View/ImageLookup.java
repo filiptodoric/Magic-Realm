@@ -42,6 +42,12 @@ public class ImageLookup {
 		lookupTable.put("Wolf", "wolf.gif");
 		lookupTable.put("Viper", "serpent.gif");
 		lookupTable.put("Dragon", "dragon.gif");
+		lookupTable.put("Serpent", "serpent.gif");
+		lookupTable.put("Giant", "giant.gif");
+		lookupTable.put("Spider", "spider.gif");
+		lookupTable.put("Goblin", "goblin_spear.gif");
+		lookupTable.put("Giant Bat", "bat.gif");
+		
 		
 	}
 	
