@@ -12,6 +12,7 @@ import java.util.Iterator;
 
 import ListsAndLogic.ListOfSecretRoutes;
 import ListsAndLogic.ListOfSecretRoutes;
+import ListsAndLogic.ListOfMonsters;
 import ObjectClasses.Chit;
 import ObjectClasses.Clearing;
 import ObjectClasses.HexTile;
@@ -19,6 +20,7 @@ import ObjectClasses.MapChit;
 import ObjectClasses.Player;
 import View.MagicRealmGUI;
 import View.MapBrain;
+
 
 /**
  * The main controller for the client side of the game. Incorporates networking 
@@ -29,6 +31,7 @@ public class MagicRealmClient implements Runnable {
     ObjectInputStream in;
     ObjectOutputStream out;
     MagicRealmGUI gui;
+    ListOfMonsters monsterList;
     /** A specialized object of secret routes on the map.*/
     ListOfSecretRoutes secretRoutes;
     /** An object representing the player associated with this client.*/
@@ -54,6 +57,7 @@ public class MagicRealmClient implements Runnable {
     
     public MagicRealmClient() {
     	gui = new MagicRealmGUI();
+    	monsterList = new ListOfMonsters();
     	secretRoutes = new ListOfSecretRoutes();
     	setActionListeners();
     	day = 1;
@@ -142,13 +146,18 @@ public class MagicRealmClient implements Runnable {
     	    
     	    if (currentTile.hasSoundChit()){
     		    chitName = currentTile.getSoundChit().getName();
+    		    int soundNum = currentTile.getSoundNumber();
     	    }else{
     		    chitName = currentTile.getWarningChit().getName();
     	    }
     	   
+    	    
+    	    
     	    switch(dice){
     			case 1:
-    				
+    				if (warningChitLetter.equals("M") && chitName.equals("SMOKE")){
+    					ListOfMonsters.monsters.get("Tremendous Flying Dragon");
+    				}
     			case 2:
     				
     			case 3:
@@ -160,6 +169,10 @@ public class MagicRealmClient implements Runnable {
     			case 6:	
     	    }
         }
+        
+        
+        
+     
     
     
     
