@@ -121,6 +121,40 @@ public class MagicRealmClient implements Runnable {
     	refreshMap();
     }
     
+    
+    
+    
+    
+/**************************************************************************************************
+* FUNCTION: summonMonster()                                                                 Apr. 06
+* @param:   dice (int) 
+**************************************************************************************************/
+    
+    private void summonMonster(int dice){
+	    
+	    System.out.println("-- In summonMonster().");
+	    
+	    HexTile currentTile = gui.mapBrain.getCurrentTile();
+	    switch(dice){
+			case 1:
+				
+			case 2:
+				
+			case 3:
+				
+			case 4:
+			
+			case 5:
+				
+			case 6:
+				
+	    }
+    }
+    
+    
+    
+    
+    
     private int rollDice(){
     	if (cheatMode){
     		return gui.getDieRoll();
@@ -132,6 +166,7 @@ public class MagicRealmClient implements Runnable {
     		return Math.max((int)(Math.random()*5+1), (int)(Math.random()*5+1));
     	}
     }
+    
     
     private void setCharacterActionListeners(){
 		gui.tradeButton.addActionListener(new ActionListener(){
@@ -165,6 +200,7 @@ public class MagicRealmClient implements Runnable {
 				int searchChoice = gui.getSearchType();
 				String temp = "";
 				int dice = rollDice();
+				summonMonster(dice);
 				if (searchChoice == 0){
 					switch(dice){
 					case 1:

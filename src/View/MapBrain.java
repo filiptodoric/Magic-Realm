@@ -29,6 +29,7 @@ public class MapBrain extends MouseAdapter implements Serializable{
 	String hexName;
 	String inpAdjTiles;
 	Clearing currentClearing;
+	HexTile currentTile;
 	BoxOfMapChits mapChits;
 	
 	
@@ -340,6 +341,7 @@ public class MapBrain extends MouseAdapter implements Serializable{
 		for (HexTile tile : tiles){
 			for (Clearing clearing : tile.getClearings()){
 				if (clearing.getArea().contains(p)){
+					currentTile = tile;
 					currentClearing = clearing;
 					System.out.println("Clearing " + clearing.getName() + " selected");
 					showChits(clearing);
@@ -407,11 +409,17 @@ public class MapBrain extends MouseAdapter implements Serializable{
 		return currentClearing;
 		
 	}
+	
+	
+	public HexTile getCurrentTile(){
+		return currentTile;
+	}
+	
 
 	public void clearCurrentClearing() {
 		currentClearing = null;
 	}
 
-
+	
 
 }
