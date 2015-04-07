@@ -7,7 +7,6 @@ public class ListOfWeapons {
 	 * The list of all monsters, organized in the form of "(name, (variable, value))"
 	 */
 	public static HashMap<String, HashMap<String, String>> weapons = new HashMap<String, HashMap<String, String>>();
-	private static HashMap<String, String> values = new HashMap<String,String>();
 	
 	public ListOfWeapons(){
 		initMonster("Spear", "Striking", "10");
@@ -30,9 +29,9 @@ public class ListOfWeapons {
 	}
 	
 	private void initMonster(String str1, String str2, String str3){
+		HashMap<String, String> values = new HashMap<String,String>();
 		values.put("atkMethod", str2);
 		values.put("length", str3);
 		weapons.put(str1, values);
-		values.clear();
 	}
 }

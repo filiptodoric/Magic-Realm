@@ -20,7 +20,7 @@ public class ActionChit extends Chit{
 	}
 	
 	public String toString(){
-		String chitString = getName() + " " + getLetter() + getTime();
+		String chitString = getName() + " " + getLetter() + " " + getTime() + " ";
 		for (int i = 0; i < numAsterisks(); i++){
 			chitString += "*";
 		}

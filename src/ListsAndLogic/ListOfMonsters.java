@@ -47,7 +47,7 @@ public class ListOfMonsters {
 		initMonster("Tremendous Octopus", "Tremendous", 
 				"8 FAME and 8 NOTORIETY", null, "False", "3", "4");
 		initMonster("Viper", "Medium and armored", 
-				"1 FAME and 2 NOTORIETY", null, "False", "3", "2");
+				"1 FAME and 2 NOTORIETY", "Tooth/Claw", "False", "3", "2");
 		initMonster("Tremendous Serpent", "Tremendous", 
 				"7 FAME and 7 NOTORIETY", null, "False", "5", "4");
 		initMonster("Ghost", "Medium", 
@@ -59,7 +59,7 @@ public class ListOfMonsters {
 		initMonster("Heavy Flying Dragon", "Heavy and armored", 
 				"5 FAME and 5 NOTORIETY", null, "True", "4", "4");
 		initMonster("Wolf", "Medium", 
-				"0 FAME and 1 NOTORIETY", null, "False", "4", "5");
+				"0 FAME and 1 NOTORIETY", "Tooth/Claw", "False", "4", "5");
 		
 	}
 	

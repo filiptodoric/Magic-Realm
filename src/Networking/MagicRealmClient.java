@@ -7,12 +7,17 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import ListsAndLogic.ListOfSecretRoutes;
 import ListsAndLogic.ListOfSecretRoutes;
 import ListsAndLogic.ListOfMonsters;
+import ListsAndLogic.MusicLookupTable;
 import ObjectClasses.Chit;
 import ObjectClasses.Clearing;
 import ObjectClasses.HexTile;
@@ -31,6 +36,7 @@ public class MagicRealmClient implements Runnable {
     ObjectInputStream in;
     ObjectOutputStream out;
     MagicRealmGUI gui;
+    private MusicLookupTable musicLookup;
     ListOfMonsters monsterList;
     /** A specialized object of secret routes on the map.*/
     ListOfSecretRoutes secretRoutes;
@@ -54,9 +60,17 @@ public class MagicRealmClient implements Runnable {
     ArrayList<String> playableCharacters;
     /** A quick reference for the client to have dwelling chits on hand.*/
     ArrayList<Chit> dwellingChits;
+    /** Music! */
+	Media mainSong;
+	MediaPlayer mediaPlayer;
+    
     
     public MagicRealmClient() {
     	gui = new MagicRealmGUI();
+    	JFXPanel fxPanel = new JFXPanel();
+    	musicLookup = new MusicLookupTable();
+    	mainSong = new Media(Paths.get(musicLookup.table.get("mainTheme")).toUri().toString());
+    	mediaPlayer = new MediaPlayer(mainSong);
     	monsterList = new ListOfMonsters();
     	secretRoutes = new ListOfSecretRoutes();
     	setActionListeners();
@@ -383,6 +397,7 @@ public class MagicRealmClient implements Runnable {
 				}
 				if (turns == 0){
 					gui.disableButtons();
+					mediaPlayer.stop();
 					try {
 						out.writeObject("COMPLETE");
 					} catch (IOException e1) {
@@ -420,6 +435,7 @@ public class MagicRealmClient implements Runnable {
 					}
 					if (turns == 0){
 						gui.disableButtons();
+						mediaPlayer.stop();
 						try {
 							out.writeObject("COMPLETE");
 						} catch (IOException e1) {
@@ -446,6 +462,7 @@ public class MagicRealmClient implements Runnable {
 				}
 				if (turns == 0){
 					gui.disableButtons();
+					mediaPlayer.stop();
 					try {
 						out.writeObject("COMPLETE");
 					} catch (IOException e1) {
@@ -562,11 +579,7 @@ public class MagicRealmClient implements Runnable {
             	gui.startGameButton.setEnabled(false);
             } else if (line.startsWith("ROUNDSTART:")){
             	if (line.contains(player.getName())){
-            		try {
-						Thread.sleep(3000);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
+            		mediaPlayer.play();
             		gui.playerInfoArea.setText("");
                 	gui.playerInfoArea.append("Day " + day + ": It's your turn...");
                 	day++;

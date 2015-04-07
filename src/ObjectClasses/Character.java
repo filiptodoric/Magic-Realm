@@ -38,23 +38,29 @@ public class Character extends Chit{
 			inventory.add(new Weapon("Short Sword", "L", false, 0, false, 1));
 			inventory.add(new Armour("Breastplate", "M"));
 			inventory.add(new Armour("Shield", "M"));
+			break;
 		case "Swordsman":
 			inventory.add(new Weapon("Thrusting Sword", "L", false, 0, false, 1));
+			break;
 		case "Amazon":
 			inventory.add(new Weapon("Short Sword", "L", false, 0, false, 1));
 			inventory.add(new Armour("Helmet", "M"));
 			inventory.add(new Armour("Breastplate", "M"));
 			inventory.add(new Armour("Shield", "M"));
+			break;
 		case "Dwarf":
 			inventory.add(new Weapon("Great Axe", "L", false, 4, false, 1));
 			inventory.add(new Armour("Helmet", "M"));
+			break;
 		case "Elf":
 			inventory.add(new Weapon("Light Bow", "L", false, 1, false, 2));
+			break;
 			// Spells? :O
 		case "Black Knight":
 			inventory.add(new Weapon("Mace", "L", false, 3, false, 0));
 			inventory.add(new Armour("Suit of Armor", "T"));
 			inventory.add(new Armour("Shield", "M"));
+			break;
 		}
 	}
 	
@@ -267,6 +273,14 @@ public class Character extends Chit{
 	
 	public int getFame() {
 		return fame;
+	}
+	
+	public void removeItem(Chit item){
+		for (Chit chit : inventory){
+			if (chit.getName().equals(item.getName())){
+				inventory.remove(chit);
+			}
+		}
 	}
 
 }

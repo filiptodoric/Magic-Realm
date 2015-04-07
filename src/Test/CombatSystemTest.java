@@ -33,7 +33,7 @@ public class CombatSystemTest {
         catch (IOException ioe){
         	System.out.println("Failed to initialize I/O streams with socket!");
         }
-		CombatSystem sys = new CombatSystem(in, out);
+		CombatSystem sys = new CombatSystem(in, out, false);
 		testCharacter = new Character("Amazon", null);
 		ArrayList<Chit> characters = new ArrayList<Chit>();
 		characters.add(new Chit("Amazon", "L"));
