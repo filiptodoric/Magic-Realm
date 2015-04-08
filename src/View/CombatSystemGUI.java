@@ -20,14 +20,9 @@ public class CombatSystemGUI{
 	
 	public JFrame window;
 	private ImageLookup lookup;
-	private JPanel universalPanel;
 	private JPanel combatPanel;
 	private JPanel optionPanel;
 	private GridBagConstraints constraints;
-	private ArrayList<JLabel> protagonistLabels;
-	private ArrayList<JLabel> enemyLabels;
-	public JButton fleeButton;
-	public JButton fightButton;
 	public JLabel infoText;
 	private ListOfMonsters monsterList;
 	
@@ -88,7 +83,6 @@ public class CombatSystemGUI{
 			constraints.gridwidth = 1;
 			constraints.gridheight = 1;
 			combatPanel.add(label, constraints);
-			combatPanel.repaint();
 		}
 		characterCount = 0;
 		for (Chit chit : side2){
@@ -103,7 +97,6 @@ public class CombatSystemGUI{
 			constraints.gridwidth = 1;
 			constraints.gridheight = 1;
 			combatPanel.add(label, constraints);
-			combatPanel.repaint();
 		}
 	}
 	
@@ -120,18 +113,6 @@ public class CombatSystemGUI{
 		constraints.gridwidth = 3;
 		constraints.gridheight = 1;
 		optionPanel.add(infoText, constraints);
-		constraints.gridx = 0;
-		constraints.gridy = 1;
-		constraints.gridwidth = 1;
-		constraints.gridheight = 1;
-		fightButton = new JButton("Fight!");
-		optionPanel.add(fightButton, constraints);
-		constraints.gridx = 2;
-		constraints.gridy = 1;
-		constraints.gridwidth = 1;
-		constraints.gridheight = 1;
-		fleeButton = new JButton("Flee!");
-		optionPanel.add(fleeButton, constraints);
 		window.pack();
 	}
 
@@ -181,7 +162,7 @@ public class CombatSystemGUI{
 	}
 
 	public Object getEncounterAction() {
-		Object[] options = {"Alert Weapon", "Activate/Deactivate Belongings", "Abandon belongings"};
+		Object[] options = {"Alert Weapon", "Flee", "Activate/Deactivate Belongings", "Abandon belongings"};
 		return JOptionPane.showInputDialog(window, 
 		        "Perform an action:",
 		        "Action Turn",
@@ -359,6 +340,14 @@ public class CombatSystemGUI{
 
 	public void showVictorious() {
 		JOptionPane.showMessageDialog(null, "You are victorious!");
+	}
+	
+	public void showFlee() {
+		JOptionPane.showMessageDialog(null, "You managed to flee successfully!");
+	}
+	
+	public void showNoFlee() {
+		JOptionPane.showMessageDialog(null, "You failed to flee successfully!");
 	}
 
 	public void showDefeat() {

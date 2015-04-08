@@ -7,6 +7,8 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
 
+import javafx.embed.swing.JFXPanel;
+
 import javax.swing.JOptionPane;
 
 import ControlFlow.CombatSystem;
@@ -21,27 +23,14 @@ public class CombatSystemTest {
 	static ObjectInputStream in;
 	
 	public static void main(String[] args) {
-		String serverAddress = "";
-        try {
-        	// If left blank, serverAddress will simply be "localhost"
-        	Socket socket = new Socket(serverAddress, config.PORT);
-        	out = new ObjectOutputStream(socket.getOutputStream());
-        	out.flush();
-        	in = new ObjectInputStream(socket.getInputStream());
-        }
-    	catch (SocketException e){
-    		
-    	}
-        catch (IOException ioe){
-        	System.out.println("Failed to initialize I/O streams with socket!");
-        }
-		CombatSystem sys = new CombatSystem(in, out, true);
+		CombatSystem sys = new CombatSystem(true);
+		JFXPanel fxPanel = new JFXPanel();
 		testCharacter = new Character("Amazon", null);
 		ArrayList<Chit> characters = new ArrayList<Chit>();
 		characters.add(new Chit("Amazon", "L"));
 		ArrayList<Chit> enemies = new ArrayList<Chit>();
 		enemies.add(new Chit("Wolf", "L"));
 		//enemies.add(new Chit("Viper", "L"));
-		sys.initFight(characters, enemies, testCharacter, true, true);
+		sys.initFight(characters, enemies, testCharacter, true);
 	}
 }

@@ -14,6 +14,7 @@ import java.util.Iterator;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import ControlFlow.CombatSystem;
 import ListsAndLogic.ListOfSecretRoutes;
 import ListsAndLogic.ListOfSecretRoutes;
 import ListsAndLogic.ListOfMonsters;
@@ -61,6 +62,8 @@ public class MagicRealmClient implements Runnable {
     ArrayList<String> playableCharacters;
     /** A quick reference for the client to have dwelling chits on hand.*/
     ArrayList<Chit> dwellingChits;
+    /** Combat system for fighting.*/
+    CombatSystem combatSystem;
     /** Music! */
 	Media mainSong;
 	MediaPlayer mediaPlayer;
@@ -69,6 +72,7 @@ public class MagicRealmClient implements Runnable {
     public MagicRealmClient() {
     	gui = new MagicRealmGUI();
     	JFXPanel fxPanel = new JFXPanel();
+    	combatSystem = new CombatSystem(cheatMode);
     	musicLookup = new MusicLookupTable();
     	mainSong = new Media(Paths.get(musicLookup.table.get("mainTheme")).toUri().toString());
     	mediaPlayer = new MediaPlayer(mainSong);
@@ -181,32 +185,38 @@ public class MagicRealmClient implements Runnable {
     	    switch(dice){
     			case 1:			
     				if (warningChitLetter.equals("M") && chitName.equals("SMOKE")){
-    					placeTheMonster("Dragon", onThisClearing);
+    					//placeTheMonster("Dragon", onThisClearing);
+    					placeTheMonster("Wolf", onThisClearing);
     				}
     				break;
     			case 2:
     				if (warningChitLetter.equals("M") && chitName.equals("SLITHER")){
-    					placeTheMonster("Serpent", onThisClearing);
+    					//placeTheMonster("Serpent", onThisClearing);
+    					placeTheMonster("Wolf", onThisClearing);
     				}
     				break;
     			case 3:
     				if (warningChitLetter.equals("C")){
-    					placeTheMonster("Goblin", onThisClearing);
+    					//placeTheMonster("Goblin", onThisClearing);
+    					placeTheMonster("Wolf", onThisClearing);
     				}
     				break;
     			case 4: 
     				if (warningChitLetter.equals("M")){
-    					placeTheMonster("Giant", onThisClearing);
+    					//placeTheMonster("Giant", onThisClearing);
+    					placeTheMonster("Wolf", onThisClearing);
     				}
     				break;
     			case 5:
     				if (warningChitLetter.equals("M")){
-    					placeTheMonster("Spider", onThisClearing);
+    					//placeTheMonster("Spider", onThisClearing);
+    					placeTheMonster("Wolf", onThisClearing);
     				}
     				break;
     			case 6: 
     				if (warningChitLetter.equals("M") || warningChitLetter.equals("C")){
-    					placeTheMonster("Giant Bat", onThisClearing);
+    					//placeTheMonster("Giant Bat", onThisClearing);
+    					placeTheMonster("Wolf", onThisClearing);
     				}
     			default:
     				break;
@@ -250,11 +260,6 @@ public class MagicRealmClient implements Runnable {
       	    	player.getCharacter().setClearing(playerClearing);
       	    	refreshMap();
       	    }
-     
-    
-    
-    
-    
     
     private int rollDice(){
     	if (cheatMode){
@@ -286,6 +291,7 @@ public class MagicRealmClient implements Runnable {
 					cheatMode = false;
 					gui.playerInfoArea.append("\nCheat mode disabled!");
 				}
+				combatSystem.setCheatMode(cheatMode);
 			}
 		});
 		
@@ -368,7 +374,6 @@ public class MagicRealmClient implements Runnable {
 				int searchChoice = gui.getSearchType();
 				String temp = "";
 				int dice = rollDice();
-				summonMonster(dice);
 				if (searchChoice == 0){
 					switch(dice){
 					case 1:
@@ -495,11 +500,44 @@ public class MagicRealmClient implements Runnable {
 						player.getCharacter().hasFoundDiscovery(gui.getMapBrain().getCurrentClearing().getName() + "," + getPlayerClearing().getName()))){
 					gui.playerInfoArea.append("\nMoved to " + gui.getMapBrain().getCurrentClearing().getName());
 					placeCharacter(gui.getMapBrain().getCurrentClearing().getName());
+					summonMonster(rollDice());
 					if (player.getCharacter().getName().equals("Amazon") && playerSpecialAbility == false){
 						playerSpecialAbility = true;
 					}
 					else{
 						turns--;
+					}
+					if(gui.getMapBrain().getCurrentClearing().getChits().size() != 1){
+						for(Chit chit : gui.getMapBrain().getCurrentClearing().getChits()){
+							// If it produces a result off the monster lookup table, it's a monster!
+							if(monsterList.monsters.get(chit.getName()) != null){
+								ArrayList<Chit> side1 = new ArrayList<Chit>();
+								ArrayList<Chit> side2 = new ArrayList<Chit>();
+								ArrayList<Chit> inventory = player.getCharacter().getInventory();
+								side1.add(player.getCharacter());
+								for(Chit enemy : gui.getMapBrain().getCurrentClearing().getChits()){
+									if (!side1.contains(enemy)){
+										side2.add(enemy);
+									}
+								}
+								mediaPlayer.stop();
+								combatSystem.initFight(side1, side2, player.getCharacter(), true);
+								// If the player died, make a treasure pile out of his inventory
+								if (player.getCharacter() == null){
+									for (Chit item : inventory){
+										gui.getMapBrain().getCurrentClearing().addChit(item);
+									}
+								}
+								side1.addAll(side2);
+								// Remove all chits that were wiped out in combat!
+								for (Chit oldChit : gui.getMapBrain().getCurrentClearing().getChits()){
+									if (!side1.contains(oldChit)){
+										gui.getMapBrain().getCurrentClearing().removeChit(oldChit);
+									}
+								}
+								break;
+							}
+						}
 					}
 					if (turns == 0){
 						gui.disableButtons();
