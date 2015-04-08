@@ -8,6 +8,7 @@ import javafx.scene.media.MediaPlayer;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.file.Paths;
@@ -120,7 +121,11 @@ public class CombatSystem{
 		gui.fightButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
 				mediaPlayer.stop();
-				startCombat();
+				try {
+					startCombat();
+				} catch (ClassNotFoundException | IOException e) {
+					e.printStackTrace();
+				}
 			}
 		});
 		
@@ -129,7 +134,7 @@ public class CombatSystem{
 		}
 	}
 	
-	protected void startCombat() {
+	protected void startCombat() throws ClassNotFoundException, IOException {
 		if (AIopponent){
 			// AI combat (PvE)
 			while((allies.size() > 0) && (enemies.size() > 0)){
@@ -280,10 +285,19 @@ public class CombatSystem{
 				gui.infoText.setText("Combat begins!");
 				// Receive enemy if you're the attacker, or send if you're the defender
 				if(attacker){
-					//in.readObject();
+					// Get enemy directions
+					String[] enemyDirections = (String[]) in.readObject();
+					// Get enemy character
+					Character enemy = (Character) in.readObject();
 				}
 				else{
-					//out.writeObject("COMBAT:"+enemyCharacter.getName()+"");
+					out.writeObject(directions);
+					out.writeObject(playerCharacter);
+					// Wait for the attacker to calculate the results
+					playerCharacter = (Character) in.readObject();
+					if (playerCharacter == null){
+						
+					}
 				}
 				ArrayList<String> turns = getTurns(enemies, playerCharacter, fightChit2);
 				ArrayList<Chit> allChits = new ArrayList<Chit>();
@@ -297,13 +311,9 @@ public class CombatSystem{
 							if (chit.getName().equals(playerCharacter.getName())){
 								playerAttack(fightChit2, index, directions[0], enemyManeuvers.get(index));
 							}
-							else if (enemies.contains(chit)){
-								playEnemyAITurn(chit, allies, directions, enemyManeuvers.get(index));
-							}
-							else if(allies.contains(chit)){
-								// This is incredibly optimistic, but here's the functionality for
-								// allowing allies to fight!
-								playAlliedAITurn(((Native)chit), enemies);
+							else{
+								// Play out the enemy attack on you
+								enemyAttack();
 							}
 						}
 					}
@@ -361,6 +371,11 @@ public class CombatSystem{
 		}
 	}
 	
+	private void enemyAttack() {
+		// TODO Auto-generated method stub
+		
+	}
+
 	private void playAlliedAITurn(Native chit, ArrayList<Chit> targetChits) {
 		int index = (int)(Math.random()*targetChits.size());
 		if (chit.getLetter().charAt(0) >= targetChits.get(index).getLetter().charAt(0)){

@@ -3,8 +3,8 @@ package View;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import ObjectClasses.ActionChit;
 import ObjectClasses.TurnsTableModel;
-
 import ObjectClasses.Chit;
 
 import java.awt.*;
@@ -516,6 +516,42 @@ public class MagicRealmGUI {
 			String[] options = {"1", "2", "3", "4", "5", "6"};
 		    return (JOptionPane.showOptionDialog(null, "Select the dice result!", "*CHEAT MODE* - Dice Roll",
 		        JOptionPane.DEFAULT_OPTION, 0, null, options, options[0])) + 1;
+	}
+	
+	public String getFatiguedChit(ArrayList<ActionChit> fatigued) {
+		ArrayList<String> str = new ArrayList<String>();
+		for (ActionChit chit : fatigued){
+			str.add(chit.toString());
+		}
+		Object[] options = str.toArray();
+		return (String) JOptionPane.showInputDialog(window, 
+		        "Select a fatigued chit to rest to active status:",
+		        "Rest",
+		        JOptionPane.QUESTION_MESSAGE, 
+		        null, 
+		        options, 
+		        options[0]);
+	}
+	
+	public String getWoundedChit(ArrayList<ActionChit> wounded) {
+		ArrayList<String> str = new ArrayList<String>();
+		for (ActionChit chit : wounded){
+			str.add(chit.toString());
+		}
+		Object[] options = str.toArray();
+		return (String) JOptionPane.showInputDialog(window, 
+		        "Select a wounded chit to rest to fatigued status:",
+		        "Rest",
+		        JOptionPane.QUESTION_MESSAGE, 
+		        null, 
+		        options, 
+		        options[0]);
+	}
+
+	public int getWoundOrFatigue() {
+		String[] options = {"Wound->Fatigue", "Fatigue->Active"};
+	    return (JOptionPane.showOptionDialog(null, "Select a type of chit to rest:", "Rest",
+	        JOptionPane.DEFAULT_OPTION, 0, null, options, options[0])) + 1;
 	}
 	
 } /* CLOSES CLASS */

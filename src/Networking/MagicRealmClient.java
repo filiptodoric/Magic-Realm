@@ -18,6 +18,7 @@ import ListsAndLogic.ListOfSecretRoutes;
 import ListsAndLogic.ListOfSecretRoutes;
 import ListsAndLogic.ListOfMonsters;
 import ListsAndLogic.MusicLookupTable;
+import ObjectClasses.ActionChit;
 import ObjectClasses.Chit;
 import ObjectClasses.Clearing;
 import ObjectClasses.HexTile;
@@ -290,7 +291,74 @@ public class MagicRealmClient implements Runnable {
 		
 		gui.restButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				// TODO Place function here.
+				if (player.getCharacter().fatiguedActionChits.size() == 0 && player.getCharacter().woundedActionChits.size() == 0){
+					gui.playerInfoArea.append("\nNo wounded or fatigued chits to rest!");
+				}
+				else{
+					turns--;
+					if (player.getCharacter().fatiguedActionChits.size() != 0 && player.getCharacter().woundedActionChits.size() == 0){
+						String chit = gui.getFatiguedChit(player.getCharacter().fatiguedActionChits);
+						 ActionChit temp = null;
+						 for (ActionChit action : player.getCharacter().fatiguedActionChits){
+							 if (action.toString().equals(chit)){
+								 temp = action;
+								 break;
+							 }
+						 }
+						 player.getCharacter().fatiguedActionChits.remove(temp);
+						 player.getCharacter().activeActionChits.add(temp);
+					}
+					if (player.getCharacter().woundedActionChits.size() != 0 && player.getCharacter().fatiguedActionChits.size() == 0){
+						 String chit = gui.getWoundedChit(player.getCharacter().woundedActionChits);
+						 ActionChit temp = null;
+						 for (ActionChit action : player.getCharacter().woundedActionChits){
+							 if (action.toString().equals(chit)){
+								 temp = action;
+								 break;
+							 }
+						 }
+						 player.getCharacter().woundedActionChits.remove(temp);
+						 player.getCharacter().fatiguedActionChits.add(temp);
+					}
+					else{
+						int choice = gui.getWoundOrFatigue();
+						String chit = "";
+						if (choice == 0){
+							 chit = gui.getWoundedChit(player.getCharacter().woundedActionChits);
+							 ActionChit temp = null;
+							 for (ActionChit action : player.getCharacter().woundedActionChits){
+								 if (action.toString().equals(chit)){
+									 temp = action;
+									 break;
+								 }
+							 }
+							 player.getCharacter().woundedActionChits.remove(temp);
+							 player.getCharacter().fatiguedActionChits.add(temp);
+						}
+						else{
+							 chit = gui.getFatiguedChit(player.getCharacter().fatiguedActionChits);
+							 ActionChit temp = null;
+							 for (ActionChit action : player.getCharacter().fatiguedActionChits){
+								 if (action.toString().equals(chit)){
+									 temp = action;
+									 break;
+								 }
+							 }
+							 player.getCharacter().fatiguedActionChits.remove(temp);
+							 player.getCharacter().activeActionChits.add(temp);
+						}
+					}
+				}
+				if (turns == 0){
+					gui.disableButtons();
+					mediaPlayer.stop();
+					try {
+						out.writeObject("COMPLETE");
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+					gui.playerInfoArea.append("\nDay completed, waiting for others...");
+				}
 			}
 		});
 		
