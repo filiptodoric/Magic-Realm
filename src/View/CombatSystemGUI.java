@@ -18,7 +18,7 @@ import ObjectClasses.Weapon;
 
 public class CombatSystemGUI{
 	
-	private JFrame window;
+	public JFrame window;
 	private ImageLookup lookup;
 	private JPanel universalPanel;
 	private JPanel combatPanel;
@@ -154,6 +154,7 @@ public class CombatSystemGUI{
 
 	public void close() {
 		window.dispose();
+		window = null;
 	}
 
 	public int getTarget(ArrayList<Chit> enemies) {

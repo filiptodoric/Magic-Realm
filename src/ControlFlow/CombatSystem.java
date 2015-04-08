@@ -70,10 +70,10 @@ public class CombatSystem{
 		musicLookup = new MusicLookupTable();
 		cheatMode = cheatEnabled;
 		JFXPanel fxPanel = new JFXPanel();
-		gui = new CombatSystemGUI();
 	}
 	
 	public void initFight(ArrayList<Chit> side1, ArrayList<Chit> side2, Character player, boolean isAI, boolean isAttacker){
+		gui = new CombatSystemGUI();
 		playerCharacter = player;
 		AIopponent = isAI;
 		attacker = isAttacker;
@@ -82,9 +82,18 @@ public class CombatSystem{
 		gui.addCharacters(allies, enemies);
 		gui.setupOptions(enemies);
 		setActionListeners();
+		while(gui.window != null){
+			// Check on the gui once per second, prevents high CPU usage 
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public void initFightPlayers(Character player, Character targetPlayer, boolean isAttacker){
+		gui = new CombatSystemGUI();
 		playerCharacter = player;
 		enemyCharacter = targetPlayer;
 		attacker = isAttacker;
