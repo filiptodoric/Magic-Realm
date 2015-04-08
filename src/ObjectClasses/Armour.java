@@ -6,10 +6,12 @@ public class Armour extends Chit{
 	
 	boolean damaged;
 	String protectsAgainst;
+	boolean isEnabled;
 	
 	public Armour(String inputName, String inpLetter) {
 		super(inputName, inpLetter);
 		setProtectAgainst();
+		isEnabled = true;
 	}
 	
 	public boolean isDamaged(){
@@ -18,6 +20,10 @@ public class Armour extends Chit{
 	
 	public void setDamaged(){
 		damaged = true;
+	}
+	
+	public void setEnabled(boolean enabled){
+		isEnabled = enabled;
 	}
 	
 	public void setProtectAgainst(){
@@ -33,5 +39,9 @@ public class Armour extends Chit{
 		else{
 			protectsAgainst = "Any One Direction";
 		}
+	}
+
+	public boolean isEnabled() {
+		return isEnabled;
 	}
 }

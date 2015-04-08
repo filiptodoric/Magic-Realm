@@ -254,9 +254,8 @@ public class CombatSystemGUI{
 				        null, 
 				        options, 
 				        options[0]);
-				String[] targetValue = selectedValue.split(" ");
 				for (ActionChit chit : playerCharacter.activeActionChits){
-					if (chit.getName().equals(targetValue[0]) && chit.getLetter().equals(targetValue[1]) && chit.getTime() == Integer.parseInt(targetValue[2])){
+					if (chit.toString().equals(selectedValue)){
 						// 2 effort limit as per 21.3/1b
 						if ((chit.numAsterisks() + effortAsterisks) <= 2){
 							return chit;
@@ -301,9 +300,8 @@ public class CombatSystemGUI{
 					        null, 
 					        options, 
 					        options[0]);
-					String[] targetValue = directions[1].split(" ");
 					for (ActionChit chit : playerCharacter.activeActionChits){
-						if (chit.getName().equals(targetValue[0]) && chit.getLetter().equals(targetValue[1]) && chit.getTime() == Integer.parseInt(targetValue[2])){
+						if (chit.toString().equals(directions[1])){
 							// 2 effort limit as per 21.3/1b
 							if ((chit.numAsterisks() + effortAsterisks) <= 2){
 								flag = true;
@@ -364,5 +362,49 @@ public class CombatSystemGUI{
 
 	public void showDefeat() {
 		JOptionPane.showMessageDialog(null, "You were defeated!");
+	}
+
+	public ActionChit getSelectedChit(Character player, String category, boolean isFatigue) {
+		ArrayList<String> availableChits = new ArrayList<String>();
+		String prompt = "";
+		if (isFatigue){
+			prompt = "Select a chit to fatigue:";
+		}
+		else{
+			prompt = "Select a chit to wound:";
+		}
+		for (Chit chit : player.activeActionChits){
+			if (category.equals("FIGHT/MOVE")){
+				String[] fightMove = category.split("/");
+				if (chit.getName().contains(fightMove[0]) || chit.getName().contains(fightMove[1])){
+					availableChits.add(chit.toString());
+				}
+			}
+			else{
+				if (chit.getName().contains(category)){
+					availableChits.add(chit.toString());
+				}
+			}
+		}
+		Object[] options = availableChits.toArray();
+		String chitToRemove = (String) JOptionPane.showInputDialog(window, 
+		        prompt,
+		        "Chit Selection",
+		        JOptionPane.QUESTION_MESSAGE, 
+		        null, 
+		        options, 
+		        options[0]);
+		for(ActionChit chit : player.activeActionChits){
+			if (chit.toString().equals(chitToRemove)){
+				return chit;
+			}
+		}
+		return null;
+	}
+
+	public int getMonsterDieRoll(String monsterName) {
+			String[] options = {"Charge and Thrust", "Dodge and Swing", "Duck and Smash"};
+		    return JOptionPane.showOptionDialog(null, "Select the maneuver for " + monsterName, "*CHEAT MODE* - Monster Maneuver",
+		        JOptionPane.DEFAULT_OPTION, 0, null, options, options[0]);
 	}
 }

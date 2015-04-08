@@ -22,6 +22,8 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import javax.swing.JOptionPane;
+
 import ListsAndLogic.ListOfMonsters;
 import ListsAndLogic.ListOfWeapons;
 import ListsAndLogic.MusicLookupTable;
@@ -29,8 +31,18 @@ import ObjectClasses.ActionChit;
 import ObjectClasses.Armour;
 import ObjectClasses.Chit;
 import ObjectClasses.Character;
+import ObjectClasses.Native;
 import ObjectClasses.Weapon;
 
+/**
+ * CombatSystem status:
+ * - CAN fight against monsters
+ * 		- Cheat mode enabled for monster attacks
+ * 		- Can fight with multiple monsters across several turns! :D
+ * - CAN'T fight PvP (yet)
+ * - CAN'T fight alongside natives (yet)
+ * - CAN'T fight against natives (period, not implementing)
+ */
 public class CombatSystem{
 	CombatSystemGUI gui;
 	Character playerCharacter;
@@ -164,8 +176,32 @@ public class CombatSystem{
 							else if(allies.contains(chit)){
 								// This is incredibly optimistic, but here's the functionality for
 								// allowing allies to fight!
-								playAlliedAITurn(chit);
+								playAlliedAITurn(((Native)chit), enemies);
 							}
+						}
+					}
+				}
+				if(effortAsterisks == 2){
+					if (fightChit1 != null){
+						if((fightChit1.numAsterisks() + fightChit2.numAsterisks()) == 2){
+							fatigueChit(playerCharacter, "FIGHT");
+						}
+						else if ((fightChit1.numAsterisks() + fightChit2.numAsterisks()) == 1){
+							fatigueChit(playerCharacter, "FIGHT/MOVE");
+						}
+						else{
+							fatigueChit(playerCharacter, "MOVE");
+						}
+					}
+					else{
+						if((fightChit2.numAsterisks()) == 2){
+							fatigueChit(playerCharacter, "FIGHT");
+						}
+						else if ((fightChit2.numAsterisks()) == 1){
+							fatigueChit(playerCharacter, "FIGHT/MOVE");
+						}
+						else{
+							fatigueChit(playerCharacter, "MOVE");
 						}
 					}
 				}
@@ -187,6 +223,7 @@ public class CombatSystem{
 				MediaPlayer mediaPlayer = new MediaPlayer(hit);
 				mediaPlayer.play();
 				gui.showVictorious();
+				mediaPlayer.stop();
 				gui.close();
 				try {
 					Thread.sleep(3000);
@@ -257,8 +294,32 @@ public class CombatSystem{
 							else if(allies.contains(chit)){
 								// This is incredibly optimistic, but here's the functionality for
 								// allowing allies to fight!
-								playAlliedAITurn(chit);
+								playAlliedAITurn(((Native)chit), enemies);
 							}
+						}
+					}
+				}
+				if(effortAsterisks == 2){
+					if (fightChit1 != null){
+						if((fightChit1.numAsterisks() + fightChit2.numAsterisks()) == 2){
+							fatigueChit(playerCharacter, "FIGHT");
+						}
+						else if ((fightChit1.numAsterisks() + fightChit2.numAsterisks()) == 1){
+							fatigueChit(playerCharacter, "FIGHT/MOVE");
+						}
+						else{
+							fatigueChit(playerCharacter, "MOVE");
+						}
+					}
+					else{
+						if((fightChit2.numAsterisks()) == 2){
+							fatigueChit(playerCharacter, "FIGHT");
+						}
+						else if ((fightChit2.numAsterisks()) == 1){
+							fatigueChit(playerCharacter, "FIGHT/MOVE");
+						}
+						else{
+							fatigueChit(playerCharacter, "MOVE");
 						}
 					}
 				}
@@ -280,6 +341,7 @@ public class CombatSystem{
 				MediaPlayer mediaPlayer = new MediaPlayer(hit);
 				mediaPlayer.play();
 				gui.showVictorious();
+				mediaPlayer.stop();
 				gui.close();
 				try {
 					Thread.sleep(3000);
@@ -290,9 +352,17 @@ public class CombatSystem{
 		}
 	}
 	
-	private void playAlliedAITurn(Chit chit) {
-		// TODO Auto-generated method stub
-		
+	private void playAlliedAITurn(Native chit, ArrayList<Chit> targetChits) {
+		int index = (int)(Math.random()*targetChits.size());
+		if (chit.getLetter().charAt(0) >= targetChits.get(index).getLetter().charAt(0)){
+				gui.infoText.setText(targetChits.get(index).getName() + "was killed!");
+				System.out.println(targetChits.get(index).getName() + "was killed!");
+				enemies.remove(index);
+		}
+		else{
+			gui.infoText.setText(targetChits.get(index).getName() + "was attacked by " + chit.getName() + ", but the attack failed.");
+			System.out.println(targetChits.get(index).getName() + "was attacked by " + chit.getName() + ", but the attack failed.");
+		}
 	}
 
 	/*
@@ -303,8 +373,13 @@ public class CombatSystem{
 		ArrayList<Integer> moves = new ArrayList<Integer>();
 		for (Chit enemy : enemies){
 			int i = (int)(Math.random()*3);
-			if (i == 3){
-				i = 2;
+			if (cheatMode){
+				i = gui.getMonsterDieRoll(enemy.getName());
+			}
+			else{
+				if (i == 3){
+					i = 2;
+				}
 			}
 			moves.add(i);
 		}
@@ -327,29 +402,36 @@ public class CombatSystem{
 		}
 		else{
 			// Monster attacks player
-			if (Integer.parseInt((monsterLookup.monsters.get(enemies.get(index).getName()).get("attackSpeed"))) >= targetChits.get(index).getLetter().charAt(0)){
+			// Get player's move chit
+			ActionChit moveChit = null;
+			for (ActionChit action : playerCharacter.activeActionChits){
+				if (action.toString().equals(directions[1])){
+					moveChit = action;
+				}
+			}
+			if (Integer.parseInt((monsterLookup.monsters.get(enemies.get(index).getName()).get("attackSpeed"))) > moveChit.getLetter().charAt(0)){
 				if (((monsterLookup.monsters.get(enemies.get(index).getName()).get("size").charAt(0)) >= targetChits.get(index).getLetter().charAt(0)) &&
 					(directions[3] == null) ){
 					// Need to check for suits of armor!
-					boolean armourProtection = checkArmour(chit, index, maneuver);
+					boolean armourProtection = checkArmour(chit, index, maneuver, directions[3]);
 					if (!armourProtection){
-						gui.infoText.setText(targetChits.get(index).getName() + "was killed!");
-						System.out.println(targetChits.get(index).getName() + "was killed!");
+						gui.infoText.setText(targetChits.get(index).getName() + " was killed!");
+						System.out.println(targetChits.get(index).getName() + " was killed!");
 						allies.remove(index);
 					}
 				}
 				else{
-					if (!isAligned(directions[3], maneuver)){
+					if (!isAligned(directions[2], maneuver)){
 						// Missed
 						gui.infoText.setText(chit.getName() + " tried to attack, but missed!");
 						System.out.println(chit.getName() + " tried to attack, but missed!");
 					}
 					else{
 						// Hit, but shield?
-						boolean armourProtection = checkArmour(chit, index, maneuver);
+						boolean armourProtection = checkArmour(chit, index, maneuver, directions[3]);
 						if (!armourProtection){
-							gui.infoText.setText(targetChits.get(index).getName() + "was killed!");
-							System.out.println(targetChits.get(index).getName() + "was killed!");
+							gui.infoText.setText(targetChits.get(index).getName() + " was killed!");
+							System.out.println(targetChits.get(index).getName() + " was killed!");
 							allies.remove(index);
 						}
 					}
@@ -358,12 +440,11 @@ public class CombatSystem{
 			else{
 				// Lined up with the player's maneuver
 				if(isAligned(directions[2], maneuver)){
-					if (((monsterLookup.monsters.get(enemies.get(index).getName()).get("size").charAt(0)) >= targetChits.get(index).getLetter().charAt(0)) &&
-							(directions[3] == null || !isAligned(directions[3], maneuver)) ){
-							boolean armourProtection = checkArmour(chit, index, maneuver);
+					if (((monsterLookup.monsters.get(enemies.get(index).getName()).get("size").charAt(0)) >= targetChits.get(index).getLetter().charAt(0))){
+							boolean armourProtection = checkArmour(chit, index, maneuver, directions[3]);
 							if (!armourProtection){
-								gui.infoText.setText(targetChits.get(index).getName() + "was killed!");
-								System.out.println(targetChits.get(index).getName() + "was killed!");
+								gui.infoText.setText(targetChits.get(index).getName() + " was killed!");
+								System.out.println(targetChits.get(index).getName() + " was killed!");
 								allies.remove(index);
 							}
 					}
@@ -378,42 +459,69 @@ public class CombatSystem{
 		}
 	}
 
-	private boolean checkArmour(Chit chit, int index, int maneuver) {
+	private boolean checkArmour(Chit chit, int index, int maneuver, String shieldDirection) {
 		// Chit = attacker
+		ArrayList<Chit> toRemove = new ArrayList<Chit>();
+		boolean flag = false;
 		for(Chit item : playerCharacter.getInventory()){
 			if (item.getName().equals("Suit of Armor") && (monsterLookup.monsters.get(enemies.get(index).getName()).get("size").charAt(0) != 'T')){
 				gui.infoText.setText(chit.getName() + " tried to attack you, but hit your suit of armour and did nothing.");
 				System.out.println(chit.getName() + " tried to attack you, but hit your suit of armour and did nothing.");
-				return true;
+				flag = true;
+				break;
+			}
+			else if (item.getName().equals("Shield") && (monsterLookup.monsters.get(enemies.get(index).getName()).get("size").charAt(0) >= 'M')){
+				toRemove.add(item);
+				gui.infoText.setText(chit.getName() + " attacked you, destroyed your shield and wounded you.");
+				System.out.println(chit.getName() + " attacked you, destroyed your shield and wounded you.");
+				woundChit(playerCharacter, "FIGHT/MOVE");
+				flag = true;
+				break;
+			}
+			else if (item.getName().equals("Shield") && (monsterLookup.monsters.get(enemies.get(index).getName()).get("size").charAt(0) < 'M')){
+				gui.infoText.setText(chit.getName() + " tried to attack you, but hit your shield and did nothing.");
+				System.out.println(chit.getName() + " tried to attack you, but hit your shield and did nothing.");
+				flag = true;
+				break;
 			}
 			else if (item.getName().equals("Suit of Armor") && (monsterLookup.monsters.get(enemies.get(index).getName()).get("size").charAt(0) == 'T')){
 				if (((Armour)chit).isDamaged()){
-					playerCharacter.removeItem(item);
+					toRemove.add(item);
 					gui.infoText.setText(chit.getName() + " attacked you, destroyed your suit of armour and wounded you.");
 					System.out.println(chit.getName() + " attacked you, destroyed your suit of armour and wounded you.");
-					return true;
+					woundChit(playerCharacter, "FIGHT/MOVE");
+					flag = true;
+					break;
 				}
 				else{
 					((Armour)chit).setDamaged();
 					gui.infoText.setText(chit.getName() + " attacked you, damaged your suit of armour and did nothing.");
 					System.out.println(chit.getName() + " attacked you, damaged your suit of armour and did nothing.");
-					return true;
+					flag = true;
+					break;
 				}
 			}
 			else if (item.getName().equals("Breastplate") && (maneuver == 0 || maneuver == 1)){
-				playerCharacter.removeItem(item);
+				toRemove.add(item);
 				gui.infoText.setText(chit.getName() + " attacked you, destroyed your breastplate and wounded you.");
 				System.out.println(chit.getName() + " attacked you, destroyed your breastplate and wounded you.");
-				return true;
+				woundChit(playerCharacter, "FIGHT/MOVE");
+				flag = true;
+				break;
 			}
-			else if (item.getName().equals("Helmet") && (maneuver == 2)){
-				playerCharacter.removeItem(item);
-				gui.infoText.setText(chit.getName() + " attacked you, destroyed your breastplate and wounded you.");
-				System.out.println(chit.getName() + " attacked you, destroyed your breastplate and wounded you.");
-				return true;
+			else if (item.getName().equals("Helmet") && (maneuver == 2) && ((Armour)item).isEnabled()){
+				toRemove.add(item);
+				gui.infoText.setText(chit.getName() + " attacked you, destroyed your helmet and wounded you.");
+				System.out.println(chit.getName() + " attacked you, destroyed your helmet and wounded you.");
+				woundChit(playerCharacter, "FIGHT/MOVE");
+				flag = true;
+				break;
 			}
 		}
-		return false;
+		for (Chit item : toRemove){
+			playerCharacter.getInventory().remove(item);
+		}
+		return flag;
 	}
 
 	private ArrayList<String> getTurns(ArrayList<Chit> enemies, Character player, ActionChit charFightChit) {
@@ -460,6 +568,24 @@ public class CombatSystem{
 			}
 			return characterOrder;
 		}
+	}
+	
+	private void fatigueChit(Character character, String category){
+		ActionChit chit = null;
+		while (chit == null){
+			chit = gui.getSelectedChit(character, category, true);
+		}
+		character.activeActionChits.remove(chit);
+		character.fatiguedActionChits.add(chit);
+	}
+	
+	private void woundChit(Character character, String category){
+		ActionChit chit = null;
+		while (chit == null){
+			chit = gui.getSelectedChit(character, category, false);
+		}
+		character.activeActionChits.remove(chit);
+		character.woundedActionChits.add(chit);
 	}
 
 	private void playerAttack(ActionChit fightChit2, int index, String attackDirection, int enemyManeuver){
@@ -525,9 +651,9 @@ public class CombatSystem{
 	}
 
 	private boolean isAligned(String atkDirection, int monsterPosition) {
-		if ((monsterPosition == 0 && atkDirection.contains("Thrust")) || 
-		(monsterPosition == 1 && atkDirection.contains("Swing")) || 
-		(monsterPosition == 2 && atkDirection.contains("Smash"))){
+		if ((monsterPosition == 0 && (atkDirection.contains("Charge") || atkDirection.contains("Thrust"))) || 
+		(monsterPosition == 1 && (atkDirection.contains("Dodge") || atkDirection.contains("Swing"))) || 
+		(monsterPosition == 2 && (atkDirection.contains("Duck") || atkDirection.contains("Smash")))){
 			return true;
 		}
 		return false;
