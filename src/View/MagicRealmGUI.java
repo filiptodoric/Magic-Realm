@@ -28,6 +28,7 @@ public class MagicRealmGUI {
 	public JButton 	        setupVRButton;
 	public JTable             turnsTable;
 	public JTextArea          playerInfoArea;
+	public JLabel			playerStats;
 	public JLayeredPane       map;
 	public MapBrain           mapBrain;
 	public static ImageLookup lookup;
@@ -345,11 +346,6 @@ public class MagicRealmGUI {
 		constraints.gridwidth = 1;
 		constraints.fill = constraints.NONE;
 		
-		showCheatButton.setToolTipText("Enable cheat mode!");
-		constraints.gridx = 0;
-		constraints.gridy = 4;
-		charInternalFrame.add(showCheatButton, constraints);
-		
 		// Hide Button
 		hideButton = new JButton();
 		constraints.gridx = 0;
@@ -396,6 +392,13 @@ public class MagicRealmGUI {
 		tradeButton.setEnabled(false);
 		charInternalFrame.add(tradeButton, constraints);
 		
+		// Stats label
+		playerStats = new JLabel();
+		constraints.gridx = 0;
+		constraints.gridy = 5;
+		constraints.gridheight = 1;
+		constraints.gridwidth = 5;
+		charInternalFrame.add(playerStats, constraints);
 		
 		turnsTable = new JTable(new TurnsTableModel());
 		DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
@@ -583,6 +586,16 @@ public class MagicRealmGUI {
 	public int confirmHire(String nativeToHire, int cost) {
 		return JOptionPane.showConfirmDialog(null, "So " + nativeToHire + " is willing to join you, but it's gonna cost ya " + cost + " gold! You buying?",
 				"Dwelling Marketplace", JOptionPane.YES_NO_OPTION);
+	}
+	
+	public void updateStats(ArrayList<String> stats, ArrayList<Integer> vals) {
+		String update = "";
+		int index = 0;
+		for(String stat : stats){
+			update += stat + ": " + vals.get(index) + " | ";
+			index++;
+		}
+		playerStats.setText(update);
 	}
 	
 } /* CLOSES CLASS */

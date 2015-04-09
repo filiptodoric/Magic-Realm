@@ -306,6 +306,13 @@ public class MagicRealmClient implements Runnable {
         			if (chit.getLetter().equals(player.getCharacter().getClearing())){
         				mediaPlayer.pause();
         				conductTrade();
+        				turns--;
+        				ArrayList<String> playerStats = player.getCharacter().getStats();
+                    	playerStats.add("Turns");
+                    	ArrayList<Integer> statVals = player.getCharacter().getStatVals();
+                    	statVals.add(turns);
+                    	gui.updateStats(playerStats, statVals);
+                    	mediaPlayer.play();
         				return;
         			}
         		}
@@ -387,6 +394,11 @@ public class MagicRealmClient implements Runnable {
 						}
 					}
 				}
+				ArrayList<String> playerStats = player.getCharacter().getStats();
+            	playerStats.add("Turns");
+            	ArrayList<Integer> statVals = player.getCharacter().getStatVals();
+            	statVals.add(turns);
+            	gui.updateStats(playerStats, statVals);
 				if (turns == 0){
 					gui.disableButtons();
 					mediaPlayer.stop();
@@ -500,6 +512,11 @@ public class MagicRealmClient implements Runnable {
 						break;
 					}
 				}
+				ArrayList<String> playerStats = player.getCharacter().getStats();
+            	playerStats.add("Turns");
+            	ArrayList<Integer> statVals = player.getCharacter().getStatVals();
+            	statVals.add(turns);
+            	gui.updateStats(playerStats, statVals);
 				if (turns == 0){
 					gui.disableButtons();
 					mediaPlayer.stop();
@@ -623,6 +640,11 @@ public class MagicRealmClient implements Runnable {
 							}
 						}
 					}
+					ArrayList<String> playerStats = player.getCharacter().getStats();
+                	playerStats.add("Turns");
+                	ArrayList<Integer> statVals = player.getCharacter().getStatVals();
+                	statVals.add(turns);
+                	gui.updateStats(playerStats, statVals);
 					if (turns == 0){
 						gui.disableButtons();
 						mediaPlayer.stop();
@@ -650,6 +672,11 @@ public class MagicRealmClient implements Runnable {
 					player.getCharacter().setHidden(true);
 					gui.playerInfoArea.append("\nManaged to hide!");
 				}
+				ArrayList<String> playerStats = player.getCharacter().getStats();
+            	playerStats.add("Turns");
+            	ArrayList<Integer> statVals = player.getCharacter().getStatVals();
+            	statVals.add(turns);
+            	gui.updateStats(playerStats, statVals);
 				if (turns == 0){
 					gui.disableButtons();
 					mediaPlayer.stop();
@@ -903,6 +930,11 @@ public class MagicRealmClient implements Runnable {
     						}
     					}
                 	}
+                	ArrayList<String> playerStats = player.getCharacter().getStats();
+                	playerStats.add("Turns");
+                	ArrayList<Integer> statVals = player.getCharacter().getStatVals();
+                	statVals.add(turns);
+                	gui.updateStats(playerStats, statVals);
                 	gui.enableButtons();
                 	player.getCharacter().setHidden(false);
             	}

@@ -296,4 +296,20 @@ public class Character extends Chit{
 	public ArrayList<Native> getAllies(){
 		return allies;
 	}
+
+	public ArrayList<String> getStats() {
+		ArrayList<String> stats = new ArrayList<String>();
+		stats.add("Gold");
+		stats.add("Fame");
+		stats.add("Notority");
+		return stats;
+	}
+
+	public ArrayList<Integer> getStatVals() {
+		ArrayList<Integer> statVals = new ArrayList<Integer>();
+		statVals.add(gold);
+		statVals.add(fame);
+		statVals.add(notority);
+		return statVals;
+	}
 }
