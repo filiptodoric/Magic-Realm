@@ -530,15 +530,59 @@ public class MagicRealmClient implements Runnable {
 				if (gui.getMapBrain().getCurrentClearing().getAdjacentClearings().contains(getPlayerClearing().getName()) &&
 						(!secretRoutes.isSecret(gui.getMapBrain().getCurrentClearing().getName(),getPlayerClearing().getName()) ||
 						player.getCharacter().hasFoundDiscovery(gui.getMapBrain().getCurrentClearing().getName() + "," + getPlayerClearing().getName()))){
+					// Rule 7.6 - A player cannot enter a cave on the same day he uses a "sunlight" phase
+					// English translation - If a player has already moved for the day, they can't move to a cave clearing
+					// (Note: Rule 7.7 says that players can use an extra move to enter the cave, so it is assumed that
+					// if turns >= 3, you can move into a cave)
+					if (turns < 3){
+						boolean caveFlag = false;
+						for(MapChit chit : gui.getMapBrain().getTile(player.getCharacter().getClearing()).getChits()){
+							if(chit instanceof MapChit && ((MapChit)chit).getLetter().equals("C")){
+								// Moving from cave clearings, we're fine!
+								caveFlag = true;
+							}
+						}
+						if(!caveFlag){
+							// Moving from a different clearing into a cave clearing, gotta check!
+							for(Chit chit : gui.getMapBrain().getCurrentTile().getChits()){
+								if(chit instanceof MapChit && ((MapChit)chit).getLetter().equals("C")){
+									gui.playerInfoArea.append("\nYou can't move into a cave clearing after sunlight! (Less than 3 turns left)");
+									return;
+								}
+							}
+						}
+					}
+					if (player.getCharacter().getName().equals("Amazon") && playerSpecialAbility == false){
+						playerSpecialAbility = true;
+						// Check if we're moving to a mountain clearing; still need to dock Amazon the extra move
+						// Amazon can only lose 1 turn max though, so we treat it like a normal move
+						for(Chit chit : gui.getMapBrain().getCurrentTile().getChits()){
+							if(chit instanceof MapChit && ((MapChit)chit).getLetter().equals("M")){
+								turns--;
+								break;
+							}
+						}
+					}
+					else{
+						for(Chit chit : gui.getMapBrain().getCurrentTile().getChits()){
+							if(chit instanceof MapChit && ((MapChit)chit).getLetter().equals("M")){
+								if(turns == 1){
+									// Not enough turns to move, notify player and exit the function completely
+									gui.playerInfoArea.append("\nCan't move to this mountain clearing, only one turn left!");
+									return;
+								}
+								else{
+									// 2+ turns, dock the player the extra turn
+									turns--;
+									break;
+								}
+							}
+						}
+						turns--;
+					}
 					gui.playerInfoArea.append("\nMoved to " + gui.getMapBrain().getCurrentClearing().getName());
 					placeCharacter(gui.getMapBrain().getCurrentClearing().getName());
 					summonMonster(rollDice());
-					if (player.getCharacter().getName().equals("Amazon") && playerSpecialAbility == false){
-						playerSpecialAbility = true;
-					}
-					else{
-						turns--;
-					}
 					if(gui.getMapBrain().getCurrentClearing().getChits().size() != 1){
 						for(Chit chit : gui.getMapBrain().getCurrentClearing().getChits()){
 							// If it produces a result off the monster lookup table, it's a monster!
@@ -599,7 +643,7 @@ public class MagicRealmClient implements Runnable {
 		gui.hideButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				turns--;
-				if ((Math.random()*6)+1 > 5.0){
+				if (rollDice() == 6){
 					gui.playerInfoArea.append("\nCouldn't hide!");
 				}
 				else{
@@ -811,6 +855,7 @@ public class MagicRealmClient implements Runnable {
                 	gui.playerInfoArea.append("Day " + day + ": It's your turn...");
                 	day++;
                 	playerSpecialAbility = false;
+                	// Special conditions for player turns
                 	if (player.getCharacter().getName().equals("Captain")){
                 		for (Chit chit : gui.getMapBrain().findDwellings()){
                 			if (chit.getLetter().equals(player.getCharacter().getClearing())){
@@ -827,6 +872,18 @@ public class MagicRealmClient implements Runnable {
 					else{
 	                	turns = 3;
 					}
+                	/*
+                	 * If a player starts in a cave, they automatically only get two phases for the day
+                	 * (This applies to all characters, so it's checked after special conditions are
+                	 * applied) - Players also never start in caves, so avoid checking on game start ;)
+                	 */
+                	if (gui.getMapBrain().getCurrentTile() != null){
+                    	for(Chit chit : gui.getMapBrain().getTile(player.getCharacter().getClearing()).getChits()){
+    						if(chit instanceof MapChit && ((MapChit)chit).getLetter().equals("C")){
+    							turns = 2;
+    						}
+    					}
+                	}
                 	gui.enableButtons();
                 	player.getCharacter().setHidden(false);
             	}

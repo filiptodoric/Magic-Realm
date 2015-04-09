@@ -420,6 +420,25 @@ public class MapBrain extends MouseAdapter implements Serializable{
 		currentClearing = null;
 	}
 
+	public Clearing getClearing(String clearingText){
+		for(HexTile tile : tiles){
+			for(Clearing clearing : tile.getClearings()){
+				if(clearing.getName().equals(clearingText)){
+					return clearing;
+				}
+			}
+		}
+		return null;
+	}
 	
-
+	public HexTile getTile(String tileText){
+		for(HexTile tile : tiles){
+			for(Clearing clearing : tile.getClearings()){
+				if(clearing.getName().equals(tileText)){
+					return tile;
+				}
+			}
+		}
+		return null;
+	}
 }

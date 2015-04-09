@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import ObjectClasses.ActionChit;
+import ObjectClasses.HexTile;
 import ObjectClasses.TurnsTableModel;
 import ObjectClasses.Chit;
 
@@ -265,7 +266,7 @@ public class MagicRealmGUI {
         return JOptionPane.showInputDialog(
             desktopPane,
             "Enter IP Address of the Server:",
-            "Magic Realm v0.1",
+            "Magic Realm v1.0",
             JOptionPane.QUESTION_MESSAGE);
     }
 	
@@ -273,7 +274,7 @@ public class MagicRealmGUI {
         return JOptionPane.showInputDialog(
             desktopPane,
             "Enter your name:",
-            "Magic Realm v0.1",
+            "Magic Realm v1.0",
             JOptionPane.QUESTION_MESSAGE);
     }
 	
@@ -420,10 +421,6 @@ public class MagicRealmGUI {
 	public MapBrain getMapBrain(){
 		return mapBrain;
 	}
-	
-	
-	
-	
 	
 /****************************************************************************************
 * FUNCTION: showCharacterCard()

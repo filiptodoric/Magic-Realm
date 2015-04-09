@@ -280,7 +280,7 @@ public class CombatSystem{
 		}
 		// Check simple case first, player's more complex to kill
 		if (!targetChits.get(index).getName().equals(playerCharacter.getName())){
-			if ((monsterLookup.monsters.get(enemies.get(index).getName()).get("size").charAt(0)) >= targetChits.get(index).getLetter().charAt(0)){
+			if ((monsterLookup.monsters.get(chit.getName()).get("size").charAt(0)) >= targetChits.get(index).getLetter().charAt(0)){
 					cbGui.infoText.setText(targetChits.get(index).getName() + " was killed by " + chit.getName() + "!");
 					System.out.println(targetChits.get(index).getName() + " was killed by " + chit.getName() + "!");
 					allies.remove(index);
@@ -299,14 +299,14 @@ public class CombatSystem{
 					moveChit = action;
 				}
 			}
-			if (Integer.parseInt((monsterLookup.monsters.get(enemies.get(index).getName()).get("attackSpeed"))) > moveChit.getLetter().charAt(0)){
-				if (((monsterLookup.monsters.get(enemies.get(index).getName()).get("size").charAt(0)) >= targetChits.get(index).getLetter().charAt(0)) &&
+			if (Integer.parseInt((monsterLookup.monsters.get(chit.getName()).get("attackSpeed"))) > moveChit.getLetter().charAt(0)){
+				if (((monsterLookup.monsters.get(chit.getName()).get("size").charAt(0)) >= targetChits.get(index).getLetter().charAt(0)) &&
 					(directions[3] == null) ){
 					// Need to check for suits of armor!
 					boolean armourProtection = checkArmour(chit, index, maneuver, directions[3]);
 					if (!armourProtection){
-						cbGui.infoText.setText(targetChits.get(index).getName() + " was killed!");
-						System.out.println(targetChits.get(index).getName() + " was killed!");
+						cbGui.infoText.setText(targetChits.get(index).getName() + " was killed by " + chit.getName() + "!");
+						System.out.println(targetChits.get(index).getName() + " was killed by " + chit.getName() + "!");
 						allies.remove(index);
 					}
 				}
@@ -320,21 +320,21 @@ public class CombatSystem{
 						// Hit, but shield?
 						boolean armourProtection = checkArmour(chit, index, maneuver, directions[3]);
 						if (!armourProtection){
-							cbGui.infoText.setText(targetChits.get(index).getName() + " was killed!");
-							System.out.println(targetChits.get(index).getName() + " was killed!");
+							cbGui.infoText.setText(targetChits.get(index).getName() + " was killed by " + chit.getName() + "!");
+							System.out.println(targetChits.get(index).getName() + " was killed by " + chit.getName() + "!");
 							allies.remove(index);
 						}
 					}
 				}
 			}
 			else{
-				// Lined up with the player's maneuver
+				// Lined up with the enemy's maneuver
 				if(isAligned(directions[2], maneuver)){
-					if (((monsterLookup.monsters.get(enemies.get(index).getName()).get("size").charAt(0)) >= targetChits.get(index).getLetter().charAt(0))){
+					if (((monsterLookup.monsters.get(chit.getName()).get("size").charAt(0)) >= targetChits.get(index).getLetter().charAt(0))){
 							boolean armourProtection = checkArmour(chit, index, maneuver, directions[3]);
 							if (!armourProtection){
-								cbGui.infoText.setText(targetChits.get(index).getName() + " was killed!");
-								System.out.println(targetChits.get(index).getName() + " was killed!");
+								cbGui.infoText.setText(targetChits.get(index).getName() + " was killed by " + chit.getName() + "!");
+								System.out.println(targetChits.get(index).getName() + " was killed by " + chit.getName() + "!");
 								allies.remove(index);
 							}
 					}
