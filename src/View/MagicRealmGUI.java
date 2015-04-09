@@ -622,7 +622,7 @@ public class MagicRealmGUI {
 	public String getPlayerItem(ArrayList<String> items) {
 		Object[] categories = items.toArray();
 		return (String) JOptionPane.showInputDialog(window, 
-		        "Select an item from your inventory:",
+		        "Select an item:",
 		        "Dwelling Marketplace",
 		        JOptionPane.QUESTION_MESSAGE, 
 		        null, 
@@ -632,6 +632,11 @@ public class MagicRealmGUI {
 
 	public int confirmBuy(String item, int cost) {
 		return JOptionPane.showConfirmDialog(null, "A " + item + " is gonna cost ya " + cost + " gold! You buying?",
+				"Dwelling Marketplace", JOptionPane.YES_NO_OPTION);
+	}
+	
+	public int confirmSell(String item, int cost) {
+		return JOptionPane.showConfirmDialog(null, "A " + item + " is worth about " + cost + " gold! You sellin'?",
 				"Dwelling Marketplace", JOptionPane.YES_NO_OPTION);
 	}
 	
