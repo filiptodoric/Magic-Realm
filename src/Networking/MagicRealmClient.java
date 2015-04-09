@@ -546,14 +546,19 @@ public class MagicRealmClient implements Runnable {
 								ArrayList<Chit> side1 = new ArrayList<Chit>();
 								ArrayList<Chit> side2 = new ArrayList<Chit>();
 								ArrayList<Chit> inventory = player.getCharacter().getInventory();
+								// Add player
 								side1.add(player.getCharacter());
+								// Add native
+								for (Native ally : player.getCharacter().getAllies()){
+									side1.add(ally);
+								}
 								for(Chit enemy : gui.getMapBrain().getCurrentClearing().getChits()){
 									if (!side1.contains(enemy)){
 										side2.add(enemy);
 									}
 								}
 								mediaPlayer.pause();
-								combatSystem.initFight(side1, side2, player.getCharacter(), true);
+								combatSystem.initFight(side1, side2, player.getCharacter());
 								// If the player died, make a treasure pile out of his inventory
 								if (player.getCharacter() == null){
 									for (Chit item : inventory){

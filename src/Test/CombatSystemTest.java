@@ -31,6 +31,6 @@ public class CombatSystemTest {
 		ArrayList<Chit> enemies = new ArrayList<Chit>();
 		enemies.add(new Chit("Wolf", "L"));
 		//enemies.add(new Chit("Viper", "L"));
-		sys.initFight(characters, enemies, testCharacter, true);
+		sys.initFight(characters, enemies, testCharacter);
 	}
 }

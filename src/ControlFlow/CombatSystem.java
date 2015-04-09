@@ -40,15 +40,14 @@ import ObjectClasses.Weapon;
  * - CAN fight against monsters
  * 		- Cheat mode enabled for monster attacks
  * 		- Can fight with multiple monsters across several turns! :D
- * - CAN'T fight PvP (yet)
- * - CAN'T fight alongside natives (yet)
- * - CAN'T fight against natives (period, not implementing)
+ * - CAN'T fight PvP
+ * - CAN fight alongside natives!
+ * - CAN'T fight against natives
  */
 public class CombatSystem{
 	CombatSystemGUI cbGui;
 	Character playerCharacter;
 	Character enemyCharacter;
-    boolean AIopponent = false;
     ArrayList<Chit> allies;
     ArrayList<Chit> enemies;
     ListOfMonsters monsterLookup;
@@ -69,11 +68,10 @@ public class CombatSystem{
 		fightFinished = true;
 	}
 	
-	public void initFight(ArrayList<Chit> side1, ArrayList<Chit> side2, Character player, boolean isAI){
+	public void initFight(ArrayList<Chit> side1, ArrayList<Chit> side2, Character player){
 		cbGui = new CombatSystemGUI();
 		fightFinished = false;
 		playerCharacter = player;
-		AIopponent = isAI;
 		allies = side1;
 		enemies = side2;
 		cbGui.addCharacters(allies, enemies);
@@ -114,268 +112,138 @@ public class CombatSystem{
 	}
 	
 	protected void startCombat() throws ClassNotFoundException, IOException {
-		if (AIopponent){
-			// AI combat (PvE)
-			while((allies.size() > 0) && (enemies.size() > 0)){
-				round++;
-				ActionChit fightChit1 = null;
-				int effortAsterisks = 0;
-				// Select the enemy
-				int index = cbGui.getTarget(enemies);
-				// Play a fight chit, activate and/or deactivate one belonging, or abandon belongings
-				String choice = (String) cbGui.getEncounterAction();
-				if (choice.contains("Alert")){
-					fightChit1 = cbGui.getFightChit(playerCharacter, enemies, true, null, effortAsterisks);
-					if (fightChit1 != null){
-						effortAsterisks += fightChit1.numAsterisks();
-						String alertedWeapon = cbGui.getWeaponToAlert(playerCharacter);
-						for (Chit chit : playerCharacter.getInventory()){
-							if (chit.getName().contains(alertedWeapon)){
-								((Weapon) chit).setAlerted(true);
-							}
-						}
-					}
-				}
-				else if (choice.contains("Activate")){
-					// Player can choose to activate armor here
-					cbGui.activateDeactivateItems(playerCharacter);
-				}
-				else if (choice.contains("Flee")){
-					// Player can choose to flee
-					if (checkFlee()){
-						cbGui.showFlee();
-						cbGui.close();
-						return;
-					}
-					else{
-						cbGui.showNoFlee();
-					}
-				}
-				else{
-					// Player can abandon items here...not a priority since no weight cap
-					cbGui.abandonItems(playerCharacter);
-				}
-				// Get fight chit for combat
-				ActionChit fightChit2 = cbGui.getFightChit(playerCharacter, enemies, false, fightChit1, effortAsterisks);
-				effortAsterisks += fightChit2.numAsterisks();
-				// Place attack, maneuver, and shield directions (if applicable)
-				String[] directions = cbGui.getDirections(playerCharacter, effortAsterisks);
-				// Attack!
-				cbGui.infoText.setText("Combat begins!");
-				ArrayList<String> turns = getTurns(enemies, playerCharacter, fightChit2);
-				ArrayList<Chit> allChits = new ArrayList<Chit>();
-				ArrayList<Chit> deadChits = new ArrayList<Chit>();
-				ArrayList<Integer> enemyManeuvers = initEnemyMoves(enemies);
-				allChits.addAll(allies);
-				allChits.addAll(enemies);
-				for (String characterToPlay : turns){
-					for (Chit chit : allChits){
-						if (chit.getName().equals(characterToPlay)){
-							if (chit.getName().equals(playerCharacter.getName())){
-								playerAttack(fightChit2, index, directions[0], enemyManeuvers.get(index));
-							}
-							else if (enemies.contains(chit)){
-								playEnemyAITurn(chit, allies, directions, enemyManeuvers.get(index));
-							}
-							else if(allies.contains(chit)){
-								// This is incredibly optimistic, but here's the functionality for
-								// allowing allies to fight!
-								playAlliedAITurn(((Native)chit), enemies);
-							}
-						}
-					}
-				}
-				if(effortAsterisks == 2){
-					if (fightChit1 != null){
-						if((fightChit1.numAsterisks() + fightChit2.numAsterisks()) == 2){
-							fatigueChit(playerCharacter, "FIGHT");
-						}
-						else if ((fightChit1.numAsterisks() + fightChit2.numAsterisks()) == 1){
-							fatigueChit(playerCharacter, "FIGHT/MOVE");
-						}
-						else{
-							fatigueChit(playerCharacter, "MOVE");
-						}
-					}
-					else{
-						if((fightChit2.numAsterisks()) == 2){
-							fatigueChit(playerCharacter, "FIGHT");
-						}
-						else if ((fightChit2.numAsterisks()) == 1){
-							fatigueChit(playerCharacter, "FIGHT/MOVE");
-						}
-						else{
-							fatigueChit(playerCharacter, "MOVE");
+		while((allies.size() > 0) && (enemies.size() > 0)){
+			round++;
+			ActionChit fightChit1 = null;
+			int effortAsterisks = 0;
+			// Select the enemy
+			int index = cbGui.getTarget(enemies);
+			// Play a fight chit, activate and/or deactivate one belonging, or abandon belongings
+			String choice = (String) cbGui.getEncounterAction();
+			if (choice.contains("Alert")){
+				fightChit1 = cbGui.getFightChit(playerCharacter, enemies, true, null, effortAsterisks);
+				if (fightChit1 != null){
+					effortAsterisks += fightChit1.numAsterisks();
+					String alertedWeapon = cbGui.getWeaponToAlert(playerCharacter);
+					for (Chit chit : playerCharacter.getInventory()){
+						if (chit.getName().contains(alertedWeapon)){
+							((Weapon) chit).setAlerted(true);
 						}
 					}
 				}
 			}
-			if (allies.size() == 0){
-				cbGui.infoText.setText("You were defeated!");
-				cbGui.addCharacters(allies, enemies);
-				cbGui.showDefeat();
-				fightFinished = true;
-				cbGui.close();
-				try {
-					Thread.sleep(3000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+			else if (choice.contains("Activate")){
+				// Player can choose to activate armor here
+				cbGui.activateDeactivateItems(playerCharacter);
+			}
+			else if (choice.contains("Flee")){
+				// Player can choose to flee
+				if (checkFlee()){
+					cbGui.showFlee();
+					cbGui.close();
+					return;
+				}
+				else{
+					cbGui.showNoFlee();
 				}
 			}
 			else{
-				cbGui.infoText.setText("You were victorious!");
-				cbGui.addCharacters(allies, enemies);
-				Media hit = new Media(Paths.get(musicLookup.table.get("battleSuccess")).toUri().toString());
-				MediaPlayer mediaPlayer = new MediaPlayer(hit);
-				mediaPlayer.play();
-				cbGui.showVictorious();
-				mediaPlayer.stop();
-				fightFinished = true;
-				cbGui.close();
-				try {
-					Thread.sleep(3000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+				// Player can abandon items here...not a priority since no weight cap
+				cbGui.abandonItems(playerCharacter);
+			}
+			// Get fight chit for combat
+			ActionChit fightChit2 = cbGui.getFightChit(playerCharacter, enemies, false, fightChit1, effortAsterisks);
+			effortAsterisks += fightChit2.numAsterisks();
+			// Place attack, maneuver, and shield directions (if applicable)
+			String[] directions = cbGui.getDirections(playerCharacter, effortAsterisks);
+			// Attack!
+			cbGui.infoText.setText("Combat begins!");
+			ArrayList<String> turns = getTurns(enemies, playerCharacter, fightChit2);
+			ArrayList<Chit> allChits = new ArrayList<Chit>();
+			ArrayList<Chit> deadChits = new ArrayList<Chit>();
+			ArrayList<Integer> enemyManeuvers = initEnemyMoves(enemies);
+			allChits.addAll(allies);
+			allChits.addAll(enemies);
+			for (String characterToPlay : turns){
+				for (Chit chit : allChits){
+					if (chit.getName().equals(characterToPlay)){
+						if (chit.getName().equals(playerCharacter.getName())){
+							playerAttack(fightChit2, index, directions[0], enemyManeuvers.get(index));
+						}
+						else if (enemies.contains(chit)){
+							playEnemyAITurn(chit, allies, directions, enemyManeuvers.get(index));
+						}
+						else if(allies.contains(chit)){
+							// This is incredibly optimistic, but here's the functionality for
+							// allowing allies to fight!
+							playAlliedAITurn(((Native)chit), enemies);
+						}
+					}
 				}
+			}
+			if(effortAsterisks == 2){
+				if (fightChit1 != null){
+					if((fightChit1.numAsterisks() + fightChit2.numAsterisks()) == 2){
+						fatigueChit(playerCharacter, "FIGHT");
+					}
+					else if ((fightChit1.numAsterisks() + fightChit2.numAsterisks()) == 1){
+						fatigueChit(playerCharacter, "FIGHT/MOVE");
+					}
+					else{
+						fatigueChit(playerCharacter, "MOVE");
+					}
+				}
+				else{
+					if((fightChit2.numAsterisks()) == 2){
+						fatigueChit(playerCharacter, "FIGHT");
+					}
+					else if ((fightChit2.numAsterisks()) == 1){
+						fatigueChit(playerCharacter, "FIGHT/MOVE");
+					}
+					else{
+						fatigueChit(playerCharacter, "MOVE");
+					}
+				}
+			}
+		}
+		if (allies.size() == 0){
+			cbGui.infoText.setText("You were defeated!");
+			cbGui.addCharacters(allies, enemies);
+			cbGui.showDefeat();
+			fightFinished = true;
+			cbGui.close();
+			try {
+				Thread.sleep(3000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 		}
 		else{
-			//PvP, whole other can of worms...
-			while((allies.size() > 0) && (enemies.size() > 0)){
-				round++;
-				ActionChit fightChit1 = null;
-				int effortAsterisks = 0;
-				// Select the enemy
-				int index = cbGui.getTarget(enemies);
-				// Play a fight chit, activate and/or deactivate one belonging, or abandon belongings
-				String choice = (String) cbGui.getEncounterAction();
-				if (choice.contains("Alert")){
-					fightChit1 = cbGui.getFightChit(playerCharacter, enemies, true, null, effortAsterisks);
-					if (fightChit1 != null){
-						effortAsterisks += fightChit1.numAsterisks();
-						String alertedWeapon = cbGui.getWeaponToAlert(playerCharacter);
-						for (Chit chit : playerCharacter.getInventory()){
-							if (chit.getName().contains(alertedWeapon)){
-								((Weapon) chit).setAlerted(true);
-							}
-						}
-					}
-				}
-				else if (choice.contains("Activate")){
-					// Player can choose to activate armor here
-					cbGui.activateDeactivateItems(playerCharacter);
-				}
-				else{
-					// Player can abandon items here...not a priority since no weight cap
-					cbGui.abandonItems(playerCharacter);
-				}
-				// Get fight chit for combat
-				ActionChit fightChit2 = cbGui.getFightChit(playerCharacter, enemies, false, fightChit1, effortAsterisks);
-				effortAsterisks += fightChit2.numAsterisks();
-				// Place attack, maneuver, and shield directions (if applicable)
-				String[] directions = cbGui.getDirections(playerCharacter, effortAsterisks);
-				// Attack!
-				cbGui.infoText.setText("Combat begins!");
-				// Receive enemy if you're the attacker, or send if you're the defender
-				/*
-				if(attacker){
-					// Get enemy directions
-					String[] enemyDirections = (String[]) in.readObject();
-					// Get enemy character
-					Character enemy = (Character) in.readObject();
-				}
-				else{
-					out.writeObject(directions);
-					out.writeObject(playerCharacter);
-					// Wait for the attacker to calculate the results
-					playerCharacter = (Character) in.readObject();
-					if (playerCharacter == null){
-						
-					}
-				}
-				*/
-				ArrayList<String> turns = getTurns(enemies, playerCharacter, fightChit2);
-				ArrayList<Chit> allChits = new ArrayList<Chit>();
-				ArrayList<Chit> deadChits = new ArrayList<Chit>();
-				ArrayList<Integer> enemyManeuvers = initEnemyMoves(enemies);
-				allChits.addAll(allies);
-				allChits.addAll(enemies);
-				for (String characterToPlay : turns){
-					for (Chit chit : allChits){
-						if (chit.getName().equals(characterToPlay)){
-							if (chit.getName().equals(playerCharacter.getName())){
-								playerAttack(fightChit2, index, directions[0], enemyManeuvers.get(index));
-							}
-							else{
-								// Play out the enemy attack on you
-								enemyAttack();
-							}
-						}
-					}
-				}
-				if(effortAsterisks == 2){
-					if (fightChit1 != null){
-						if((fightChit1.numAsterisks() + fightChit2.numAsterisks()) == 2){
-							fatigueChit(playerCharacter, "FIGHT");
-						}
-						else if ((fightChit1.numAsterisks() + fightChit2.numAsterisks()) == 1){
-							fatigueChit(playerCharacter, "FIGHT/MOVE");
-						}
-						else{
-							fatigueChit(playerCharacter, "MOVE");
-						}
-					}
-					else{
-						if((fightChit2.numAsterisks()) == 2){
-							fatigueChit(playerCharacter, "FIGHT");
-						}
-						else if ((fightChit2.numAsterisks()) == 1){
-							fatigueChit(playerCharacter, "FIGHT/MOVE");
-						}
-						else{
-							fatigueChit(playerCharacter, "MOVE");
-						}
-					}
-				}
-			}
-			if (allies.size() == 0){
-				cbGui.infoText.setText("You were defeated!");
-				cbGui.addCharacters(allies, enemies);
-				cbGui.showDefeat();
-				try {
-					Thread.sleep(3000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-			else{
-				cbGui.infoText.setText("You were victorious!");
-				cbGui.addCharacters(allies, enemies);
-				Media hit = new Media(Paths.get(musicLookup.table.get("battleSuccess")).toUri().toString());
-				MediaPlayer mediaPlayer = new MediaPlayer(hit);
-				mediaPlayer.play();
-				cbGui.showVictorious();
-				mediaPlayer.stop();
-				cbGui.close();
-				try {
-					Thread.sleep(3000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+			cbGui.infoText.setText("You were victorious!");
+			cbGui.addCharacters(allies, enemies);
+			Media hit = new Media(Paths.get(musicLookup.table.get("battleSuccess")).toUri().toString());
+			MediaPlayer mediaPlayer = new MediaPlayer(hit);
+			mediaPlayer.play();
+			cbGui.showVictorious();
+			mediaPlayer.stop();
+			fightFinished = true;
+			cbGui.close();
+			try {
+				Thread.sleep(3000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 		}
-	}
-	
-	private void enemyAttack() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	private void playAlliedAITurn(Native chit, ArrayList<Chit> targetChits) {
 		int index = (int)(Math.random()*targetChits.size());
+		if (index == targetChits.size()){
+			index = index - 1;
+		}
 		if (chit.getLetter().charAt(0) >= targetChits.get(index).getLetter().charAt(0)){
-				cbGui.infoText.setText(targetChits.get(index).getName() + "was killed!");
-				System.out.println(targetChits.get(index).getName() + "was killed!");
+				cbGui.infoText.setText(targetChits.get(index).getName() + " was killed by " + chit.getName());
+				System.out.println(targetChits.get(index).getName() + " was killed by "  + chit.getName());
 				enemies.remove(index);
 		}
 		else{
@@ -407,11 +275,14 @@ public class CombatSystem{
 
 	private void playEnemyAITurn(Chit chit, ArrayList<Chit> targetChits, String[] directions, int maneuver) {
 		int index = (int)(Math.random()*targetChits.size());
+		if (index == targetChits.size()){
+			index = index - 1;
+		}
 		// Check simple case first, player's more complex to kill
 		if (!targetChits.get(index).getName().equals(playerCharacter.getName())){
 			if ((monsterLookup.monsters.get(enemies.get(index).getName()).get("size").charAt(0)) >= targetChits.get(index).getLetter().charAt(0)){
-					cbGui.infoText.setText(targetChits.get(index).getName() + "was killed!");
-					System.out.println(targetChits.get(index).getName() + "was killed!");
+					cbGui.infoText.setText(targetChits.get(index).getName() + " was killed by " + chit.getName() + "!");
+					System.out.println(targetChits.get(index).getName() + " was killed by " + chit.getName() + "!");
 					allies.remove(index);
 			}
 			else{
