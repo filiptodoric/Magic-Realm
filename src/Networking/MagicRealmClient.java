@@ -208,7 +208,8 @@ public class MagicRealmClient implements Runnable {
     	    String chitName;
     	    String onThisClearing;
     	    int soundNum;
-    	    
+    	    int counter = 0;
+    	    MapChit tempMapChit;
     	    
     	    HexTile currentTile      = gui.mapBrain.getCurrentTile();
     	    
@@ -216,11 +217,25 @@ public class MagicRealmClient implements Runnable {
     	    System.out.println("Warning Letter: " + warningChitLetter);
     	    
     	    
-    	    if (currentTile.hasSoundChit()){
+    	    
+    	    if (currentTile.hasSiteSoundChit()){
     		    System.out.println("-- Tile has sound chit!");
-    		    chitName = currentTile.getSoundChit().getName();
+    		    chitName = currentTile.getSiteSoundChit().getName();
     		    System.out.println(chitName);
-    		    soundNum = currentTile.getSoundNumber();
+    		    
+    		    /*   If LOST CITY or LOST CASTLE   */
+    		    if (chitName.equals("LOST CITY") || chitName.equals("LOST CASTLE")){
+    			    System.out.println("-- Switching chit for 5 new site/sound chits.");
+    			    while (counter < 5){
+    				    tempMapChit = gui.getMapBrain().mapChits.getRandomSiteSoundChit(currentTile);
+    				    if (!tempMapChit.getName().equals("LOST CITY") || (!tempMapChit.getName().equals("LOST CASTLE"))){
+    					    currentTile.addChit(tempMapChit);
+    					    counter++;
+    				    }
+    			    }
+    		    }
+    		    
+    		    soundNum = currentTile.getSiteSoundNumber();
     		    System.out.println(soundNum);
     	    }else{
     		    System.out.println("-- Tile does NOT have sound chit!");
@@ -247,8 +262,13 @@ public class MagicRealmClient implements Runnable {
     				break;
     			case 3:
     				if (warningChitLetter.equals("C")){
-    					//placeTheMonster("Goblin", onThisClearing);
-    					placeTheMonster("Wolf", onThisClearing);
+    					//placeTheMonster("");
+    				}
+    				else if(warningChitLetter.equals("W") && chitName.equals("DANK")){
+    					placeTheMonster("Viper", onThisClearing);
+    				}
+    				else if(chitName.equals("POOL")){
+    					placeTheMonster("Octopus", onThisClearing);
     				}
     				break;
     			case 4: 
@@ -258,9 +278,8 @@ public class MagicRealmClient implements Runnable {
     				}
     				break;
     			case 5:
-    				if (warningChitLetter.equals("M")){
-    					//placeTheMonster("Spider", onThisClearing);
-    					placeTheMonster("Wolf", onThisClearing);
+    				if (chitName.equals("CAIRNS")){
+    					placeTheMonster("Spider", onThisClearing);
     				}
     				break;
     			case 6: 

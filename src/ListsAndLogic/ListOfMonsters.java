@@ -12,52 +12,59 @@ public class ListOfMonsters {
 	
 	public ListOfMonsters(){
 		initMonster("Tremendous Flying Dragon", "Tremendous and armored", 
-				"12 FAME and 12 NOTORIETY", null, "True", "4", "6");
+				"12 FAME and 12 NOTORIETY", "Tooth/Claw", "True", "4", "6");
 		initMonster("Heavy Dragon", "Heavy and armored", 
-				"5 FAME and 5 NOTORIETY", null, "False", "4", "4");
+				"5 FAME and 5 NOTORIETY", "Tooth/Claw", "False", "4", "4");
 		initMonster("Head", null, null, "Broadsword", "False", null, "3");
 		initMonster("Heavy Troll", "Heavy and armored", 
-				"5 FAME and 5 NOTORIETY", null, "False", "4", "4");
+				"5 FAME and 5 NOTORIETY", "Tooth/Claw", "False", "4", "4");
+		/* Tremendous Dragon */
 		initMonster("Tremendous Dragon", "Tremendous and armored", 
-				"10 FAME and 10 NOTORIETY", null, "False", "6", "3");
+				"10 FAME and 10 NOTORIETY", "Broadsword", "False", "6", "3");
 		initMonster("Heavy Serpent", "Heavy and armored", 
-				"4 FAME and 4 NOTORIETY", null, "False", "3", "4");
+				"4 FAME and 4 NOTORIETY", "Tooth/Claw", "False", "3", "4");
 		initMonster("HeadStaff", null, null, "Staff", "False", null, "4");
 		initMonster("Giant Bat", "Heavy", 
-				"3 FAME and 3 NOTORIETY", null, "False", "3", "3");
+				"3 FAME and 3 NOTORIETY", "Tooth/Claw", "False", "3", "3");
+		/* Giant */
 		initMonster("Giant", "Tremendous", 
-				"8 FAME and 8 NOTORIETY", null, "False", "4", "5");
+				"8 FAME and 8 NOTORIETY", "Great Sword", "False", "4", "5"); // Great Sword (a.k.a. Club)
 		initMonster("Heavy Spider", "Heavy", 
-				"3 FAME and 3 NOTORIETY", null, "False", "3", "4");
+				"3 FAME and 3 NOTORIETY", "Tooth/Claw", "False", "3", "4");
 		initMonster("Club", null, null, "Great Sword", "False", null, "6");
 		initMonster("Imp", "Medium", 
 				"2 FAME and 1 NOTORIETY", "Curse", "False", "3", "4");
 		initMonster("Winged Demon", "Tremendous", 
 				"8 FAME and 8 NOTORIETY", "Power Of The Pit", "True", "3", "VI");
+		/* Goblin with Spear */
 		initMonster("Goblin with Spear", "Medium", 
 				"1 FAME and 1 NOTORIETY", "Spear", "False", "5", "5");
 		initMonster("Demon", "Tremendous", 
 				"8 FAME and 8 NOTORIETY", "Power Of The Pit", "False", "4", "VI");
+		/* Goblin with Great Sword */
 		initMonster("Goblin with Great Sword", "Medium", 
 				"1 FAME and 1 NOTORIETY", "Great Sword", "False", "5", "5");
 		initMonster("Tremendous Troll", "Tremendous and armored", 
-				"8 FAME and 8 NOTORIETY", null, "False", "4", "4");
+				"8 FAME and 8 NOTORIETY", "Tooth/Claw", "False", "4", "4");
+		/* Goblin with Axe */
 		initMonster("Goblin with Axe", "Medium", 
 				"1 FAME and 1 NOTORIETY", "Axe", "False", "4", "4");
 		initMonster("Tremendous Octopus", "Tremendous", 
-				"8 FAME and 8 NOTORIETY", null, "False", "3", "4");
+				"8 FAME and 8 NOTORIETY", "Tooth/Claw", "False", "3", "4");
+		/* Viper */
 		initMonster("Viper", "Medium and armored", 
 				"1 FAME and 2 NOTORIETY", "Tooth/Claw", "False", "3", "2");
 		initMonster("Tremendous Serpent", "Tremendous", 
-				"7 FAME and 7 NOTORIETY", null, "False", "5", "4");
+				"7 FAME and 7 NOTORIETY", "Tooth/Claw", "False", "5", "4");
 		initMonster("Ghost", "Medium", 
-				"0 FAME and 2 NOTORIETY", null, "False", "2", "3");
+				"0 FAME and 2 NOTORIETY", "Tooth/Claw", "False", "2", "3");
 		initMonster("Tremendous Spider", "Tremendous", 
-				"6 FAME and 6 NOTORIETY", null, "False", "4", "5");
+				"6 FAME and 6 NOTORIETY", "Tooth/Claw", "False", "4", "5");
 		initMonster("Ogre", "Medium", 
-				"0 FAME and 2 NOTORIETY", null, "False", "4", "5");
+				"0 FAME and 2 NOTORIETY", "Tooth/Claw", "False", "4", "5");
 		initMonster("Heavy Flying Dragon", "Heavy and armored", 
-				"5 FAME and 5 NOTORIETY", null, "True", "4", "4");
+				"5 FAME and 5 NOTORIETY", "Tooth/Claw", "True", "4", "4");
+		/* Wolf */
 		initMonster("Wolf", "Medium", 
 				"0 FAME and 1 NOTORIETY", "Tooth/Claw", "False", "4", "5");
 		
