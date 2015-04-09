@@ -15,6 +15,7 @@ public class Character extends Chit{
 	public ArrayList<ActionChit> activeActionChits;
 	public ArrayList<ActionChit> woundedActionChits;
 	public ArrayList<ActionChit> fatiguedActionChits;
+	private ArrayList<Native> allies;
 	
 	public Character(String selectedCharacter, ArrayList<Chit> dwellingLocations) {
 		super(selectedCharacter,null);
@@ -25,6 +26,7 @@ public class Character extends Chit{
 		activeActionChits = new ArrayList<ActionChit>();
 		woundedActionChits = new ArrayList<ActionChit>();
 		fatiguedActionChits = new ArrayList<ActionChit>();
+		allies = new ArrayList<Native>();
 		initInventory();
 		initStartClearings(dwellingLocations);
 		initStartChits();
@@ -283,4 +285,15 @@ public class Character extends Chit{
 		}
 	}
 
+	public void addAlly(Native nativeToHire) {
+		allies.add(nativeToHire);
+	}
+	
+	public void removeAlly(Native nativeToHire) {
+		allies.remove(nativeToHire);
+	}
+	
+	public ArrayList<Native> getAllies(){
+		return allies;
+	}
 }

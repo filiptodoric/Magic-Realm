@@ -11,5 +11,6 @@ public class MusicLookupTable {
 		table.put("battleSuccess", "music/battleSuccess.mp3");
 		table.put("mainTheme", "music/mainTheme.mp3");
 		table.put("combatTheme", "music/combatTheme.mp3");
+		table.put("tradebgm", "music/tradebgm.mp3");
 	}
 }

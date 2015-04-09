@@ -78,9 +78,16 @@ public class CombatSystem{
 		enemies = side2;
 		cbGui.addCharacters(allies, enemies);
 		cbGui.setupOptions(enemies);
-		Media hit = new Media(Paths.get(musicLookup.table.get(enemies.get(0).getName())).toUri().toString());
-		MediaPlayer mediaPlayer = new MediaPlayer(hit);
-		mediaPlayer.play();
+		for(Chit enemy : enemies){
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			Media hit = new Media(Paths.get(musicLookup.table.get(enemy.getName())).toUri().toString());
+			MediaPlayer mediaPlayer = new MediaPlayer(hit);
+			mediaPlayer.play();
+		}
 		try {
 			startCombat();
 		} catch (ClassNotFoundException | IOException e1) {

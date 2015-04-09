@@ -11,10 +11,13 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import javax.swing.JOptionPane;
+
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import ControlFlow.CombatSystem;
+import ListsAndLogic.ListOfNatives;
 import ListsAndLogic.ListOfSecretRoutes;
 import ListsAndLogic.ListOfSecretRoutes;
 import ListsAndLogic.ListOfMonsters;
@@ -24,6 +27,7 @@ import ObjectClasses.Chit;
 import ObjectClasses.Clearing;
 import ObjectClasses.HexTile;
 import ObjectClasses.MapChit;
+import ObjectClasses.Native;
 import ObjectClasses.Player;
 import View.MagicRealmGUI;
 import View.MapBrain;
@@ -40,6 +44,7 @@ public class MagicRealmClient implements Runnable {
     MagicRealmGUI gui;
     private MusicLookupTable musicLookup;
     ListOfMonsters monsterList;
+    ListOfNatives nativesList;
     /** A specialized object of secret routes on the map.*/
     ListOfSecretRoutes secretRoutes;
     /** An object representing the player associated with this client.*/
@@ -77,6 +82,7 @@ public class MagicRealmClient implements Runnable {
     	mainSong = new Media(Paths.get(musicLookup.table.get("mainTheme")).toUri().toString());
     	mediaPlayer = new MediaPlayer(mainSong);
     	monsterList = new ListOfMonsters();
+    	nativesList = new ListOfNatives();
     	secretRoutes = new ListOfSecretRoutes();
     	setActionListeners();
     	day = 1;
@@ -137,6 +143,24 @@ public class MagicRealmClient implements Runnable {
         				}
         			}
         		}
+        	}
+        	// Repeat for all player allies
+        	for (Chit ally : player.getCharacter().getAllies()){
+        		for (HexTile tile : gui.getMapBrain().getTiles()){
+            		for (Clearing clearing : tile.getClearings()){
+            			if (clearing.getName().equals(targetClearing)){
+            				clearing.addChit(ally);
+            			}
+            			else if (!clearing.getName().equals(targetClearing)){
+            				Iterator<Chit> iter = clearing.getChits().iterator();
+            				while (iter.hasNext()){
+            					if(iter.next().getName().equals(ally.getName())){
+            						iter.remove();
+            					}
+            				}
+            			}
+            		}
+            	}
         	}
     	}
     	// Set the player's new clearing
@@ -277,7 +301,15 @@ public class MagicRealmClient implements Runnable {
     private void setCharacterActionListeners(){
 		gui.tradeButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				// TODO Place function here.
+				// Find if the player's on a dwelling
+				for (Chit chit : gui.getMapBrain().findDwellings()){
+        			if (chit.getLetter().equals(player.getCharacter().getClearing())){
+        				mediaPlayer.pause();
+        				conductTrade();
+        				return;
+        			}
+        		}
+				gui.playerInfoArea.append("\nNo dwellings here, nowhere to trade!");
 			}
 		});
 		
@@ -520,7 +552,7 @@ public class MagicRealmClient implements Runnable {
 										side2.add(enemy);
 									}
 								}
-								mediaPlayer.stop();
+								mediaPlayer.pause();
 								combatSystem.initFight(side1, side2, player.getCharacter(), true);
 								// If the player died, make a treasure pile out of his inventory
 								if (player.getCharacter() == null){
@@ -536,6 +568,8 @@ public class MagicRealmClient implements Runnable {
 										clearingChits.remove();
 									}
 								}
+								refreshMap();
+								mediaPlayer.play();
 								break;
 							}
 						}
@@ -592,6 +626,87 @@ public class MagicRealmClient implements Runnable {
 			}
 		});
     }
+
+	protected void conductTrade() {
+		Media hit = new Media(Paths.get(musicLookup.table.get("tradebgm")).toUri().toString());
+		MediaPlayer tradeBGMPlayer = new MediaPlayer(hit);
+		tradeBGMPlayer.play();
+		String choice = gui.getTradeType();
+		if (choice.contains("Buy")){
+			
+		}
+		else if (choice.contains("Sell")){
+			
+		}
+		else{
+			// Get all natives
+			ArrayList<String> nativeNames = new ArrayList<String>();
+			for (Chit chit : getPlayerClearing().getChits()){
+				if (chit instanceof Native){
+					nativeNames.add(chit.getName());
+				}
+			}
+			String nativeToHire = gui.getNativeToHire(nativeNames.toArray());
+			// Have to get the native's character type for hiring
+			String charType = null;
+			for (Chit chit : getPlayerClearing().getChits()){
+				if (chit instanceof Native && chit.getName().equals(nativeToHire)){
+					charType = ((Native)chit).getCharType();
+				}
+			}
+			System.out.println("Hey!");
+			// Get the native's wage, and roll on the meeting table for final cost
+			String costString = nativesList.natives.get(charType).get("wage");
+			int cost = customMeetingTable(Integer.parseInt(costString));
+			if (cost == 0){
+				gui.displayMessage("Turns out he's not interested. Better get moving before others take an interest in ya...for reasons other than being hired.", 
+						"Dwelling Marketplace");
+			}
+			else if (cost <= player.getCharacter().getGold()){
+				int confirm = gui.confirmHire(nativeToHire, cost);
+				if (confirm == JOptionPane.YES_OPTION){
+					gui.displayMessage("Fantastic! He's yours.", "Dwelling Marketplace");
+					// Add chit to player ally list
+					for (Chit chit : getPlayerClearing().getChits()){
+						if (chit.getName().equals(nativeToHire)){
+							player.getCharacter().addAlly((Native) chit);
+						}
+					}
+				}
+				else{
+					gui.displayMessage("Too cheap? Fine, get outta here!", "Dwelling Marketplace");
+				}
+			}
+			else{
+				gui.displayMessage("Ha! You're too poor to afford that guy. Get outta here and don't waste my time!", "Dwelling Marketplace");
+			}
+		}
+		tradeBGMPlayer.stop();
+	}
+	
+	/**
+	 * A custom meeting table based off of the "Ally" relationship in the official meeting table.
+	 * Die roll 1 produces no deal instead of boon!
+	 */
+	private int customMeetingTable(int cost){
+		int result = rollDice();
+		switch(result){
+		case 1:
+			return 0;
+		case 2:
+			return cost;
+		case 3:
+			return cost*2;
+		case 4:
+			return cost*3;
+		case 5:
+			return cost*4;
+		case 6:
+			return cost*4;
+		default:
+			return 0;
+		}
+	}
 
 	private Clearing getPlayerClearing() {
 		for (HexTile tile : gui.getMapBrain().getTiles()){

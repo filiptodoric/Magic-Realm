@@ -9,7 +9,6 @@ public class ListOfNatives {
 	 * The list of all natives, organized in the form of "(name, (variable, value))"
 	 */
 	public static HashMap<String, HashMap<String, String>> natives = new HashMap<String, HashMap<String, String>>();
-	private static HashMap<String, String> values = new HashMap<String,String>();
 	
 	public ListOfNatives(){
 		initNative("Knight", "Broadsword", "Tremendous and armored", "8", 
@@ -38,6 +37,7 @@ public class ListOfNatives {
 	
 	private void initNative(String str1, String str2, String str3, String str4, 
 			String str5, String str6, String str7){
+		HashMap<String, String> values = new HashMap<String,String>();
 		values.put("weapon", str2);
 		values.put("VUL", str3);
 		values.put("wage", str4);
@@ -45,6 +45,5 @@ public class ListOfNatives {
 		values.put("move", str6);
 		values.put("weight", str7);
 		natives.put(str1, values);
-		values.clear();
 	}
 }

@@ -268,10 +268,10 @@ public class MapBrain extends MouseAdapter implements Serializable{
 				if (clearing.getName().contains("C5")){
 					if (warning.getName().equals("SMOKE")){
 						clearing.addChit(new Chit("House", clearing.getName()));
-						clearing.addChit(new Native("Soldier 1", "H", true, 6, 4, "S"));
-						clearing.addChit(new Native("Soldier 2", "H", true, 6, 4, "S"));
-						clearing.addChit(new Native("Soldier 3", "H", false, 6, 5, "S"));
-						clearing.addChit(new Native("Soldier HQ", "T", true, 4, 6, "S"));
+						clearing.addChit(new Native("Soldier 1", "H", true, 6, 4, "S", "Pikeman"));
+						clearing.addChit(new Native("Soldier 2", "H", true, 6, 4, "S", "Pikeman"));
+						clearing.addChit(new Native("Soldier 3", "H", false, 6, 5, "S", "Crossbowman"));
+						clearing.addChit(new Native("Soldier HQ", "T", true, 4, 6, "S", "Great Swordsman"));
 					}
 					else if (warning.getName().equals("BONES")){
 						clearing.addChit(new Denizen("Ghost", "H", false, 4, 4));
@@ -279,27 +279,27 @@ public class MapBrain extends MouseAdapter implements Serializable{
 					}
 					else if (warning.getName().equals("RUINS")){
 						clearing.addChit(new Chit("Guard", clearing.getName()));
-						clearing.addChit(new Native("Guard 1", "H", true, 5, 5, "G"));
-						clearing.addChit(new Native("Guard 2", "H", true, 5, 5, "G"));
-						clearing.addChit(new Native("Guard HQ", "H", true, 5, 5, "G"));
+						clearing.addChit(new Native("Guard 1", "H", true, 5, 5, "G", "Knight"));
+						clearing.addChit(new Native("Guard 2", "H", true, 5, 5, "G", "Knight"));
+						clearing.addChit(new Native("Guard HQ", "H", true, 5, 5, "G", "Knight"));
 					}
 					else if (warning.getName().equals("STINK")){
 						clearing.addChit(new Chit("Inn", clearing.getName()));
-						clearing.addChit(new Native("Rogue 1", "H", true, 5, 4, "R"));
-						clearing.addChit(new Native("Rogue 2", "H", true, 5, 4, "R"));
-						clearing.addChit(new Native("Rogue 3", "M", true, 5, 3, "R"));
-						clearing.addChit(new Native("Rogue 4", null, true, 0, 2, "R"));
-						clearing.addChit(new Native("Rogue 5", "M", true, 3, 4, "R"));
-						clearing.addChit(new Native("Rogue 6", "M", true, 3, 5, "R"));
-						clearing.addChit(new Native("Rogue 7", "M", true, 3, 5, "R"));
-						clearing.addChit(new Native("Rogue HQ", "H", true, 6, 4, "R"));
+						clearing.addChit(new Native("Rogue 1", "H", true, 5, 4, "R", "Great Axeman"));
+						clearing.addChit(new Native("Rogue 2", "H", true, 5, 4, "R", "Great Axeman"));
+						clearing.addChit(new Native("Rogue 3", "M", true, 5, 3, "R", "Short Swordsman"));
+						clearing.addChit(new Native("Rogue 4", null, true, 0, 2, "R", "Archer"));
+						clearing.addChit(new Native("Rogue 5", "M", true, 3, 4, "R", "Assassin"));
+						clearing.addChit(new Native("Rogue 6", "M", true, 3, 5, "R", "Short Swordsman"));
+						clearing.addChit(new Native("Rogue 7", "M", true, 3, 5, "R", "Short Swordsman"));
+						clearing.addChit(new Native("Rogue HQ", "H", true, 6, 4, "R", "Assassin"));
 					}
 					else if (warning.getName().equals("DANK")){
 						clearing.addChit(new Chit("Chapel", clearing.getName()));
-						clearing.addChit(new Native("Order 1", "H", true, 4, 6, "G"));
-						clearing.addChit(new Native("Order 2", "H", true, 5, 5, "G"));
-						clearing.addChit(new Native("Order 3", "H", true, 4, 6, "G"));
-						clearing.addChit(new Native("Order HQ", "H", true, 6, 4, "G"));
+						clearing.addChit(new Native("Order 1", "H", true, 4, 6, "G", "Knight"));
+						clearing.addChit(new Native("Order 2", "H", true, 5, 5, "G", "Knight"));
+						clearing.addChit(new Native("Order 3", "H", true, 4, 6, "G", "Knight"));
+						clearing.addChit(new Native("Order HQ", "H", true, 6, 4, "G", "Knight"));
 					}
 				}
 			}

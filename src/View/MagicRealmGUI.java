@@ -553,6 +553,40 @@ public class MagicRealmGUI {
 	    return (JOptionPane.showOptionDialog(null, "Select a type of chit to rest:", "Rest",
 	        JOptionPane.DEFAULT_OPTION, 0, null, options, options[0])) + 1;
 	}
+
+	public String getTradeType() {
+		String[] options = {"Buy", "Sell", "Hire Native"};
+		return (String) JOptionPane.showInputDialog(window, 
+		        "Welcome! What 'er ya here for?",
+		        "Dwelling Marketplace",
+		        JOptionPane.QUESTION_MESSAGE, 
+		        null, 
+		        options, 
+		        options[0]);
+	}
+
+
+
+
+
+	public String getNativeToHire(Object[] objects) {
+		return (String) JOptionPane.showInputDialog(window, 
+		        "We've got a couple of fine warriors, who do you want?",
+		        "Dwelling Marketplace",
+		        JOptionPane.QUESTION_MESSAGE, 
+		        null, 
+		        objects, 
+		        objects[0]);
+	}
+
+	public void displayMessage(String message, String header) {
+		JOptionPane.showMessageDialog(null, message, header, JOptionPane.PLAIN_MESSAGE);
+	}
+
+	public int confirmHire(String nativeToHire, int cost) {
+		return JOptionPane.showConfirmDialog(null, "So " + nativeToHire + " is willing to join you, but it's gonna cost ya " + cost + " gold! You buying?",
+				"Dwelling Marketplace", JOptionPane.YES_NO_OPTION);
+	}
 	
 } /* CLOSES CLASS */
 
