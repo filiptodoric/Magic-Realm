@@ -77,6 +77,8 @@ public class Clearing extends MouseAdapter implements Serializable{
 		int fameHold = fame;
 		int[] returnArray = {treasureHold, notorityHold, fameHold};
 		treasure = 0;
+		fame = 0;
+		notority = 0;
 		return returnArray;
 	}
 	
