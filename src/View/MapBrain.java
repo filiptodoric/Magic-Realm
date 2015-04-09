@@ -8,6 +8,7 @@ import java.io.*;
 import javax.swing.*;
 
 import ListsAndLogic.BoxOfMapChits;
+import ListsAndLogic.StableOfHorses;
 import ObjectClasses.Chit;
 import ObjectClasses.Clearing;
 import ObjectClasses.Denizen;
@@ -31,13 +32,13 @@ public class MapBrain extends MouseAdapter implements Serializable{
 	Clearing currentClearing;
 	HexTile currentTile;
 	BoxOfMapChits mapChits;
-	
-	
+	StableOfHorses horseStable;
 	
 	public MapBrain(JLayeredPane mapImage){
 		this.label = mapImage;
 		tiles      = new ArrayList<HexTile>();
 		mapChits   = new BoxOfMapChits();
+		horseStable = new StableOfHorses();
 		counter    = 0;
 		initClearings();	
 	}
@@ -268,6 +269,7 @@ public class MapBrain extends MouseAdapter implements Serializable{
 				if (clearing.getName().contains("C5")){
 					if (warning.getName().equals("SMOKE")){
 						clearing.addChit(new Chit("House", clearing.getName()));
+						clearing.addChits(horseStable.getDwellingHorses());
 						clearing.addChit(new Native("Soldier 1", "H", true, 6, 4, "S", "Pikeman"));
 						clearing.addChit(new Native("Soldier 2", "H", true, 6, 4, "S", "Pikeman"));
 						clearing.addChit(new Native("Soldier 3", "H", false, 6, 5, "S", "Crossbowman"));
@@ -279,12 +281,14 @@ public class MapBrain extends MouseAdapter implements Serializable{
 					}
 					else if (warning.getName().equals("RUINS")){
 						clearing.addChit(new Chit("Guard", clearing.getName()));
+						clearing.addChits(horseStable.getDwellingHorses());
 						clearing.addChit(new Native("Guard 1", "H", true, 5, 5, "G", "Knight"));
 						clearing.addChit(new Native("Guard 2", "H", true, 5, 5, "G", "Knight"));
 						clearing.addChit(new Native("Guard HQ", "H", true, 5, 5, "G", "Knight"));
 					}
 					else if (warning.getName().equals("STINK")){
 						clearing.addChit(new Chit("Inn", clearing.getName()));
+						clearing.addChits(horseStable.getDwellingHorses());
 						clearing.addChit(new Native("Rogue 1", "H", true, 5, 4, "R", "Great Axeman"));
 						clearing.addChit(new Native("Rogue 2", "H", true, 5, 4, "R", "Great Axeman"));
 						clearing.addChit(new Native("Rogue 3", "M", true, 5, 3, "R", "Short Swordsman"));
@@ -296,6 +300,7 @@ public class MapBrain extends MouseAdapter implements Serializable{
 					}
 					else if (warning.getName().equals("DANK")){
 						clearing.addChit(new Chit("Chapel", clearing.getName()));
+						clearing.addChits(horseStable.getDwellingHorses());
 						clearing.addChit(new Native("Order 1", "H", true, 4, 6, "G", "Knight"));
 						clearing.addChit(new Native("Order 2", "H", true, 5, 5, "G", "Knight"));
 						clearing.addChit(new Native("Order 3", "H", true, 4, 6, "G", "Knight"));

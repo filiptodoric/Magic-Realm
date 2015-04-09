@@ -61,6 +61,10 @@ public class Clearing extends MouseAdapter implements Serializable{
 		chits.add(chit);
 	}
 	
+	public void addChits(ArrayList<Horse> arrayList){
+		chits.addAll(arrayList);
+	}
+	
 	public void removeChit(Chit chit) {
 		chits.remove(chit);
 	}
