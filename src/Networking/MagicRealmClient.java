@@ -241,7 +241,7 @@ public class MagicRealmClient implements Runnable {
       	        		for (Clearing clearing : tile.getClearings()){
       	        			if (clearing.getName().equals(targetClearing)){
       	        				//clearing.addChit(player.getCharacter());
-      	        				clearing.addChit(new Chit(monsterName, ""));
+      	        				clearing.addChit(new Chit(monsterName, monsterList.monsters.get(monsterName).get("size")));
       	        				refreshMap();
       	        			}
       	        			else if (!clearing.getName().equals(targetClearing)){
@@ -314,7 +314,7 @@ public class MagicRealmClient implements Runnable {
 						 player.getCharacter().fatiguedActionChits.remove(temp);
 						 player.getCharacter().activeActionChits.add(temp);
 					}
-					if (player.getCharacter().woundedActionChits.size() != 0 && player.getCharacter().fatiguedActionChits.size() == 0){
+					else if (player.getCharacter().woundedActionChits.size() != 0 && player.getCharacter().fatiguedActionChits.size() == 0){
 						 String chit = gui.getWoundedChit(player.getCharacter().woundedActionChits);
 						 ActionChit temp = null;
 						 for (ActionChit action : player.getCharacter().woundedActionChits){
@@ -530,9 +530,10 @@ public class MagicRealmClient implements Runnable {
 								}
 								side1.addAll(side2);
 								// Remove all chits that were wiped out in combat!
-								for (Chit oldChit : gui.getMapBrain().getCurrentClearing().getChits()){
-									if (!side1.contains(oldChit)){
-										gui.getMapBrain().getCurrentClearing().removeChit(oldChit);
+								Iterator<Chit> clearingChits = gui.getMapBrain().getCurrentClearing().getChits().iterator();
+								while (clearingChits.hasNext()){
+									if (!side1.contains(clearingChits.next())){
+										clearingChits.remove();
 									}
 								}
 								break;

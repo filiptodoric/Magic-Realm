@@ -601,19 +601,24 @@ public class CombatSystem{
 	}
 
 	private void playerAttack(ActionChit fightChit2, int index, String attackDirection, int enemyManeuver){
-		boolean hasAttacked = false;
+		boolean hasActiveWeapon = false;
 		// Compare player attack time with target move time (faster = undercut = hit)
 		if (fightChit2.getTime() < Integer.parseInt(monsterLookup.monsters.get(enemies.get(index).getName()).get("moveSpeed"))){
 			for(Chit chit : playerCharacter.getInventory()){
-				if ((chit instanceof Weapon) && (((Weapon)chit).isAlerted()) &&
-						(fightChit2.getLetter().charAt(0) >= monsterLookup.monsters.get(enemies.get(index).getName()).get("size").charAt(0))){
+				if ((chit instanceof Weapon) && (((Weapon)chit).isAlerted())){
+					hasActiveWeapon = true;
+					if (fightChit2.getLetter().charAt(0) >= monsterLookup.monsters.get(enemies.get(index).getName()).get("size").charAt(0)){
 						cbGui.infoText.setText("You killed the " + enemies.get(index).getName() + "!");
 						System.out.println("You killed the " + enemies.get(index).getName() + "!");
 						enemies.remove(index);
-						hasAttacked = true;
+					}
+					else{
+						// Character attacked, but was not strong enough to kill
+						System.out.println("You tried to attack, but were not strong enough to inflict any damage.");
+					}
 				}
 			}
-			if(!hasAttacked){
+			if(!hasActiveWeapon){
 				// Attack with dagger, no weapon alerted! If an enemy has armor, then it's absolutely
 				// NOT Light, so only useful case is medium. It's "always" medium as per 23.2/1c.
 				System.out.println("You attack with the dagger, no active weapon!");
@@ -621,13 +626,12 @@ public class CombatSystem{
 						cbGui.infoText.setText("You killed the " + enemies.get(index).getName() + "!");
 						System.out.println("You killed the " + enemies.get(index).getName() + "!");
 						enemies.remove(index);
-						hasAttacked = true;
+						hasActiveWeapon = true;
 				}
-				
-			}
-			else{
-				// Character attacked, but was not strong enough to kill
-				System.out.println("You tried to attack, but were not strong enough.");
+				else{
+					// Character attacked, but was not strong enough to kill
+					System.out.println("You tried to attack, but were not strong enough to inflict any damage.");
+				}
 			}
 		}
 		else{
@@ -637,17 +641,17 @@ public class CombatSystem{
 							(fightChit2.getLetter().charAt(0) >= monsterLookup.monsters.get(enemies.get(index).getName()).get("size").charAt(0))){
 							cbGui.infoText.setText("You killed the " + enemies.get(index).getName() + "!");
 							enemies.remove(index);
-							hasAttacked = true;
+							hasActiveWeapon = true;
 					}
 				}
-				if(!hasAttacked){
+				if(!hasActiveWeapon){
 					// Attack with dagger, no weapon alerted!
 					System.out.println("You attack with the dagger, no active weapon!");
 					if (('M' >= monsterLookup.monsters.get(enemies.get(index).getName()).get("size").charAt(0))){
 						cbGui.infoText.setText("You killed the " + enemies.get(index).getName() + "!");
 						System.out.println("You killed the " + enemies.get(index).getName() + "!");
 						enemies.remove(index);
-						hasAttacked = true;
+						hasActiveWeapon = true;
 					}
 				}
 				else{
