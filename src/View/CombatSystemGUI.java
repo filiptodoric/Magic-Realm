@@ -98,6 +98,7 @@ public class CombatSystemGUI{
 			constraints.gridheight = 1;
 			combatPanel.add(label, constraints);
 		}
+		combatPanel.repaint();
 	}
 	
 	public void setupOptions(ArrayList<Chit> side2) {
@@ -162,7 +163,7 @@ public class CombatSystemGUI{
 	}
 
 	public Object getEncounterAction() {
-		Object[] options = {"Alert Weapon", "Flee", "Activate/Deactivate Belongings", "Abandon belongings"};
+		Object[] options = {"Alert Weapon", "Flee", "Activate/Deactivate Belongings", "Abandon belongings", "Order Natives to Attack (I'm too lazy to fight)"};
 		return JOptionPane.showInputDialog(window, 
 		        "Perform an action:",
 		        "Action Turn",
@@ -396,5 +397,9 @@ public class CombatSystemGUI{
 			String[] options = {"Charge and Thrust", "Dodge and Swing", "Duck and Smash"};
 		    return JOptionPane.showOptionDialog(null, "Select the maneuver for " + monsterName, "*CHEAT MODE* - Monster Maneuver",
 		        JOptionPane.DEFAULT_OPTION, 0, null, options, options[0]);
+	}
+	
+	public void displayMessage(String message, String header) {
+		JOptionPane.showMessageDialog(null, message, header, JOptionPane.PLAIN_MESSAGE);
 	}
 }

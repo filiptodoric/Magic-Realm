@@ -681,6 +681,11 @@ public class MagicRealmClient implements Runnable {
 		MediaPlayer tradeBGMPlayer = new MediaPlayer(hit);
 		tradeBGMPlayer.play();
 		String choice = gui.getTradeType();
+		if(choice == null){
+			gui.displayMessage("A wise'r once told me, an 'unce of prevention's worth a pound o' cure. Maybe you'll learn the hard way.", 
+					"Dwelling Marketplace");
+			return;
+		}
 		if (choice.contains("Buy")){
 			
 		}
@@ -703,12 +708,16 @@ public class MagicRealmClient implements Runnable {
 					charType = ((Native)chit).getCharType();
 				}
 			}
-			System.out.println("Hey!");
+			if (charType == null){
+				gui.displayMessage("We'll be seein' ya. Or maybe not.", 
+						"Dwelling Marketplace");
+				return;
+			}
 			// Get the native's wage, and roll on the meeting table for final cost
 			String costString = nativesList.natives.get(charType).get("wage");
 			int cost = customMeetingTable(Integer.parseInt(costString));
 			if (cost == 0){
-				gui.displayMessage("Turns out he's not interested. Better get moving before others take an interest in ya...for reasons other than being hired.", 
+				gui.displayMessage("Turns out he's not interested. Better get movin' before others take an interest in ya...for reasons other than being hired.", 
 						"Dwelling Marketplace");
 			}
 			else if (cost <= player.getCharacter().getGold()){
@@ -721,6 +730,16 @@ public class MagicRealmClient implements Runnable {
 							player.getCharacter().addAlly((Native) chit);
 						}
 					}
+					Iterator<Chit> iter = getPlayerClearing().getChits().iterator();
+					while(iter.hasNext()){
+						Chit chit = iter.next();
+						if(chit instanceof Native){
+							if(player.getCharacter().getAllies().contains((Native)chit)){
+								iter.remove();
+							}
+						}
+					}
+					refreshMap();
 				}
 				else{
 					gui.displayMessage("Too cheap? Fine, get outta here!", "Dwelling Marketplace");

@@ -111,9 +111,9 @@ public class MapBrain extends MouseAdapter implements Serializable{
 		/* OAK WOODS HOTSPOTS */
 		tile = new HexTile("OW");
 		tile.addChit(mapChits.getRandomWarningChit("W"));
-		tile.addClearing(new Clearing(new Rectangle(951,945,100,80), "OW C2", "BORDERLAND C2,LEDGES C5, OW C4"));
+		tile.addClearing(new Clearing(new Rectangle(951,945,100,80), "OW C2", "BORDERLAND C2,LEDGES C5,OW C4"));
 		tile.addClearing(new Clearing(new Rectangle(1182,991,100,80), "OW C4", "OW C2,DW C1"));
-		tile.addClearing(new Clearing(new Rectangle(1052,1108,100,80), "OW C5", "MW C5, BV C1"));
+		tile.addClearing(new Clearing(new Rectangle(1052,1108,100,80), "OW C5", "MW C5,BV C1"));
 		tiles.add(tile);
 		
 		/* CRAG CLEARINGS */

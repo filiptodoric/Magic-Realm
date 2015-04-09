@@ -6,6 +6,7 @@ import javafx.embed.swing.JFXPanel;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -26,6 +27,7 @@ import java.util.TreeSet;
 import javax.swing.JOptionPane;
 
 import ListsAndLogic.ListOfMonsters;
+import ListsAndLogic.ListOfNatives;
 import ListsAndLogic.ListOfWeapons;
 import ListsAndLogic.MusicLookupTable;
 import ObjectClasses.ActionChit;
@@ -52,10 +54,12 @@ public class CombatSystem{
     ArrayList<Chit> enemies;
     ListOfMonsters monsterLookup;
     ListOfWeapons weaponsLookup;
+    ListOfNatives nativesLookup;
 	private MusicLookupTable musicLookup;
 	private int round;
 	private int kills;
 	private boolean cheatMode;
+	private boolean iAmLazy;
 	public boolean fightFinished;
 	
 	public CombatSystem(boolean cheatEnabled) {
@@ -63,9 +67,11 @@ public class CombatSystem{
 		kills = 0;
 		monsterLookup = new ListOfMonsters();
 		weaponsLookup = new ListOfWeapons();
+		nativesLookup = new ListOfNatives();
 		musicLookup = new MusicLookupTable();
 		cheatMode = cheatEnabled;
 		fightFinished = true;
+		iAmLazy = false;
 	}
 	
 	public void initFight(ArrayList<Chit> side1, ArrayList<Chit> side2, Character player){
@@ -147,24 +153,44 @@ public class CombatSystem{
 					cbGui.showNoFlee();
 				}
 			}
+			else if(choice.contains("lazy")){
+				if(allies.size() > 1){
+					iAmLazy = true;
+				}
+				else{
+					cbGui.displayMessage("Gotta fight, nobody else here to help!", "Sorry!");
+				}
+			}
 			else{
 				// Player can abandon items here...not a priority since no weight cap
 				cbGui.abandonItems(playerCharacter);
 			}
+			ActionChit fightChit2;
+			String[] directions;
 			// Get fight chit for combat
-			ActionChit fightChit2 = cbGui.getFightChit(playerCharacter, enemies, false, fightChit1, effortAsterisks);
-			effortAsterisks += fightChit2.numAsterisks();
-			// Place attack, maneuver, and shield directions (if applicable)
-			String[] directions = cbGui.getDirections(playerCharacter, effortAsterisks);
+			if(!iAmLazy){
+				fightChit2 = cbGui.getFightChit(playerCharacter, enemies, false, fightChit1, effortAsterisks);
+				effortAsterisks += fightChit2.numAsterisks();
+				// Place attack, maneuver, and shield directions (if applicable)
+				directions = cbGui.getDirections(playerCharacter, effortAsterisks);
+			}
+			else{
+				fightChit2 = null;
+				directions = new String[]{"","","",""};
+			}
 			// Attack!
 			cbGui.infoText.setText("Combat begins!");
-			ArrayList<String> turns = getTurns(enemies, playerCharacter, fightChit2);
+			ArrayList<String> turns = getTurns(fightChit2);
 			ArrayList<Chit> allChits = new ArrayList<Chit>();
 			ArrayList<Chit> deadChits = new ArrayList<Chit>();
 			ArrayList<Integer> enemyManeuvers = initEnemyMoves(enemies);
 			allChits.addAll(allies);
 			allChits.addAll(enemies);
 			for (String characterToPlay : turns){
+				if(allies.size() == 0 || enemies.size() == 0){
+					// One side was defeated, fight's over!
+					break;
+				}
 				for (Chit chit : allChits){
 					if (chit.getName().equals(characterToPlay)){
 						if (chit.getName().equals(playerCharacter.getName())){
@@ -181,6 +207,7 @@ public class CombatSystem{
 					}
 				}
 			}
+			cbGui.addCharacters(allies, enemies);
 			if(effortAsterisks == 2){
 				if (fightChit1 != null){
 					if((fightChit1.numAsterisks() + fightChit2.numAsterisks()) == 2){
@@ -205,6 +232,7 @@ public class CombatSystem{
 					}
 				}
 			}
+			iAmLazy = false;
 		}
 		if (allies.size() == 0){
 			cbGui.infoText.setText("You were defeated!");
@@ -241,14 +269,14 @@ public class CombatSystem{
 		if (index == targetChits.size()){
 			index = index - 1;
 		}
-		if (chit.getLetter().charAt(0) >= targetChits.get(index).getLetter().charAt(0)){
+		if (successfulAttack(chit.getLetter().charAt(0), targetChits.get(index).getLetter().charAt(0))){
 				cbGui.infoText.setText(targetChits.get(index).getName() + " was killed by " + chit.getName());
 				System.out.println(targetChits.get(index).getName() + " was killed by "  + chit.getName());
 				enemies.remove(index);
 		}
 		else{
-			cbGui.infoText.setText(targetChits.get(index).getName() + "was attacked by " + chit.getName() + ", but the attack failed.");
-			System.out.println(targetChits.get(index).getName() + "was attacked by " + chit.getName() + ", but the attack failed.");
+			cbGui.infoText.setText(targetChits.get(index).getName() + " was attacked by " + chit.getName() + ", but the attack failed.");
+			System.out.println(targetChits.get(index).getName() + " was attacked by " + chit.getName() + ", but the attack failed.");
 		}
 	}
 
@@ -280,14 +308,15 @@ public class CombatSystem{
 		}
 		// Check simple case first, player's more complex to kill
 		if (!targetChits.get(index).getName().equals(playerCharacter.getName())){
-			if ((monsterLookup.monsters.get(chit.getName()).get("size").charAt(0)) >= targetChits.get(index).getLetter().charAt(0)){
+			if (successfulAttack(chit.getLetter().charAt(0), targetChits.get(index).getLetter().charAt(0))){
 					cbGui.infoText.setText(targetChits.get(index).getName() + " was killed by " + chit.getName() + "!");
 					System.out.println(targetChits.get(index).getName() + " was killed by " + chit.getName() + "!");
+					playerCharacter.removeAlly((Native) allies.get(index));
 					allies.remove(index);
 			}
 			else{
-				cbGui.infoText.setText(targetChits.get(index).getName() + "was attacked by " + chit.getName() + ", but the attack failed.");
-				System.out.println(targetChits.get(index).getName() + "was attacked by " + chit.getName() + ", but the attack failed.");
+				cbGui.infoText.setText(targetChits.get(index).getName() + " was attacked by " + chit.getName() + ", but the attack failed.");
+				System.out.println(targetChits.get(index).getName() + " was attacked by " + chit.getName() + ", but the attack failed.");
 			}
 		}
 		else{
@@ -300,8 +329,7 @@ public class CombatSystem{
 				}
 			}
 			if (Integer.parseInt((monsterLookup.monsters.get(chit.getName()).get("attackSpeed"))) > moveChit.getLetter().charAt(0)){
-				if (((monsterLookup.monsters.get(chit.getName()).get("size").charAt(0)) >= targetChits.get(index).getLetter().charAt(0)) &&
-					(directions[3] == null) ){
+				if (successfulAttack(chit.getLetter().charAt(0), targetChits.get(index).getLetter().charAt(0))){
 					// Need to check for suits of armor!
 					boolean armourProtection = checkArmour(chit, index, maneuver, directions[3]);
 					if (!armourProtection){
@@ -311,13 +339,18 @@ public class CombatSystem{
 					}
 				}
 				else{
-					if (!isAligned(directions[2], maneuver)){
-						// Missed
-						cbGui.infoText.setText(chit.getName() + " tried to attack, but missed!");
-						System.out.println(chit.getName() + " tried to attack, but missed!");
+					// Hit, but shield?
+					boolean armourProtection = checkArmour(chit, index, maneuver, directions[3]);
+					if (!armourProtection){
+						cbGui.infoText.setText(chit.getName() + " tried to attack, but was too weak to wound you.");
+						System.out.println(chit.getName() + " tried to attack, but was too weak to wound you.");
 					}
-					else{
-						// Hit, but shield?
+				}
+			}
+			else{
+				// Lined up with the enemy's maneuver
+				if(isAligned(directions[2], maneuver)){
+					if (successfulAttack(chit.getLetter().charAt(0), targetChits.get(index).getLetter().charAt(0))){
 						boolean armourProtection = checkArmour(chit, index, maneuver, directions[3]);
 						if (!armourProtection){
 							cbGui.infoText.setText(targetChits.get(index).getName() + " was killed by " + chit.getName() + "!");
@@ -325,18 +358,13 @@ public class CombatSystem{
 							allies.remove(index);
 						}
 					}
-				}
-			}
-			else{
-				// Lined up with the enemy's maneuver
-				if(isAligned(directions[2], maneuver)){
-					if (((monsterLookup.monsters.get(chit.getName()).get("size").charAt(0)) >= targetChits.get(index).getLetter().charAt(0))){
-							boolean armourProtection = checkArmour(chit, index, maneuver, directions[3]);
-							if (!armourProtection){
-								cbGui.infoText.setText(targetChits.get(index).getName() + " was killed by " + chit.getName() + "!");
-								System.out.println(targetChits.get(index).getName() + " was killed by " + chit.getName() + "!");
-								allies.remove(index);
-							}
+					else{
+						// Hit, but shield?
+						boolean armourProtection = checkArmour(chit, index, maneuver, directions[3]);
+						if (!armourProtection){
+							cbGui.infoText.setText(chit.getName() + " tried to attack, but was too weak to wound you.");
+							System.out.println(chit.getName() + " tried to attack, but was too weak to wound you.");
+						}
 					}
 				}
 				// Too slow, not lined up with the player...
@@ -414,7 +442,7 @@ public class CombatSystem{
 		return flag;
 	}
 
-	private ArrayList<String> getTurns(ArrayList<Chit> enemies, Character player, ActionChit charFightChit) {
+	private ArrayList<String> getTurns(ActionChit charFightChit) {
 		if (round == 1){
 			// Sort by weapon strength
 			int playerWeaponLength = 0;
@@ -425,7 +453,19 @@ public class CombatSystem{
 					playerWeaponLength = Integer.parseInt(ListOfWeapons.weapons.get(chit.getName()).get("length"));
 				}
 			}
-			map.put(player.getName(), playerWeaponLength);
+			if(!iAmLazy){
+				map.put(playerCharacter.getName(), playerWeaponLength);
+			}
+			// Add allies
+			for (Chit ally : allies){
+				if (ally instanceof Native){
+					String nativeWeapon = nativesLookup.natives.get(((Native) ally).getCharType()).get("weapon");
+					if (ListOfWeapons.weapons.get(nativeWeapon).get("length") != null){
+						map.put(ally.getName(), Integer.parseInt(ListOfWeapons.weapons.get(nativeWeapon).get("length")));
+					}
+				}
+			}
+			// Add enemies
 			for (Chit enemy : enemies){
 				String monsterWeapon = monsterLookup.monsters.get(enemy.getName()).get("weapon");
 				if (ListOfWeapons.weapons.get(monsterWeapon).get("length") != null){
@@ -449,7 +489,14 @@ public class CombatSystem{
 			// Sort by attack speed
 			Map<String, Integer> map = new TreeMap<String, Integer>(Collections.reverseOrder());
 			ArrayList<String> characterOrder = new ArrayList<String>();
-			map.put(player.getName(), charFightChit.getTime());
+			if(charFightChit != null && !iAmLazy){
+				map.put(playerCharacter.getName(), charFightChit.getTime());
+			}
+			for (Chit ally : allies){
+				if (ally instanceof Native){
+					map.put(ally.getName(), ((Native)ally).getAttackTime());
+				}
+			}
 			for (Chit enemy : enemies){
 				map.put(enemy.getName(), Integer.parseInt(monsterLookup.monsters.get(enemy.getName()).get("attackSpeed")));
 			}
@@ -485,7 +532,7 @@ public class CombatSystem{
 			for(Chit chit : playerCharacter.getInventory()){
 				if ((chit instanceof Weapon) && (((Weapon)chit).isAlerted())){
 					hasActiveWeapon = true;
-					if (fightChit2.getLetter().charAt(0) >= monsterLookup.monsters.get(enemies.get(index).getName()).get("size").charAt(0)){
+					if (successfulAttack(fightChit2.getLetter().charAt(0), monsterLookup.monsters.get(enemies.get(index).getName()).get("size").charAt(0))){
 						cbGui.infoText.setText("You killed the " + enemies.get(index).getName() + "!");
 						System.out.println("You killed the " + enemies.get(index).getName() + "!");
 						enemies.remove(index);
@@ -500,7 +547,7 @@ public class CombatSystem{
 				// Attack with dagger, no weapon alerted! If an enemy has armor, then it's absolutely
 				// NOT Light, so only useful case is medium. It's "always" medium as per 23.2/1c.
 				System.out.println("You attack with the dagger, no active weapon!");
-				if (('M' >= monsterLookup.monsters.get(enemies.get(index).getName()).get("size").charAt(0))){
+				if (successfulAttack("M".charAt(0), monsterLookup.monsters.get(enemies.get(index).getName()).get("size").charAt(0))){
 						cbGui.infoText.setText("You killed the " + enemies.get(index).getName() + "!");
 						System.out.println("You killed the " + enemies.get(index).getName() + "!");
 						enemies.remove(index);
@@ -516,7 +563,7 @@ public class CombatSystem{
 			if (isAligned(attackDirection, enemyManeuver)){
 				for(Chit chit : playerCharacter.getInventory()){
 					if ((chit instanceof Weapon) && (((Weapon)chit).isAlerted()) &&
-							(fightChit2.getLetter().charAt(0) >= monsterLookup.monsters.get(enemies.get(index).getName()).get("size").charAt(0))){
+							(successfulAttack(fightChit2.getLetter().charAt(0), monsterLookup.monsters.get(enemies.get(index).getName()).get("size").charAt(0)))){
 							cbGui.infoText.setText("You killed the " + enemies.get(index).getName() + "!");
 							enemies.remove(index);
 							hasActiveWeapon = true;
@@ -525,7 +572,7 @@ public class CombatSystem{
 				if(!hasActiveWeapon){
 					// Attack with dagger, no weapon alerted!
 					System.out.println("You attack with the dagger, no active weapon!");
-					if (('M' >= monsterLookup.monsters.get(enemies.get(index).getName()).get("size").charAt(0))){
+					if (successfulAttack("M".charAt(0), monsterLookup.monsters.get(enemies.get(index).getName()).get("size").charAt(0))){
 						cbGui.infoText.setText("You killed the " + enemies.get(index).getName() + "!");
 						System.out.println("You killed the " + enemies.get(index).getName() + "!");
 						enemies.remove(index);
@@ -584,5 +631,26 @@ public class CombatSystem{
 	
 	public void setCheatMode(boolean b){
 		cheatMode = b;
+	}
+	
+	/**
+	 * Returns true if attack strength is greater than defend vulnerability
+	 */
+	private boolean successfulAttack(char attack, char defend){
+		if(attack == defend){
+			return true;
+		}
+		else if(attack == 'M' && defend == 'L'){
+			return true;
+		}
+		else if(attack == 'H' && defend == 'M'){
+			return true;
+		}
+		else if(attack == 'T' && defend == 'H'){
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 }

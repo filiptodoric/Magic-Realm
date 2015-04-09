@@ -304,6 +304,7 @@ public class MagicRealmServer implements Runnable{
             	if (names.size() == 0){
             		gameInProgress = false;
             		day = 0;
+            		centralMap = null;
             	}
 	            if (reason != null && reason != ""){
 	            	System.out.println("Client shutting down: " + reason);
