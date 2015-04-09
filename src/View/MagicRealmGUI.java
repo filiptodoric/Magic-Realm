@@ -555,7 +555,7 @@ public class MagicRealmGUI {
 	}
 
 	public String getTradeType() {
-		String[] options = {"Buy", "Sell", "Hire Native"};
+		String[] options = {"Buy", "Sell", "Trade", "Hire Native"};
 		return (String) JOptionPane.showInputDialog(window, 
 		        "Welcome! What 'er ya here for?",
 		        "Dwelling Marketplace",
@@ -596,6 +596,43 @@ public class MagicRealmGUI {
 			index++;
 		}
 		playerStats.setText(update);
+	}
+
+	public String getBuySellTradeChoice(String buySellTrade) {
+		String prompt = "";
+		if(buySellTrade.contains("Buy")){
+			prompt = "We're always open for business! What'cha want?";
+		}
+		else if (buySellTrade.contains("Sell")){
+			prompt = "If we like it, we'll buy it! ";
+		}
+		else{
+			prompt = "You like it, I like it, we've got a deal. What'cha offerin'?";
+		}
+		Object[] categories = {"Weapons", "Armour", "Horses"};
+		return (String) JOptionPane.showInputDialog(window, 
+		        prompt,
+		        "Dwelling Marketplace",
+		        JOptionPane.QUESTION_MESSAGE, 
+		        null, 
+		        categories, 
+		        categories[0]);
+	}
+	
+	public String getPlayerItem(ArrayList<String> items) {
+		Object[] categories = items.toArray();
+		return (String) JOptionPane.showInputDialog(window, 
+		        "Select an item from your inventory:",
+		        "Dwelling Marketplace",
+		        JOptionPane.QUESTION_MESSAGE, 
+		        null, 
+		        categories, 
+		        categories[0]);
+	}
+
+	public int confirmBuy(String item, int cost) {
+		return JOptionPane.showConfirmDialog(null, "A " + item + " is gonna cost ya " + cost + " gold! You buying?",
+				"Dwelling Marketplace", JOptionPane.YES_NO_OPTION);
 	}
 	
 } /* CLOSES CLASS */
