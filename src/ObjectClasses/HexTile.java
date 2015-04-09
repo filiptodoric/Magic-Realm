@@ -34,9 +34,9 @@ public class HexTile implements Serializable{
 		return null;
 	}
 	
-	public MapChit getSoundChit(){
+	public MapChit getSiteSoundChit(){
 		for (MapChit chit : chits){
-			if(chit.getType().equals(MapChit.Type.SOUND)){
+			if(chit.getType().equals(MapChit.Type.SOUND) || chit.getType().equals(MapChit.Type.SITE)){
 				return chit;
 			}
 		}
@@ -52,8 +52,8 @@ public class HexTile implements Serializable{
 		return null;
 	}
 	
-	public int getSoundNumber()	{
-		MapChit soundChit = getSoundChit();
+	public int getSiteSoundNumber()	{
+		MapChit soundChit = getSiteSoundChit();
 		int soundChitNumber = Integer.parseInt(soundChit.getLetter());
 		return soundChitNumber;
 	}
@@ -70,8 +70,8 @@ public class HexTile implements Serializable{
 /**************************************************************************************************
 * FUNCTION: hasSoundChit()
 **************************************************************************************************/
-		public boolean hasSoundChit(){
-			if (getSoundChit() == null){
+		public boolean hasSiteSoundChit(){
+			if (getSiteSoundChit() == null){
 				return false;
 			}
 			else

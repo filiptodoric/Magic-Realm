@@ -18,6 +18,7 @@ public class ListOfMonsters {
 		initMonster("Head", null, null, "Broadsword", "False", null, "3");
 		initMonster("Heavy Troll", "Heavy and armored", 
 				"5 FAME and 5 NOTORIETY", "Tooth/Claw", "False", "4", "4");
+		/* Tremendous Dragon */
 		initMonster("Tremendous Dragon", "Tremendous and armored", 
 				"10 FAME and 10 NOTORIETY", "Broadsword", "False", "6", "3");
 		initMonster("Heavy Serpent", "Heavy and armored", 
@@ -50,6 +51,7 @@ public class ListOfMonsters {
 				"1 FAME and 1 NOTORIETY", "Axe", "False", "4", "4");
 		initMonster("Tremendous Octopus", "Tremendous", 
 				"8 FAME and 8 NOTORIETY", "Tooth/Claw", "False", "3", "4");
+		/* Viper */
 		initMonster("Viper", "Medium and armored", 
 				"1 FAME and 2 NOTORIETY", "Tooth/Claw", "False", "3", "2");
 		initMonster("Tremendous Serpent", "Tremendous", 

@@ -31,7 +31,7 @@ public class MapBrain extends MouseAdapter implements Serializable{
 	String inpAdjTiles;
 	Clearing currentClearing;
 	HexTile currentTile;
-	BoxOfMapChits mapChits;
+	public BoxOfMapChits mapChits;
 	StableOfHorses horseStable;
 	
 	public MapBrain(JLayeredPane mapImage){
