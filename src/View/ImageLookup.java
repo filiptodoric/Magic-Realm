@@ -47,9 +47,15 @@ public class ImageLookup {
 		lookupTable.put("Spider", "spider.gif");
 		lookupTable.put("Goblin", "goblin_spear.gif");
 		lookupTable.put("Giant Bat", "bat.gif");
-		lookupTable.put("Warhorse", "warhorse.gif");
-		lookupTable.put("Workhorse", "horse.gif");
-		lookupTable.put("Pony", "pony.gif");
+		for(int i = 1; i < 5; i++){
+			lookupTable.put("Warhorse " + i, "warhorse.gif");
+		}
+		for(int i = 1; i < 7; i++){
+			lookupTable.put("Workhorse " + i, "horse.gif");
+		}
+		for(int i = 1; i < 8; i++){
+			lookupTable.put("Pony " + i, "pony.gif");
+		}
 	}
 	
 	public String getValue(String name){

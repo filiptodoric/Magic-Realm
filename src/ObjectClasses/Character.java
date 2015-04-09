@@ -284,6 +284,10 @@ public class Character extends Chit{
 			}
 		}
 	}
+	
+	public void addItem(Chit item){
+		inventory.add(item);
+	}
 
 	public void addAlly(Native nativeToHire) {
 		allies.add(nativeToHire);

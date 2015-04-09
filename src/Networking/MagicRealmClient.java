@@ -21,14 +21,18 @@ import ListsAndLogic.ListOfNatives;
 import ListsAndLogic.ListOfSecretRoutes;
 import ListsAndLogic.ListOfSecretRoutes;
 import ListsAndLogic.ListOfMonsters;
+import ListsAndLogic.ListOfWeapons;
 import ListsAndLogic.MusicLookupTable;
 import ObjectClasses.ActionChit;
+import ObjectClasses.Armour;
 import ObjectClasses.Chit;
 import ObjectClasses.Clearing;
 import ObjectClasses.HexTile;
+import ObjectClasses.Horse;
 import ObjectClasses.MapChit;
 import ObjectClasses.Native;
 import ObjectClasses.Player;
+import ObjectClasses.Weapon;
 import View.MagicRealmGUI;
 import View.MapBrain;
 
@@ -45,6 +49,7 @@ public class MagicRealmClient implements Runnable {
     private MusicLookupTable musicLookup;
     ListOfMonsters monsterList;
     ListOfNatives nativesList;
+    ListOfWeapons weaponsList;
     /** A specialized object of secret routes on the map.*/
     ListOfSecretRoutes secretRoutes;
     /** An object representing the player associated with this client.*/
@@ -84,6 +89,7 @@ public class MagicRealmClient implements Runnable {
     	monsterList = new ListOfMonsters();
     	nativesList = new ListOfNatives();
     	secretRoutes = new ListOfSecretRoutes();
+    	weaponsList = new ListOfWeapons();
     	setActionListeners();
     	day = 1;
     }
@@ -161,6 +167,26 @@ public class MagicRealmClient implements Runnable {
             			}
             		}
             	}
+        	}
+        	// Repeat for any horses (need them represented in-game)
+        	for (Chit item : player.getCharacter().getInventory()){
+        		if(item instanceof Horse){
+            		for (HexTile tile : gui.getMapBrain().getTiles()){
+                		for (Clearing clearing : tile.getClearings()){
+                			if (clearing.getName().equals(targetClearing)){
+                				clearing.addChit(item);
+                			}
+                			else if (!clearing.getName().equals(targetClearing)){
+                				Iterator<Chit> iter = clearing.getChits().iterator();
+                				while (iter.hasNext()){
+                					if(iter.next().getName().equals(item.getName())){
+                						iter.remove();
+                					}
+                				}
+                			}
+                		}
+                	}
+        		}
         	}
     	}
     	// Set the player's new clearing
@@ -275,7 +301,7 @@ public class MagicRealmClient implements Runnable {
 //      	        						iter.remove();
 //      	        					}
 //      	        				}
-      	        				System.out.println("in the else ----- shit");
+      	        				//System.out.println("in the else ----- shit");
       	        			}
       	        		}
       	        	}
@@ -313,6 +339,16 @@ public class MagicRealmClient implements Runnable {
                     	statVals.add(turns);
                     	gui.updateStats(playerStats, statVals);
                     	mediaPlayer.play();
+                    	if (turns == 0){
+        					gui.disableButtons();
+        					mediaPlayer.stop();
+        					try {
+        						out.writeObject("COMPLETE");
+        					} catch (IOException e1) {
+        						e1.printStackTrace();
+        					}
+        					gui.playerInfoArea.append("\nDay completed, waiting for others...");
+        				}
         				return;
         			}
         		}
@@ -714,16 +750,215 @@ public class MagicRealmClient implements Runnable {
 		MediaPlayer tradeBGMPlayer = new MediaPlayer(hit);
 		tradeBGMPlayer.play();
 		String choice = gui.getTradeType();
+		ArrayList<String> selectableInventory = new ArrayList<String>();
 		if(choice == null){
 			gui.displayMessage("A wise'r once told me, an 'unce of prevention's worth a pound o' cure. Maybe you'll learn the hard way.", 
 					"Dwelling Marketplace");
 			return;
 		}
 		if (choice.contains("Buy")){
-			
+			String category = gui.getBuySellTradeChoice(choice);
+			if (category == null){gui.displayMessage("If you're not gonna buy, get outta here and stop wasting my time!", "Dwelling Marketplace");return;}
+			if(category.contains("Weapons")){
+				// Buy weapons
+				String item = gui.getPlayerItem(weaponsList.getAllValidWeapons());
+				String costString = weaponsList.weapons.get(item).get("price");
+				int cost = customMeetingTable(Integer.parseInt(costString));
+				if (cost == 0){
+					gui.displayMessage("We don't sell to rascals like you.", 
+							"Dwelling Marketplace");
+					return;
+				}
+				else if (cost <= player.getCharacter().getGold()){
+					int confirm = gui.confirmBuy(item, cost);
+					if (confirm == JOptionPane.YES_OPTION){
+						gui.displayMessage("Fantastic! It's yours.", "Dwelling Marketplace");
+						player.getCharacter().addItem(new Weapon(item,weaponsList.weapons.get(item).get("stength"), false, 0, false, 0));
+					}
+					else{
+						gui.displayMessage("Too cheap? Fine, get outta here!", "Dwelling Marketplace");
+					}
+				}
+				else{
+					gui.displayMessage("Ha! You're too poor to afford that weapon. Get outta here and don't waste my time!", "Dwelling Marketplace");
+				}
+				
+			}
+			else if(category.contains("Armour")){
+				// Buy armor
+				String item = gui.getPlayerItem(weaponsList.getAllValidArmour());
+				String costString = weaponsList.weapons.get(item).get("price");
+				int cost = customMeetingTable(Integer.parseInt(costString));
+				if (cost == 0){
+					gui.displayMessage("We don't sell to rascals like you.", 
+							"Dwelling Marketplace");
+					return;
+				}
+				else if (cost <= player.getCharacter().getGold()){
+					int confirm = gui.confirmBuy(item, cost);
+					if (confirm == JOptionPane.YES_OPTION){
+						gui.displayMessage("Fantastic! It's yours.", "Dwelling Marketplace");
+						player.getCharacter().addItem(new Armour(item,weaponsList.weapons.get(item).get("stength")));
+					}
+					else{
+						gui.displayMessage("Too cheap? Fine, get outta here!", "Dwelling Marketplace");
+					}
+				}
+				else{
+					gui.displayMessage("Ha! You're too poor to afford that weapon. Get outta here and don't waste my time!", "Dwelling Marketplace");
+				}
+				
+			}
+			else{
+				// Buy a horse!
+				for(Chit item : getPlayerClearing().getChits()){
+					if (item instanceof Horse){
+						selectableInventory.add(item.getName());
+					}
+				}
+				if (selectableInventory.size() == 0){
+					gui.displayMessage("Sorry, no horses here!", "Dwelling Marketplace");
+				}
+				String item = gui.getPlayerItem(selectableInventory);
+				Horse horseToBuy = null;
+				for(Chit chit : getPlayerClearing().getChits()){
+					if (chit instanceof Horse && chit.getName().equals(item)){
+						horseToBuy = (Horse) chit;
+					}
+				}
+				int cost = customMeetingTable(horseToBuy.getCost());
+				if (cost == 0){
+					gui.displayMessage("You're not worthy of buying one of our horses.", 
+							"Dwelling Marketplace");
+					return;
+				}
+				else if (cost <= player.getCharacter().getGold()){
+					int confirm = gui.confirmBuy(item, cost);
+					if (confirm == JOptionPane.YES_OPTION){
+						gui.displayMessage("Fantastic! It's yours.", "Dwelling Marketplace");
+						player.getCharacter().addItem(horseToBuy);
+						getPlayerClearing().removeChit(horseToBuy);
+					}
+					else{
+						gui.displayMessage("Too cheap? Fine, get outta here!", "Dwelling Marketplace");
+					}
+				}
+				else{
+					gui.displayMessage("Ha! You're too poor to afford that weapon. Get outta here and don't waste my time!", "Dwelling Marketplace");
+				}
+			}
 		}
 		else if (choice.contains("Sell")){
-			
+			String category = gui.getBuySellTradeChoice(choice);
+			if (category == null){gui.displayMessage("If you're not gonna sell anything, get outta here and stop wasting my time!", "Dwelling Marketplace");return;}
+			if(category.contains("Weapons")){
+				for(Chit item : player.getCharacter().getInventory()){
+					if (item instanceof Weapon){
+						selectableInventory.add(item.getName());
+					}
+				}
+				if (selectableInventory.size() == 0){
+					gui.displayMessage("Trying to sell when you have nothing to sell? Get outta here and don't waste my time!", "Dwelling Marketplace");
+				}
+				String item = gui.getPlayerItem(selectableInventory);
+				String costString = weaponsList.weapons.get(item).get("price");
+				int cost = customMeetingTable(Integer.parseInt(costString));
+				if (cost == 0){
+					gui.displayMessage("You're trying to sell me this piece of junk? I'm disgusted.", 
+							"Dwelling Marketplace");
+				}
+				else if (cost <= player.getCharacter().getGold()){
+					int confirm = gui.confirmHire("", cost);
+					if (confirm == JOptionPane.YES_OPTION){
+						gui.displayMessage("Fantastic! He's yours.", "Dwelling Marketplace");
+						// Add chit to player ally list
+						for (Chit chit : getPlayerClearing().getChits()){
+							if (chit.getName().equals("")){
+								player.getCharacter().addAlly((Native) chit);
+								player.getCharacter().loseGold(cost);
+							}
+						}
+						Iterator<Chit> iter = getPlayerClearing().getChits().iterator();
+						while(iter.hasNext()){
+							Chit chit = iter.next();
+							if(chit instanceof Native){
+								if(player.getCharacter().getAllies().contains((Native)chit)){
+									iter.remove();
+								}
+							}
+						}
+						refreshMap();
+					}
+					else{
+						gui.displayMessage("Too cheap? Fine, get outta here!", "Dwelling Marketplace");
+					}
+				}
+				else{
+					gui.displayMessage("Ha! You're too poor to afford that weapon. Get outta here and don't waste my time!", "Dwelling Marketplace");
+				}
+			}
+			else if(category.contains("Armour")){
+				for(Chit item : player.getCharacter().getInventory()){
+					if (item instanceof Armour){
+						selectableInventory.add(item.getName());
+					}
+				}
+				if (selectableInventory.size() == 0){
+					gui.displayMessage("Trying to trade when you have nothing to trade? Get outta here and don't waste my time!", "Dwelling Marketplace");
+				}
+				String item = gui.getPlayerItem(selectableInventory);
+				String costString = weaponsList.weapons.get(item).get("price");
+				int cost = customMeetingTable(Integer.parseInt(costString));
+				if (cost == 0){
+					gui.displayMessage("You're trying to sell me this piece of junk? I'm disgusted.", 
+							"Dwelling Marketplace");
+				}
+				else if (cost <= player.getCharacter().getGold()){
+					int confirm = gui.confirmHire("", cost);
+					if (confirm == JOptionPane.YES_OPTION){
+						gui.displayMessage("Fantastic! He's yours.", "Dwelling Marketplace");
+						// Add chit to player ally list
+						for (Chit chit : getPlayerClearing().getChits()){
+							if (chit.getName().equals("")){
+								player.getCharacter().addAlly((Native) chit);
+								player.getCharacter().loseGold(cost);
+							}
+						}
+						Iterator<Chit> iter = getPlayerClearing().getChits().iterator();
+						while(iter.hasNext()){
+							Chit chit = iter.next();
+							if(chit instanceof Native){
+								if(player.getCharacter().getAllies().contains((Native)chit)){
+									iter.remove();
+								}
+							}
+						}
+						refreshMap();
+					}
+					else{
+						gui.displayMessage("Too cheap? Fine, get outta here!", "Dwelling Marketplace");
+					}
+				}
+				else{
+					gui.displayMessage("Ha! You're too poor to afford that weapon. Get outta here and don't waste my time!", "Dwelling Marketplace");
+				}
+			}
+			else{
+				// Sell a horse!
+			}
+		}
+		else if(choice.contains("Trade")){
+			String category = gui.getBuySellTradeChoice(choice);
+			if (category == null){gui.displayMessage("If you're not gonna buy, get outta here and stop wasting my time!", "Dwelling Marketplace");return;}
+			if(category.contains("Weapons")){
+				// Trade weapons
+			}
+			else if(category.contains("Armour")){
+				// Trade armor
+			}
+			else{
+				// Trade a horse!
+			}
 		}
 		else{
 			// Get all natives
