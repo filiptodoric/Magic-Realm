@@ -4,11 +4,16 @@ Commit 111:
 
 - Display for current gold/fame/notority
 
+Commit 112:
+
+- Rewards for killing monsters (should be easy enough)
+- Patch for repeatedly plundering a clearing and still getting fame and notority
+- Players now actually pay for hiring natives (code was previously missing for deducting hiring cost)
+
 Still need (or at least should aim for):
 
 - Horses (basic implementation - just buy 'em, use 'em, and fight 'em!)
 - Buying/Selling (see page 81 of 2nd Ed. rules)
-- Rewards for killing monsters (should be easy enough)
 - Victory points (not mentioned but still somewhat important?)
 - Multiplayer playtesting: haven't played a good game in a while, should make sure everything's fine
 - Manual specification of treasure values (cheat mode)

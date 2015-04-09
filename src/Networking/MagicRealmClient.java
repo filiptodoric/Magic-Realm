@@ -496,10 +496,16 @@ public class MagicRealmClient implements Runnable {
 						player.getCharacter().gainGold(foundTreasure[0]);
 						player.getCharacter().gainNotority(foundTreasure[1]);
 						player.getCharacter().gainFame(foundTreasure[2]);
-						 gui.playerInfoArea.append("\nYou found " + foundTreasure[0] + " gold, gained " +
-						foundTreasure[1] + " notority, and gained " + foundTreasure[2] + " fame! You now have " + 
-									player.getCharacter().getGold() + " gold, " + player.getCharacter().getNotority() +
-									" notority, and " + player.getCharacter().getFame() + " fame.");
+						if(foundTreasure[0] == 0 && foundTreasure[1] == 0 && foundTreasure[2] == 0){
+							gui.playerInfoArea.append("\nYou found " + foundTreasure[0] + " gold, gained " +
+									foundTreasure[1] + " notority, and gained " + foundTreasure[2] + " fame! You now have " + 
+												player.getCharacter().getGold() + " gold, " + player.getCharacter().getNotority() +
+												" notority, and " + player.getCharacter().getFame() + " fame.");
+						}
+						else{
+							gui.playerInfoArea.append("\nHate to break it to ya, but you only found fool's gold. You or someone else already dug up whatever was here...");
+						}
+						 
 						break;
 					case 5:
 						gui.playerInfoArea.append("\nYou didn't find anything.");
@@ -755,6 +761,7 @@ public class MagicRealmClient implements Runnable {
 					for (Chit chit : getPlayerClearing().getChits()){
 						if (chit.getName().equals(nativeToHire)){
 							player.getCharacter().addAlly((Native) chit);
+							player.getCharacter().loseGold(cost);
 						}
 					}
 					Iterator<Chit> iter = getPlayerClearing().getChits().iterator();

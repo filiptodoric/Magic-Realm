@@ -77,6 +77,7 @@ public class CombatSystem{
 	public void initFight(ArrayList<Chit> side1, ArrayList<Chit> side2, Character player){
 		cbGui = new CombatSystemGUI();
 		fightFinished = false;
+		kills = 0;
 		playerCharacter = player;
 		allies = side1;
 		enemies = side2;
@@ -92,24 +93,6 @@ public class CombatSystem{
 			MediaPlayer mediaPlayer = new MediaPlayer(hit);
 			mediaPlayer.play();
 		}
-		try {
-			startCombat();
-		} catch (ClassNotFoundException | IOException e1) {
-			e1.printStackTrace();
-		}
-	}
-	
-	public void initFightPlayers(Character player, Character targetPlayer){
-		cbGui = new CombatSystemGUI();
-		playerCharacter = player;
-		enemyCharacter = targetPlayer;
-		allies.add(playerCharacter);
-		enemies.add(enemyCharacter);
-		cbGui.addCharacters(allies, enemies);
-		cbGui.setupOptions(enemies);
-		Media hit = new Media(Paths.get(musicLookup.table.get(enemies.get(0).getName())).toUri().toString());
-		MediaPlayer mediaPlayer = new MediaPlayer(hit);
-		mediaPlayer.play();
 		try {
 			startCombat();
 		} catch (ClassNotFoundException | IOException e1) {
@@ -535,6 +518,12 @@ public class CombatSystem{
 					if (successfulAttack(fightChit2.getLetter().charAt(0), monsterLookup.monsters.get(enemies.get(index).getName()).get("size").charAt(0))){
 						cbGui.infoText.setText("You killed the " + enemies.get(index).getName() + "!");
 						System.out.println("You killed the " + enemies.get(index).getName() + "!");
+						kills++;
+						String[] reward = monsterLookup.monsters.get(enemies.get(index).getName()).get("bounty").split(" ");
+						playerCharacter.gainFame(Integer.parseInt(reward[0])*kills);
+						playerCharacter.gainNotority(Integer.parseInt(reward[3])*kills);
+						cbGui.infoText.setText("You gained " + Integer.parseInt(reward[0])*kills + " fame and " + Integer.parseInt(reward[3])*kills + " notority!");
+						System.out.println("You gained " + Integer.parseInt(reward[0])*kills + " fame and " + Integer.parseInt(reward[3])*kills + " notority!");
 						enemies.remove(index);
 					}
 					else{
@@ -550,6 +539,12 @@ public class CombatSystem{
 				if (successfulAttack("M".charAt(0), monsterLookup.monsters.get(enemies.get(index).getName()).get("size").charAt(0))){
 						cbGui.infoText.setText("You killed the " + enemies.get(index).getName() + "!");
 						System.out.println("You killed the " + enemies.get(index).getName() + "!");
+						kills++;
+						String[] reward = monsterLookup.monsters.get(enemies.get(index).getName()).get("bounty").split(" ");
+						playerCharacter.gainFame(Integer.parseInt(reward[0])*kills);
+						playerCharacter.gainNotority(Integer.parseInt(reward[3])*kills);
+						cbGui.infoText.setText("You gained " + Integer.parseInt(reward[0])*kills + " fame and " + Integer.parseInt(reward[3])*kills + " notority!");
+						System.out.println("You gained " + Integer.parseInt(reward[0])*kills + " fame and " + Integer.parseInt(reward[3])*kills + " notority!");
 						enemies.remove(index);
 						hasActiveWeapon = true;
 				}
@@ -565,6 +560,13 @@ public class CombatSystem{
 					if ((chit instanceof Weapon) && (((Weapon)chit).isAlerted()) &&
 							(successfulAttack(fightChit2.getLetter().charAt(0), monsterLookup.monsters.get(enemies.get(index).getName()).get("size").charAt(0)))){
 							cbGui.infoText.setText("You killed the " + enemies.get(index).getName() + "!");
+							System.out.println("You killed the " + enemies.get(index).getName() + "!");
+							kills++;
+							String[] reward = monsterLookup.monsters.get(enemies.get(index).getName()).get("bounty").split(" ");
+							playerCharacter.gainFame(Integer.parseInt(reward[0])*kills);
+							playerCharacter.gainNotority(Integer.parseInt(reward[3])*kills);
+							cbGui.infoText.setText("You gained " + Integer.parseInt(reward[0])*kills + " fame and " + Integer.parseInt(reward[3])*kills + " notority!");
+							System.out.println("You gained " + Integer.parseInt(reward[0])*kills + " fame and " + Integer.parseInt(reward[3])*kills + " notority!");
 							enemies.remove(index);
 							hasActiveWeapon = true;
 					}
@@ -575,6 +577,12 @@ public class CombatSystem{
 					if (successfulAttack("M".charAt(0), monsterLookup.monsters.get(enemies.get(index).getName()).get("size").charAt(0))){
 						cbGui.infoText.setText("You killed the " + enemies.get(index).getName() + "!");
 						System.out.println("You killed the " + enemies.get(index).getName() + "!");
+						kills++;
+						String[] reward = monsterLookup.monsters.get(enemies.get(index).getName()).get("bounty").split(" ");
+						playerCharacter.gainFame(Integer.parseInt(reward[0])*kills);
+						playerCharacter.gainNotority(Integer.parseInt(reward[3])*kills);
+						cbGui.infoText.setText("You gained " + Integer.parseInt(reward[0])*kills + " fame and " + Integer.parseInt(reward[3])*kills + " notority!");
+						System.out.println("You gained " + Integer.parseInt(reward[0])*kills + " fame and " + Integer.parseInt(reward[3])*kills + " notority!");
 						enemies.remove(index);
 						hasActiveWeapon = true;
 					}
