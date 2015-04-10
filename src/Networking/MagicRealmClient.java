@@ -318,7 +318,8 @@ public class MagicRealmClient implements Runnable {
     * @param:   dice (int) 
     **************************************************************************************************/     
             private void placeTheMonster(String monsterName, String targetClearing){
-          	  	System.out.println("-- In placeMonster().");
+          	  	System.out.println("-- In placing monster: " + monsterName);
+          	  	
           	  	String playerClearing = player.getCharacter().getClearing();
           	    	if (player.getCharacter().getClearing() == null){
           	    		player.getCharacter().setClearing(targetClearing);
