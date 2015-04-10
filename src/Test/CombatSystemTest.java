@@ -23,13 +23,16 @@ public class CombatSystemTest {
 	static ObjectInputStream in;
 	
 	public static void main(String[] args) {
-		CombatSystem sys = new CombatSystem(true);
+		CombatSystem sys = new CombatSystem(false);
 		JFXPanel fxPanel = new JFXPanel();
 		testCharacter = new Character("Amazon", null);
 		ArrayList<Chit> characters = new ArrayList<Chit>();
 		characters.add(new Chit("Amazon", "L"));
 		ArrayList<Chit> enemies = new ArrayList<Chit>();
-		enemies.add(new Chit("Heavy Serpent", "Heavy and armored"));
+		enemies.add(new Chit("Wolf", "M"));
+		enemies.add(new Chit("Wolf", "M"));
+		enemies.add(new Chit("Wolf", "M"));
+		enemies.add(new Chit("Wolf", "M"));
 		//enemies.add(new Chit("Viper", "L"));
 		sys.initFight(characters, enemies, testCharacter);
 	}

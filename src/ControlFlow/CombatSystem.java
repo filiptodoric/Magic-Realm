@@ -292,6 +292,9 @@ public class CombatSystem{
 			index = index - 1;
 		}
 		// Check simple case first, player's more complex to kill
+		if(targetChits.size() == 0){
+			return;
+		}
 		if (!targetChits.get(index).getName().equals(playerCharacter.getName())){
 			if (successfulAttack(chit.getLetter().charAt(0), targetChits.get(index).getLetter().charAt(0))){
 					cbGui.infoText.setText(targetChits.get(index).getName() + " was killed by " + chit.getName() + "!");
@@ -311,6 +314,15 @@ public class CombatSystem{
 			for (ActionChit action : playerCharacter.activeActionChits){
 				if (action.toString().equals(directions[1])){
 					moveChit = action;
+				}
+			}
+			if(moveChit == null){
+				String[] moveChitString = directions[1].split(" ");
+				if(moveChitString.length == 3){
+					moveChit = new ActionChit(moveChitString[0], moveChitString[1], Integer.parseInt(moveChitString[2]), 0);
+				}
+				else{
+					moveChit = new ActionChit(moveChitString[0], moveChitString[1], Integer.parseInt(moveChitString[2]), moveChitString[3].length());
 				}
 			}
 			if (Integer.parseInt((monsterLookup.monsters.get(chit.getName()).get("attackSpeed"))) > moveChit.getLetter().charAt(0)){

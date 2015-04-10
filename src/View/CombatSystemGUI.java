@@ -185,6 +185,23 @@ public class CombatSystemGUI{
 
 	public ActionChit getFightChit(Character playerCharacter, ArrayList<Chit> enemies, boolean isEncounterStep, Chit prevFightChit, int effortAsterisks) {
 		int maxMoveTime = 999;
+		boolean cantFight = true;
+		for (ActionChit chit : playerCharacter.activeActionChits){
+			if (isEncounterStep){
+				if ((chit.getTime() < maxMoveTime) && (chit.getName().equals("FIGHT") && (chit.numAsterisks() + effortAsterisks <= 2))){
+					cantFight = false;
+				}
+			}
+			else{
+				if ((chit.getName().equals("FIGHT") && (chit.numAsterisks() + effortAsterisks <= 2))){
+					cantFight = false;
+				}
+			}
+		}
+		if(cantFight && !isEncounterStep){
+			JOptionPane.showMessageDialog(null, "You are too fatigued to fight, and can only fight with L 5.");
+			return new ActionChit("FIGHT", "L", 5, 0);
+		}
 		for (Chit enemy : enemies){
 			HashMap<String, String> values = monsterList.monsters.get(enemy.getName());
 			if (maxMoveTime > Integer.parseInt(values.get("moveSpeed"))){
@@ -273,7 +290,13 @@ public class CombatSystemGUI{
 			}
 		}
 		options = availableChits.toArray();
-		if (options.length > 0){
+		boolean cantMove = true;
+		for (ActionChit chit : playerCharacter.activeActionChits){
+			if (chit.numAsterisks() + effortAsterisks <= 2){
+					cantMove = false;
+			}
+		}
+		if (options.length > 0 && cantMove == false){
 				while(true){
 					boolean flag = false;
 					directions[1] = (String) JOptionPane.showInputDialog(window, 
@@ -306,6 +329,17 @@ public class CombatSystemGUI{
 				        null, 
 				        options, 
 				        options[0]);
+		}
+		else{
+			directions[1] = "MOVE L 5";
+			options = new Object[]{"Charge Ahead", "Dodge To Side", "Duck Down"};
+			directions[2] =  (String) JOptionPane.showInputDialog(window, 
+			        "Select a maneuver direction (you are over-fatigued and can only deal Light damage:",
+			        "Maneuver Direction",
+			        JOptionPane.QUESTION_MESSAGE, 
+			        null, 
+			        options, 
+			        options[0]);
 		}
 		for (Chit item : playerCharacter.getInventory()){
 			if (item.getName().contains("Shield")){
