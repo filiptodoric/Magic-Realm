@@ -653,6 +653,10 @@ public class MagicRealmGUI {
 		}
 	}
 	
+	public int[] getVictoryConditions(){
+		return null;
+	}
+	
 } /* CLOSES CLASS */
 
 
