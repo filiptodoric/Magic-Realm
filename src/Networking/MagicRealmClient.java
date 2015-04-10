@@ -64,6 +64,8 @@ public class MagicRealmClient implements Runnable {
     int turns;
     /** The current day in the game.*/
     int day;
+    /** Integer array for victory conditions.*/
+    int[] victoryConditions;
     /**A variable for checking the previous use of a character's special ability (move, phase, etc).*/
     boolean playerSpecialAbility;
     /**A variable for checking the previous use of a horse special move ability.*/
