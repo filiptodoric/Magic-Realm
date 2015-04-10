@@ -639,6 +639,19 @@ public class MagicRealmGUI {
 		return JOptionPane.showConfirmDialog(null, "A " + item + " is worth about " + cost + " gold! You sellin'?",
 				"Dwelling Marketplace", JOptionPane.YES_NO_OPTION);
 	}
+
+	public int[] getCheatTreasure() {
+		try{
+			int treasure = Integer.parseInt(JOptionPane.showInputDialog("Input a gold amount"));
+			int notority = Integer.parseInt(JOptionPane.showInputDialog("Input a notority amount"));
+			int fame = Integer.parseInt(JOptionPane.showInputDialog("Input a fame amount"));
+			return new int[]{treasure,notority,fame};
+		}
+		catch (Exception e){
+			System.out.println("Sorry, you entered gibberish!");
+			return new int[]{0,0,0};
+		}
+	}
 	
 } /* CLOSES CLASS */
 
