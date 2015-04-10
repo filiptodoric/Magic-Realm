@@ -213,7 +213,7 @@ public class MagicRealmClient implements Runnable {
         	    
         	    String onThisClearing;
         	    int soundNum     = 0;
-        	    int whileCounter = 0;
+        	    int whileCounter = 1;
         	    MapChit tempMapChit;
         	  
         	    HexTile currentTile = gui.mapBrain.getCurrentTile();
@@ -240,19 +240,23 @@ public class MagicRealmClient implements Runnable {
         				    System.out.println("It's the LOST CASTLE!"); 
         				    warningChitLetter = "M";
         			    }
-        			    
-        			    while (whileCounter < 5){
-        				    tempMapChit = gui.getMapBrain().mapChits.getRandomSoundWarningChit();
-        				    currentTile.addChit(tempMapChit);
-        				    chitName = tempMapChit.getName();
-        				    if (tempMapChit.getType().equals(MapChit.Type.SOUND)){
-        					    soundNum = tempMapChit.getChitNumber();
-        				    } else {
-        					    soundNum = dice;
-        				    }
-        				    onThisClearing = currentTile.getName() + " C" + soundNum;
-        				    switchMonster(dice, warningChitLetter, chitName, onThisClearing);
-        				    whileCounter++;
+        			    if(currentTile.getChits().size() < 5){
+            			    while (whileCounter < 5){
+            				    tempMapChit = gui.getMapBrain().mapChits.getRandomSoundWarningChit();
+            				    currentTile.addChit(tempMapChit);
+            				    chitName = tempMapChit.getName();
+            				    if (tempMapChit.getType().equals(MapChit.Type.SOUND)){
+            					    soundNum = tempMapChit.getChitNumber();
+            				    } else {
+            					    soundNum = dice;
+            				    }
+            				    onThisClearing = currentTile.getName() + " C" + soundNum;
+            				    switchMonster(dice, warningChitLetter, chitName, onThisClearing);
+            				    whileCounter++;
+            			    }
+        			    }
+        			    if (soundNum == 0){
+        			    	soundNum = currentTile.getSiteSoundNumber();
         			    }
         		    }else{
         		    soundNum = currentTile.getSiteSoundNumber();

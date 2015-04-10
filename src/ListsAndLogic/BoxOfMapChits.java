@@ -72,13 +72,12 @@ public class BoxOfMapChits implements Serializable{
 		Iterator<MapChit> iter;
 		Random randGen = new Random();
 			
-		if (randGen.nextInt(100) < 49){
-			iter = warningChits.iterator();
-		} else {
-			iter = siteSoundChits.iterator();
-		}
-			
 		while (randomChit == null){
+			if (randGen.nextInt(100) < 49){
+				iter = warningChits.iterator();
+			} else {
+				iter = siteSoundChits.iterator();
+			}
 			while (iter.hasNext()){
 				MapChit chit = iter.next();
 				if (Math.random() <= 0.25 && !chit.getType().equals(MapChit.Type.SITE)){

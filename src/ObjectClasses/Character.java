@@ -18,7 +18,7 @@ public class Character extends Chit{
 	private ArrayList<Native> allies;
 	
 	public Character(String selectedCharacter, ArrayList<Chit> dwellingLocations) {
-		super(selectedCharacter,null);
+		super(selectedCharacter,"M");
 		currentClearing = null;
 		isHidden = false;
 		discoveries = new HashSet<String>();

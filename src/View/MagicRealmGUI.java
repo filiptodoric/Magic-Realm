@@ -5,6 +5,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import ObjectClasses.ActionChit;
 import ObjectClasses.HexTile;
+import ObjectClasses.MapChit;
 import ObjectClasses.TurnsTableModel;
 import ObjectClasses.Chit;
 
@@ -142,6 +143,23 @@ public class MagicRealmGUI {
 		JMenu fileMenu    = new JMenu("File");
 		JMenu networkMenu = new JMenu("Network");
 		JMenu helpMenu    = new JMenu("Help");
+		JMenuItem customChits = new JMenuItem("Place Custom Site/Sound Chit");
+		customChits.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+                String tile = JOptionPane.showInputDialog("Enter the name of the tile you wish to assign for (naming convention = DW, CAVERN, etc):");
+                String rawChitName = JOptionPane.showInputDialog("Enter the name of the MapChit you wish to add (naming convention = LOST CITY 3, HOARD 6, etc):");
+                String[] chitNameArray = rawChitName.split(" ");
+                String chitName = "";
+                if (chitNameArray.length == 3){
+                    mapBrain.getTileWithTilename(tile).setSiteSoundChit(new MapChit(chitNameArray[0] + " " + chitNameArray[1], chitNameArray[2], MapChit.Type.SITE));
+                }
+                else{
+                	mapBrain.getTileWithTilename(tile).setSiteSoundChit(new MapChit(chitNameArray[0], chitNameArray[2], MapChit.Type.SITE));
+                }
+                
+            }
+        });
+		helpMenu.add(customChits);
 		menuBar.add(fileMenu);
 		menuBar.add(networkMenu);
 		menuBar.add(helpMenu);
