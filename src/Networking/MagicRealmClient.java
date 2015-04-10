@@ -7,6 +7,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
+import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -88,7 +89,11 @@ public class MagicRealmClient implements Runnable {
     	JFXPanel fxPanel = new JFXPanel();
     	combatSystem = new CombatSystem(cheatMode);
     	musicLookup = new MusicLookupTable();
-    	mainSong = new Media(Paths.get(musicLookup.table.get("mainTheme")).toUri().toString());
+    	try {
+			mainSong = new Media(getClass().getResource(musicLookup.table.get("mainTheme")).toURI().toString());
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
     	mediaPlayer = new MediaPlayer(mainSong);
     	monsterList = new ListOfMonsters();
     	nativesList = new ListOfNatives();
@@ -884,7 +889,12 @@ public class MagicRealmClient implements Runnable {
     }
 
 	protected void conductTrade() {
-		Media hit = new Media(Paths.get(musicLookup.table.get("tradebgm")).toUri().toString());
+		Media hit = null;
+		try {
+			hit = new Media(getClass().getResource(musicLookup.table.get("tradebgm")).toURI().toString());
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
 		MediaPlayer tradeBGMPlayer = new MediaPlayer(hit);
 		tradeBGMPlayer.play();
 		String choice = gui.getTradeType();

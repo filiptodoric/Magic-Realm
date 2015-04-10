@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -89,11 +90,14 @@ public class CombatSystem{
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			/*
-			Media hit = new Media(Paths.get(musicLookup.table.get(enemy.getName())).toUri().toString());
+			Media hit = null;
+			try {
+				hit = new Media(getClass().getResource(musicLookup.table.get(enemy.getName())).toURI().toString());
+			} catch (URISyntaxException e) {
+				e.printStackTrace();
+			}
 			MediaPlayer mediaPlayer = new MediaPlayer(hit);
 			mediaPlayer.play();
-			*/
 		}
 		try {
 			startCombat();
@@ -234,7 +238,12 @@ public class CombatSystem{
 		else{
 			cbGui.infoText.setText("You were victorious!");
 			cbGui.addCharacters(allies, enemies);
-			Media hit = new Media(Paths.get(musicLookup.table.get("battleSuccess")).toUri().toString());
+			Media hit = null;
+			try {
+				hit = new Media(getClass().getResource(musicLookup.table.get("battleSuccess")).toURI().toString());
+			} catch (URISyntaxException e1) {
+				e1.printStackTrace();
+			}
 			MediaPlayer mediaPlayer = new MediaPlayer(hit);
 			mediaPlayer.play();
 			cbGui.showVictorious();

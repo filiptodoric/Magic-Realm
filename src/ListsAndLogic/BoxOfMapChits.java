@@ -12,6 +12,8 @@ import ObjectClasses.MapChit;
 public class BoxOfMapChits implements Serializable{
 	private HashSet<MapChit> warningChits;
 	private HashSet<MapChit> siteSoundChits;
+	boolean lostCastlePlaced = false;
+	boolean lostCityPlaced = false;
 	
 	public BoxOfMapChits(){
 		warningChits = new HashSet<MapChit>();
@@ -99,13 +101,23 @@ public class BoxOfMapChits implements Serializable{
 				Iterator<MapChit> iter = siteSoundChits.iterator();
 				while(iter.hasNext()){
 					MapChit chit = iter.next();
-					if (Math.random() <= 0.25){
-						// Make sure Lost City and Lost Castle don't end up
-						// on the wrong tile type
-						if (!((tile.getWarningChit().getLetter().equals("C") &&
-								chit.getName().equals("LOST CASTLE")) ||
-							(tile.getWarningChit().getLetter().equals("M") &&
-									chit.getName().equals("LOST CITY")))){
+					int i = 1;
+					// Yet, make sure Lost City and Lost Castle end up on a clearing, so we don't have to hack it ;)
+					if ((tile.getWarningChit().getLetter().equals("C") && chit.getName().equals("LOST CITY")) ||
+							(tile.getWarningChit().getLetter().equals("M") && chit.getName().equals("LOST CASTLE"))){
+						if(chit.getName().equals("LOST CITY")){
+							lostCityPlaced = true;
+						}
+						if(chit.getName().equals("LOST CASTLE")){
+							lostCastlePlaced = true;
+						}
+						tempChit = chit;
+						System.out.println(chit.getName() + " placed!");
+						iter.remove();
+						break;
+					}
+					else if (Math.random() <= 0.25 && (lostCityPlaced || !tile.getWarningChit().getLetter().equals("C")) && (lostCastlePlaced || !tile.getWarningChit().getLetter().equals("M"))){
+						if (!chit.getName().equals("LOST CASTLE") && !chit.getName().equals("LOST CITY")){
 							tempChit = chit;
 							iter.remove();
 							break;
