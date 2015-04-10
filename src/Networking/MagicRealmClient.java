@@ -546,18 +546,27 @@ public class MagicRealmClient implements Runnable {
 						break;
 					case 4:
 						gui.playerInfoArea.append("\nYou discovered chits (treasure)!");
-						int[] foundTreasure = getPlayerClearing().plunderTreasure();
-						player.getCharacter().gainGold(foundTreasure[0]);
-						player.getCharacter().gainNotority(foundTreasure[1]);
-						player.getCharacter().gainFame(foundTreasure[2]);
-						if(!(foundTreasure[0] == 0 && foundTreasure[1] == 0 && foundTreasure[2] == 0)){
-							gui.playerInfoArea.append("\nYou found " + foundTreasure[0] + " gold, gained " +
-									foundTreasure[1] + " notority, and gained " + foundTreasure[2] + " fame! You now have " + 
-												player.getCharacter().getGold() + " gold, " + player.getCharacter().getNotority() +
-												" notority, and " + player.getCharacter().getFame() + " fame.");
+						if(cheatMode){
+							int[] cheatTreasure = gui.getCheatTreasure();
+							getPlayerClearing().wipeTreasure();
+							player.getCharacter().gainGold(cheatTreasure[0]);
+							player.getCharacter().gainNotority(cheatTreasure[1]);
+							player.getCharacter().gainFame(cheatTreasure[2]);
 						}
 						else{
-							gui.playerInfoArea.append("\nHate to break it to ya, but you only found fool's gold. You or someone else already dug up whatever was here...");
+							int[] foundTreasure = getPlayerClearing().plunderTreasure();
+							player.getCharacter().gainGold(foundTreasure[0]);
+							player.getCharacter().gainNotority(foundTreasure[1]);
+							player.getCharacter().gainFame(foundTreasure[2]);
+							if(!(foundTreasure[0] == 0 && foundTreasure[1] == 0 && foundTreasure[2] == 0)){
+								gui.playerInfoArea.append("\nYou found " + foundTreasure[0] + " gold, gained " +
+										foundTreasure[1] + " notority, and gained " + foundTreasure[2] + " fame! You now have " + 
+													player.getCharacter().getGold() + " gold, " + player.getCharacter().getNotority() +
+													" notority, and " + player.getCharacter().getFame() + " fame.");
+							}
+							else{
+								gui.playerInfoArea.append("\nHate to break it to ya, but you only found fool's gold. You or someone else already dug up whatever was here...");
+							}
 						}
 						 
 						break;

@@ -85,6 +85,14 @@ public class Clearing extends MouseAdapter implements Serializable{
 		notority = 0;
 		return returnArray;
 	}
+	/**
+	 * For use in CHEAT MODE only!
+	 */
+	public void wipeTreasure(){
+		treasure = 0;
+		fame = 0;
+		notority = 0;
+	}
 	
 	
 	
