@@ -47,6 +47,7 @@ public class ImageLookup {
 		lookupTable.put("Ogre", "orc_sword.gif");
 		lookupTable.put("Tremendous Octopus", "octopus.gif");
 		lookupTable.put("Tremendous Troll", "troll.gif");
+		lookupTable.put("Heavy Troll", "troll.gif");
 		lookupTable.put("Serpent", "serpent.gif");
 		lookupTable.put("Heavy Serpent", "serpent.gif");
 		lookupTable.put("Giant", "giant.gif");
