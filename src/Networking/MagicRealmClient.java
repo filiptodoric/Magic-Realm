@@ -308,6 +308,7 @@ public class MagicRealmClient implements Runnable {
         				}
         				break;
         			default:
+        				System.out.println("No cases match");
         				break;
         	    	}    	   
         }
@@ -331,7 +332,7 @@ public class MagicRealmClient implements Runnable {
           	        		for (Clearing clearing : tile.getClearings()){
           	        			if (clearing.getName().equals(targetClearing)){
           	        				clearing.addChit(new Chit(monsterName, 
-          	        					monsterList.monsters.get(monsterName).get("size")));
+          	        					ListOfMonsters.monsters.get(monsterName).get("size")));
           	        				refreshMap();
           	        			}
           	        			else if (!clearing.getName().equals(targetClearing)){
