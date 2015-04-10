@@ -1,3 +1,3 @@
-# filipdylanryan
+# Created by: Dylan Zheng, Filip Todoric and Ryan Woznica
 
-# Wrapping up Iteration 2 - remember to not touch after we submit!
+# Iteration 2 is completed. MagicRealm v1.0 is released. Enjoy! 
