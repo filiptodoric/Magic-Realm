@@ -213,7 +213,7 @@ public class MagicRealmClient implements Runnable {
         	    int soundNum     = 0;
         	    int whileCounter = 0;
         	    MapChit tempMapChit;
-        	    
+        	    //hi ifl
         	    HexTile currentTile = gui.mapBrain.getCurrentTile();
         	    
         	    String warningChitLetter = currentTile.getWarningChit().getLetter();
