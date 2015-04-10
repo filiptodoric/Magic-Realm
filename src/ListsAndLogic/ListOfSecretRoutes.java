@@ -21,6 +21,7 @@ public class ListOfSecretRoutes {
 		hiddenPaths.add("LEDGES C6,LEDGES C4");
 		hiddenPassages.add("CAVERN C1,CAVERN C4");
 		hiddenPassages.add("CAVERN C3,CAVERN C5");
+		hiddenPassages.add("BORDERLAND C4,BORDERLAND C5");
 	}
 	
 	public boolean isSecret(String str1, String str2){

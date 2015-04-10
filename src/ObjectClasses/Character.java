@@ -316,4 +316,13 @@ public class Character extends Chit{
 		statVals.add(notority);
 		return statVals;
 	}
+
+	public boolean hasActiveHorse() {
+		for(Chit chit : inventory){
+			if (chit instanceof Horse && ((Horse)chit).isActive()){
+				return true;
+			}
+		}
+		return false;
+	}
 }

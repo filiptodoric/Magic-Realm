@@ -105,7 +105,7 @@ public class MapBrain extends MouseAdapter implements Serializable{
 		tile.addClearing(new Clearing(new Rectangle(611,856,100,80), "BORDERLAND C2", "EV C4,OW C2,BORDERLAND C3"));
 		tile.addClearing(new Clearing(new Rectangle(503,926,100,80), "BORDERLAND C3", "BORDERLAND C2,BORDERLAND C5,BORDERLAND C6"));
 		tile.addClearing(new Clearing(new Rectangle(770,1070,100,80), "BORDERLAND C4", "BORDERLAND C6,BORDERLAND C5,LEDGES C4"));
-		tile.addClearing(new Clearing(new Rectangle(678,1055,100,80), "BORDERLAND C5", "BORDERLAND C3,CAVERN C2"));
+		tile.addClearing(new Clearing(new Rectangle(678,1055,100,80), "BORDERLAND C5", "BORDERLAND C3,CAVERN C2,BORDERLAND C4"));
 		tile.addClearing(new Clearing(new Rectangle(588,1019,100,80), "BORDERLAND C6", "BORDERLAND C1,BORDERLAND C3,BORDERLAND C4"));
 		tiles.add(tile);
 		
@@ -134,7 +134,7 @@ public class MapBrain extends MouseAdapter implements Serializable{
 		tile.addChit(mapChits.getRandomWarningChit("C"));
 		tile.addChit(mapChits.getRandomSiteSoundChit(tile));
 		tile.addClearing(new Clearing(new Rectangle(549,1359,100,80), "CAVERN C1","BV C4,CAVERN C3,CAVERN C4"));
-		tile.addClearing(new Clearing(new Rectangle(474,1245,100,80), "CAVERN C2","BORDERLAND C4,CAVERN C3"));
+		tile.addClearing(new Clearing(new Rectangle(474,1245,100,80), "CAVERN C2","BORDERLAND C5,CAVERN C3"));
 		tile.addClearing(new Clearing(new Rectangle(420,1332,100,80), "CAVERN C3","CAVERN C5,CAVERN C6,CAVERN C1,CAVERN C2"));
 		tile.addClearing(new Clearing(new Rectangle(339,1492,100,80), "CAVERN C4","CAVERN C5,CAVERN C6,CAVERN C1"));
 		tile.addClearing(new Clearing(new Rectangle(341,1250,100,80), "CAVERN C5","HP C3,CAVERN C4,CAVERN C3"));

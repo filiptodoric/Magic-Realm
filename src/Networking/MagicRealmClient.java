@@ -66,6 +66,8 @@ public class MagicRealmClient implements Runnable {
     int day;
     /**A variable for checking the previous use of a character's special ability (move, phase, etc).*/
     boolean playerSpecialAbility;
+    /**A variable for checking the previous use of a horse special move ability.*/
+    boolean horseSpecialAbility;
     /**A variable for checking the enabling of cheat mode.*/
     boolean cheatMode;
     /**The client's list of available characters to display for the player's selection.*/
@@ -271,17 +273,17 @@ public class MagicRealmClient implements Runnable {
     					placeTheMonster("Viper", onThisClearing);
     				}
     				else if(chitName.equals("POOL")){
-    					placeTheMonster("Octopus", onThisClearing);
+    					placeTheMonster("Tremendous Octopus", onThisClearing);
     				}
     				break;
     			case 4: 
     				if (chitName.equals("VAULT")){
-    					placeTheMonster("Troll", onThisClearing);
+    					placeTheMonster("Tremendous Troll", onThisClearing);
     				}
     				break;
     			case 5:
     				if (chitName.equals("CAIRNS")){
-    					placeTheMonster("Spider", onThisClearing);
+    					placeTheMonster("Tremendous Spider", onThisClearing);
     				}
     				break;
     			default:
@@ -548,7 +550,7 @@ public class MagicRealmClient implements Runnable {
 						player.getCharacter().gainGold(foundTreasure[0]);
 						player.getCharacter().gainNotority(foundTreasure[1]);
 						player.getCharacter().gainFame(foundTreasure[2]);
-						if(foundTreasure[0] == 0 && foundTreasure[1] == 0 && foundTreasure[2] == 0){
+						if(!(foundTreasure[0] == 0 && foundTreasure[1] == 0 && foundTreasure[2] == 0)){
 							gui.playerInfoArea.append("\nYou found " + foundTreasure[0] + " gold, gained " +
 									foundTreasure[1] + " notority, and gained " + foundTreasure[2] + " fame! You now have " + 
 												player.getCharacter().getGold() + " gold, " + player.getCharacter().getNotority() +
@@ -638,6 +640,15 @@ public class MagicRealmClient implements Runnable {
 							}
 						}
 					}
+					else if(horseSpecialAbility == false && player.getCharacter().hasActiveHorse()){
+						horseSpecialAbility = true;
+						for(Chit chit : gui.getMapBrain().getCurrentTile().getChits()){
+							if(chit instanceof MapChit && ((MapChit)chit).getLetter().equals("M")){
+								turns--;
+								break;
+							}
+						}
+					}
 					else{
 						for(Chit chit : gui.getMapBrain().getCurrentTile().getChits()){
 							if(chit instanceof MapChit && ((MapChit)chit).getLetter().equals("M")){
@@ -654,6 +665,21 @@ public class MagicRealmClient implements Runnable {
 							}
 						}
 						turns--;
+					}
+					// Loop for disabling horse while in caves
+					boolean isInCave = false;
+					for(Chit chit : gui.getMapBrain().getCurrentTile().getChits()){
+						if(chit instanceof MapChit && ((MapChit)chit).getLetter().equals("C")){
+							isInCave = true;
+						}
+					}
+					Iterator<Chit> iter = player.getCharacter().getInventory().iterator();
+					while(iter.hasNext()){
+						Chit item = iter.next();
+						if(item instanceof Horse){
+							System.out.println(isInCave);
+							((Horse)item).setActive(!isInCave);
+						}
 					}
 					gui.playerInfoArea.append("\nMoved to " + gui.getMapBrain().getCurrentClearing().getName());
 					placeCharacter(gui.getMapBrain().getCurrentClearing().getName());
@@ -790,6 +816,7 @@ public class MagicRealmClient implements Runnable {
 					if (confirm == JOptionPane.YES_OPTION){
 						gui.displayMessage("Fantastic! It's yours.", "Dwelling Marketplace");
 						player.getCharacter().addItem(new Weapon(item,weaponsList.weapons.get(item).get("stength"), false, 0, false, 0));
+						player.getCharacter().loseGold(cost);
 					}
 					else{
 						gui.displayMessage("Too cheap? Fine, get outta here!", "Dwelling Marketplace");
@@ -815,6 +842,7 @@ public class MagicRealmClient implements Runnable {
 					if (confirm == JOptionPane.YES_OPTION){
 						gui.displayMessage("Fantastic! It's yours.", "Dwelling Marketplace");
 						player.getCharacter().addItem(new Armour(item,weaponsList.weapons.get(item).get("stength")));
+						player.getCharacter().loseGold(cost);
 					}
 					else{
 						gui.displayMessage("Too cheap? Fine, get outta here!", "Dwelling Marketplace");
@@ -828,7 +856,7 @@ public class MagicRealmClient implements Runnable {
 			else{
 				// Buy a horse!
 				for(Chit item : getPlayerClearing().getChits()){
-					if (item instanceof Horse){
+					if (item instanceof Horse && (!((Horse)item).isAllied())){
 						selectableInventory.add(item.getName());
 					}
 				}
@@ -852,8 +880,10 @@ public class MagicRealmClient implements Runnable {
 					int confirm = gui.confirmBuy(item, cost);
 					if (confirm == JOptionPane.YES_OPTION){
 						gui.displayMessage("Fantastic! It's yours.", "Dwelling Marketplace");
+						horseToBuy.setAllied();
 						player.getCharacter().addItem(horseToBuy);
 						getPlayerClearing().removeChit(horseToBuy);
+						player.getCharacter().loseGold(cost);
 					}
 					else{
 						gui.displayMessage("Too cheap? Fine, get outta here!", "Dwelling Marketplace");
@@ -959,6 +989,7 @@ public class MagicRealmClient implements Runnable {
 				if (cost == 0){
 					gui.displayMessage("You're trying to sell me this piece of junk? I'm disgusted.", 
 							"Dwelling Marketplace");
+					return;
 				}
 				else{
 					int confirm = gui.confirmSell(item, cost);
@@ -977,19 +1008,6 @@ public class MagicRealmClient implements Runnable {
 						gui.displayMessage("Too cheap? Fine, get outta here!", "Dwelling Marketplace");
 					}
 				}
-			}
-		}
-		else if(choice.contains("Trade")){
-			String category = gui.getBuySellTradeChoice(choice);
-			if (category == null){gui.displayMessage("If you're not gonna buy, get outta here and stop wasting my time!", "Dwelling Marketplace");return;}
-			if(category.contains("Weapons")){
-				// Trade weapons
-			}
-			else if(category.contains("Armour")){
-				// Trade armor
-			}
-			else{
-				// Trade a horse!
 			}
 		}
 		else{
@@ -1175,6 +1193,7 @@ public class MagicRealmClient implements Runnable {
                 	gui.playerInfoArea.append("Day " + day + ": It's your turn...");
                 	day++;
                 	playerSpecialAbility = false;
+                	horseSpecialAbility = false;
                 	// Special conditions for player turns
                 	if (player.getCharacter().getName().equals("Captain")){
                 		for (Chit chit : gui.getMapBrain().findDwellings()){

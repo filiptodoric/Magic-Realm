@@ -20,6 +20,9 @@ public class Horse extends ActionChit implements Serializable{
 		return cost;
 	}
 	
+	/**
+	 * For making sure a horse is allied to a player and isn't open for sale...
+	 */
 	public boolean isAllied(){
 		return isAllied;
 	}
@@ -28,8 +31,18 @@ public class Horse extends ActionChit implements Serializable{
 		return isActive;
 	}
 	
+	public void setActive(boolean active){
+		isActive = active;
+	}
+	
 	public int getGallopTime(){
 		return gallopTime;
 	}
 
+	/**
+	 * Make sure to set this when a horse gets assigned to a player!
+	 */
+	public void setAllied(){
+		isAllied = true;
+	}
 }
