@@ -2,6 +2,7 @@ package ObjectClasses;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class HexTile implements Serializable{
 	private ArrayList<Clearing> clearings;
@@ -76,6 +77,17 @@ public class HexTile implements Serializable{
 			}
 			else
 				return true;
+		}
+
+		public void setSiteSoundChit(MapChit chit) {
+			Iterator<MapChit> iter = chits.iterator();
+			while(iter.hasNext()){
+				MapChit curChit = iter.next();
+				if(curChit.getType().equals(MapChit.Type.SOUND) || curChit.getType().equals(MapChit.Type.SITE)){
+					iter.remove();
+				}
+			}
+			chits.add(chit);
 		}
 		
 	}

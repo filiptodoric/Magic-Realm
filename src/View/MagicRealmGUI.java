@@ -147,15 +147,14 @@ public class MagicRealmGUI {
 		customChits.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                 String tile = JOptionPane.showInputDialog("Enter the name of the tile you wish to assign for (naming convention = DW, CAVERN, etc):");
-                mapBrain.getTileWithTilename(tile).getChits().clear();
                 String rawChitName = JOptionPane.showInputDialog("Enter the name of the MapChit you wish to add (naming convention = LOST CITY 3, HOARD 6, etc):");
                 String[] chitNameArray = rawChitName.split(" ");
                 String chitName = "";
                 if (chitNameArray.length == 3){
-                	mapBrain.getTileWithTilename(tile).addChit(new MapChit(chitNameArray[0] + " " + chitNameArray[1], chitNameArray[2], MapChit.Type.SITE));
+                    mapBrain.getTileWithTilename(tile).setSiteSoundChit(new MapChit(chitNameArray[0] + " " + chitNameArray[1], chitNameArray[2], MapChit.Type.SITE));
                 }
                 else{
-                	mapBrain.getTileWithTilename(tile).addChit(new MapChit(chitNameArray[0], chitNameArray[2], MapChit.Type.SITE));
+                	mapBrain.getTileWithTilename(tile).setSiteSoundChit(new MapChit(chitNameArray[0], chitNameArray[2], MapChit.Type.SITE));
                 }
                 
             }
