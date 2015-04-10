@@ -3,6 +3,7 @@ package ListsAndLogic;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Random;
 
 import ObjectClasses.Chit;
 import ObjectClasses.HexTile;
@@ -59,6 +60,37 @@ public class BoxOfMapChits implements Serializable{
 		}
 		return tempChit;
 	}
+	
+	
+/**************************************************************************************************
+* FUNCTION: getRandomSoundWarningChit                                                       Apr. 09
+* @return MapChit
+**************************************************************************************************/
+	public MapChit getRandomSoundWarningChit(){
+			
+		MapChit randomChit = null;
+		Iterator<MapChit> iter;
+		Random randGen = new Random();
+			
+		if (randGen.nextInt(100) < 49){
+			iter = warningChits.iterator();
+		} else {
+			iter = siteSoundChits.iterator();
+		}
+			
+		while (randomChit == null){
+			while (iter.hasNext()){
+				MapChit chit = iter.next();
+				if (Math.random() <= 0.25 && !chit.getType().equals(MapChit.Type.SITE)){
+					randomChit = chit;
+					iter.remove();
+					break;
+				}
+			}
+		}
+		return randomChit;
+	}
+	
 	
 	public MapChit getRandomSiteSoundChit(HexTile tile){
 		MapChit tempChit = null;

@@ -21,4 +21,8 @@ public class Chit implements Serializable{
 	public String getLetter(){
 		return letter;
 	}
+	
+	public int getChitNumber(){
+		return Integer.parseInt(letter);
+	}
 }
