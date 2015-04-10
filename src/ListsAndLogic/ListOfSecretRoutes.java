@@ -20,6 +20,7 @@ public class ListOfSecretRoutes {
 		hiddenPaths.add("LEDGES C1,LEDGES C3");
 		hiddenPaths.add("LEDGES C6,LEDGES C4");
 		hiddenPassages.add("CAVERN C1,CAVERN C4");
+		hiddenPassages.add("CAVES C2,CAVES C3");
 		hiddenPassages.add("CAVERN C3,CAVERN C5");
 		hiddenPassages.add("BORDERLAND C4,BORDERLAND C5");
 	}

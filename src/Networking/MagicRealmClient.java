@@ -246,7 +246,7 @@ public class MagicRealmClient implements Runnable {
         				    warningChitLetter = "M";
         			    }
         			    if(currentTile.getChits().size() < 5){
-            			    while (whileCounter < 5){
+            			    while (whileCounter < 4){
             				    tempMapChit = gui.getMapBrain().mapChits.getRandomSoundWarningChit();
             				    currentTile.addChit(tempMapChit);
             				    chitName = tempMapChit.getName();
@@ -799,7 +799,7 @@ public class MagicRealmClient implements Runnable {
 									side1.add(ally);
 								}
 								for(Chit enemy : gui.getMapBrain().getCurrentClearing().getChits()){
-									if (!side1.contains(enemy)){
+									if (!side1.contains(enemy) && !(enemy instanceof Horse)){
 										side2.add(enemy);
 									}
 								}

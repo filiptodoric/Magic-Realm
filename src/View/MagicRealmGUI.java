@@ -160,6 +160,17 @@ public class MagicRealmGUI {
             }
         });
 		helpMenu.add(customChits);
+		JMenuItem customWarningChits = new JMenuItem("Place Custom Warning Chit");
+		customWarningChits.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+                String tile = JOptionPane.showInputDialog("Enter the name of the tile you wish to assign for (naming convention = DW, CAVERN, etc):");
+                String rawChitName = JOptionPane.showInputDialog("Enter the name of the MapChit you wish to add (naming convention = BONES M, STINK W, etc):");
+                String[] chitNameArray = rawChitName.split(" ");
+                String chitName = "";
+                mapBrain.getTileWithTilename(tile).setWarningChit(new MapChit(chitNameArray[0], chitNameArray[1], MapChit.Type.SITE));
+            }
+        });
+		helpMenu.add(customWarningChits);
 		menuBar.add(fileMenu);
 		menuBar.add(networkMenu);
 		menuBar.add(helpMenu);

@@ -89,6 +89,17 @@ public class HexTile implements Serializable{
 			}
 			chits.add(chit);
 		}
+
+		public void setWarningChit(MapChit mapChit) {
+			Iterator<MapChit> iter = chits.iterator();
+			while(iter.hasNext()){
+				MapChit curChit = iter.next();
+				if(curChit.getType().equals(MapChit.Type.WARNING)){
+					iter.remove();
+				}
+			}
+			chits.add(mapChit);
+		}
 		
 	}
 
