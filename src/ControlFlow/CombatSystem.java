@@ -89,9 +89,11 @@ public class CombatSystem{
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+			/*
 			Media hit = new Media(Paths.get(musicLookup.table.get(enemy.getName())).toUri().toString());
 			MediaPlayer mediaPlayer = new MediaPlayer(hit);
 			mediaPlayer.play();
+			*/
 		}
 		try {
 			startCombat();
