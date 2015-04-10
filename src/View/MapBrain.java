@@ -369,6 +369,7 @@ public class MapBrain extends MouseAdapter implements Serializable{
 	public void showChits(Clearing thisClearing){
 		
 		System.out.println("-- In showChits().");
+		System.out.println(getCurrentTile().getSiteSoundChit().getName());
 		
 		if(thisClearing.hasChits()){
 			JPanel chitsPanel = new JPanel();
@@ -442,6 +443,15 @@ public class MapBrain extends MouseAdapter implements Serializable{
 				if(clearing.getName().equals(tileText)){
 					return tile;
 				}
+			}
+		}
+		return null;
+	}
+	
+	public HexTile getTileWithTilename(String tileText){
+		for(HexTile tile : tiles){
+			if(tile.getName().equals(tileText)){
+				return tile;
 			}
 		}
 		return null;
