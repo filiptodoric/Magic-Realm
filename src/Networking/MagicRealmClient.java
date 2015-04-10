@@ -255,6 +255,9 @@ public class MagicRealmClient implements Runnable {
             				    whileCounter++;
             			    }
         			    }
+        			    if (soundNum == 0){
+        			    	soundNum = currentTile.getSiteSoundNumber();
+        			    }
         		    }else{
         		    soundNum = currentTile.getSiteSoundNumber();
         		    System.out.println("soundNum: " + soundNum);

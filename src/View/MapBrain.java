@@ -369,7 +369,9 @@ public class MapBrain extends MouseAdapter implements Serializable{
 	public void showChits(Clearing thisClearing){
 		
 		System.out.println("-- In showChits().");
-		System.out.println(getCurrentTile().getSiteSoundChit().getName());
+		if(getCurrentTile().getSiteSoundChit() != null){
+			System.out.println("Current Site/Sound Chit: " + getCurrentTile().getSiteSoundChit().getName());
+		}
 		
 		if(thisClearing.hasChits()){
 			JPanel chitsPanel = new JPanel();
