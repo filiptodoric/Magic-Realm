@@ -39,7 +39,7 @@ import View.MapBrain;
 
 
 /**
- * The main controller for the client side of the game. Incorporates networking 
+ * The main control for the client side of the game. Incorporates networking 
  * for the client, sends/receives messages with the server and manipulates the view.
  * Original code accessed from: http://cs.lmu.edu/~ray/notes/javanetexamples/#chat
  */
