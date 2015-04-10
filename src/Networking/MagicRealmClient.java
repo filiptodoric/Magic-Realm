@@ -197,138 +197,217 @@ public class MagicRealmClient implements Runnable {
     }
     
     
+ //Paste Here
     
+    /**************************************************************************************************
+    * FUNCTION: summonMonster()                                                                April 09
+    * @param:   dice (int) 
+    **************************************************************************************************/
+        private void summonMonster(int dice){
+    	    
+    	    System.out.println("-- In summonMonster().");
+        	    
+        	    String chitName;
+        	    
+        	    String onThisClearing;
+        	    int soundNum     = 0;
+        	    int whileCounter = 0;
+        	    MapChit tempMapChit;
+        	    
+        	    HexTile currentTile = gui.mapBrain.getCurrentTile();
+        	    
+        	    String warningChitLetter = currentTile.getWarningChit().getLetter();
+        	    System.out.println("Warning Letter: " + warningChitLetter);
+        	    
+
+        	    if (currentTile.hasSiteSoundChit()){
+        		    System.out.println("-- Tile has site/sound chit!");
+        		    chitName = currentTile.getSiteSoundChit().getName();
+        		    System.out.println("Chit Name: " + chitName);
+        		   
+        		    
+        		    /*------------------------------------------------------------------
+        		    *              If LOST CITY or LOST CASTLE Chit Found
+        		    ------------------------------------------------------------------*/
+        		    if (chitName.equals("LOST CITY") || chitName.equals("LOST CASTLE")){
+        			    System.out.println("-- Found a Lost Region...");
+        			    if (chitName.equals("LOST CITY")){                 
+        				    System.out.println("It's the LOST CITY!");
+        				    warningChitLetter = "C";                     
+        			    } else {
+        				    System.out.println("It's the LOST CASTLE!"); 
+        				    warningChitLetter = "M";
+        			    }
+        			    
+        			    while (whileCounter < 5){
+        				    tempMapChit = gui.getMapBrain().mapChits.getRandomSoundWarningChit();
+        				    currentTile.addChit(tempMapChit);
+        				    chitName = tempMapChit.getName();
+        				    if (tempMapChit.getType().equals(MapChit.Type.SOUND)){
+        					    soundNum = tempMapChit.getChitNumber();
+        				    } else {
+        					    soundNum = dice;
+        				    }
+        				    onThisClearing = currentTile.getName() + " C" + soundNum;
+        				    switchMonster(dice, warningChitLetter, chitName, onThisClearing);
+        				    whileCounter++;
+        			    }
+        		    }else{
+        		    soundNum = currentTile.getSiteSoundNumber();
+        		    System.out.println("soundNum: " + soundNum);
+        		    }
+        	    }else{
+        		    System.out.println("-- Tile does NOT have sound chit!");
+        		    chitName = currentTile.getWarningChit().getName();
+        		    System.out.println(chitName);
+        		    soundNum = dice;
+        	    }
+        	   
+        	    onThisClearing = currentTile.getName() + " C" + soundNum;
+        	    System.out.println("-- Monster being placed on: " + onThisClearing);
+        	    
+        	    /* Cases for Woods Monsters and Site Chits */
+        	    switch(dice){ 
+        			case 1:			
+        				if (chitName.equals("HOARD")){
+        					placeTheMonster("Tremendous Flying Dragon", onThisClearing);
+        				}
+        				else if(chitName.equals("LAIR")){
+        					placeTheMonster("Heavy Dragon", onThisClearing);
+        				}
+        				break;
+        			case 2:
+        				if (warningChitLetter.equals("W") && chitName.equals("RUINS")){
+        					placeTheMonster("Wolf", onThisClearing);
+        				}
+        				break;
+        			case 3:
+        				if (warningChitLetter.equals("W") && chitName.equals("BONES")){
+        					placeTheMonster("Ogre", onThisClearing);
+        				}
+        				else if(warningChitLetter.equals("W") && chitName.equals("DANK")){
+        					placeTheMonster("Viper", onThisClearing);
+        				}
+        				else if(chitName.equals("POOL")){
+        					placeTheMonster("Tremendous Octopus", onThisClearing);
+        				}
+        				break;
+        			case 4: 
+        				if (chitName.equals("VAULT")){
+
+        					placeTheMonster("Tremendous Troll", onThisClearing);
+
+        				}
+        				break;
+        			case 5:
+        				if (chitName.equals("CAIRNS")){
+
+        					placeTheMonster("Tremendous Spider", onThisClearing);
+        				}
+        				break;
+        			default:
+        				break;
+        	    	}    	   
+        }
+            
+            
+            
+            
+    /**************************************************************************************************
+    * FUNCTION: placeTheMonster()                                                              Apr. 06
+    * @param:   dice (int) 
+    **************************************************************************************************/     
+            private void placeTheMonster(String monsterName, String targetClearing){
+          	  	System.out.println("-- In placeMonster().");
+          	  	String playerClearing = player.getCharacter().getClearing();
+          	    	if (player.getCharacter().getClearing() == null){
+          	    		player.getCharacter().setClearing(targetClearing);
+          	    	}
+          	    	else{
+          	        	for (HexTile tile : gui.getMapBrain().getTiles()){
+          	        		for (Clearing clearing : tile.getClearings()){
+          	        			if (clearing.getName().equals(targetClearing)){
+          	        				clearing.addChit(new Chit(monsterName, 
+          	        					monsterList.monsters.get(monsterName).get("size")));
+          	        				refreshMap();
+          	        			}
+          	        			else if (!clearing.getName().equals(targetClearing)){
+          	        				System.out.println("-- Else.");
+          	        			}
+          	        		}
+          	        	}
+          	    	}
+          	    	// Set the player's new clearing
+          	    	player.getCharacter().setClearing(playerClearing);
+          	    	refreshMap();
+          	    }
+            
+            
+            
+            
+            
+    /**************************************************************************************************
+    * FUNCTION: switchMonster
+    * @return
+    **************************************************************************************************/
+            private void switchMonster(int dice, String warningChitLetter, String chitName, String onThisClearing ){
+          	  
+          	  System.out.println("-- In switchMonsters().");
+          	  
+          	  if (warningChitLetter.equals("M")){
+          		  switch(dice){ 
+          			case 1:			
+          				if (chitName.equals("SMOKE")){
+          					placeTheMonster("Tremendous Flying Dragon", onThisClearing);
+          				}
+          				else if(chitName.equals("FLUTTER")){
+          					placeTheMonster("Heavy Dragon", onThisClearing);
+          				}
+          				break;
+          			case 2:
+          					placeTheMonster("Heavy Serpent", onThisClearing);
+          				break;
+          			case 4: 
+          				placeTheMonster("Giant", onThisClearing);
+          				break;
+          			case 5:
+          				placeTheMonster("Heavy Spider", onThisClearing);
+          				break;
+          			case 6:
+          				placeTheMonster("Giant Bat", onThisClearing);
+          				break;
+          			default:
+          				break;
+          	    	}
+          	  } else {
+          		  switch(dice){
+          			case 1:
+          				if (chitName.equals("FLUTTER")){
+          					placeTheMonster("Tremendous Flying Dragon", onThisClearing);
+          				}else{
+          					placeTheMonster("Tremendous Dragon", onThisClearing);
+          				}
+          				break;
+          			case 2:
+      					placeTheMonster("Heavy Serpent", onThisClearing);
+      					break;
+          			case 3:
+          				placeTheMonster("Goblin with Axe", onThisClearing);
+          				break;
+          			case 4: 
+          				placeTheMonster("Heavy Troll", onThisClearing);
+          				break;
+          			case 6:
+          				placeTheMonster("Giant Bat", onThisClearing);
+          			default:
+          				break;
+          		  }
+          	  }
+            }   
+
     
-/**************************************************************************************************
-* FUNCTION: summonMonster()                                                                 Apr. 06
-* @param:   dice (int) 
-**************************************************************************************************/
-    private void summonMonster(int dice){
-	    
-	    System.out.println("-- In summonMonster().");
-    	    
-    	    String chitName;
-    	    String onThisClearing;
-    	    int soundNum;
-    	    int counter = 0;
-    	    MapChit tempMapChit;
-    	    
-    	    HexTile currentTile      = gui.mapBrain.getCurrentTile();
-    	    
-    	    String warningChitLetter = currentTile.getWarningChit().getLetter();
-    	    System.out.println("Warning Letter: " + warningChitLetter);
-    	    
-    	    
-    	    
-    	    if (currentTile.hasSiteSoundChit()){
-    		    System.out.println("-- Tile has sound chit!");
-    		    chitName = currentTile.getSiteSoundChit().getName();
-    		    System.out.println(chitName);
-    		    
-    		    /*   If LOST CITY or LOST CASTLE   */
-    		    if (chitName.equals("LOST CITY") || chitName.equals("LOST CASTLE")){
-    			    System.out.println("-- Switching chit for 5 new site/sound chits.");
-    			    while (counter < 5){
-    				    tempMapChit = gui.getMapBrain().mapChits.getRandomSiteSoundChit(currentTile);
-    				    if (!tempMapChit.getName().equals("LOST CITY") || (!tempMapChit.getName().equals("LOST CASTLE"))){
-    					    currentTile.addChit(tempMapChit);
-    					    // put swich here
-    					    counter++;
-    				    }
-    			    }
-    		    }
-    		    
-    		    soundNum = currentTile.getSiteSoundNumber();
-    		    System.out.println(soundNum);
-    	    }else{
-    		    System.out.println("-- Tile does NOT have sound chit!");
-    		    chitName = currentTile.getWarningChit().getName();
-    		    System.out.println(chitName);
-    		    soundNum = 1;
-    	    }
-    	   
-    	    onThisClearing = currentTile.getName() + " C" + soundNum;
-    	    System.out.println("-- Monster being placed on: " + onThisClearing);
-    	    
-    	    /* Cases for Woods Monsters and Site Chits */
-    	    switch(dice){ 
-    			case 1:			
-    				if (chitName.equals("HOARD")){
-    					placeTheMonster("Tremendous Flying Dragon", onThisClearing);
-    				}
-    				else if(chitName.equals("LAIR")){
-    					placeTheMonster("Heavy Dragon", onThisClearing);
-    				}
-    				break;
-    			case 2:
-    				if (warningChitLetter.equals("W") && chitName.equals("RUINS")){
-    					placeTheMonster("Wolf", onThisClearing);
-    				}
-    				break;
-    			case 3:
-    				if (warningChitLetter.equals("W") && chitName.equals("BONES")){
-    					placeTheMonster("Ogre", onThisClearing);
-    				}
-    				else if(warningChitLetter.equals("W") && chitName.equals("DANK")){
-    					placeTheMonster("Viper", onThisClearing);
-    				}
-    				else if(chitName.equals("POOL")){
-    					placeTheMonster("Tremendous Octopus", onThisClearing);
-    				}
-    				break;
-    			case 4: 
-    				if (chitName.equals("VAULT")){
-    					placeTheMonster("Tremendous Troll", onThisClearing);
-    				}
-    				break;
-    			case 5:
-    				if (chitName.equals("CAIRNS")){
-    					placeTheMonster("Tremendous Spider", onThisClearing);
-    				}
-    				break;
-    			default:
-    				break;
-    	    	}
-    }
-        
-        
-        
-        
-/**************************************************************************************************
-* FUNCTION: placeTheMonster()                                                              Apr. 06
-* @param:   dice (int) 
-**************************************************************************************************/     
-        private void placeTheMonster(String monsterName, String targetClearing){
-      	  	System.out.println("-- In placeMonster().");
-      	  	String playerClearing = player.getCharacter().getClearing();
-      	    	if (player.getCharacter().getClearing() == null){
-      	    		player.getCharacter().setClearing(targetClearing);
-      	    	}
-      	    	else{
-      	        	for (HexTile tile : gui.getMapBrain().getTiles()){
-      	        		for (Clearing clearing : tile.getClearings()){
-      	        			if (clearing.getName().equals(targetClearing)){
-      	        				//clearing.addChit(player.getCharacter());
-      	        				clearing.addChit(new Chit(monsterName, monsterList.monsters.get(monsterName).get("size")));
-      	        				refreshMap();
-      	        			}
-      	        			else if (!clearing.getName().equals(targetClearing)){
-//      	        				Iterator<Chit> iter = clearing.getChits().iterator();
-//      	        				while (iter.hasNext()){
-//      	        					if(iter.next().getName().equals(player.getCharacter().getName())){
-//      	        						iter.remove();
-//      	        					}
-//      	        				}
-      	        				//System.out.println("in the else ----- shit");
-      	        			}
-      	        		}
-      	        	}
-      	    	}
-      	    	// Set the player's new clearing
-      	    	player.getCharacter().setClearing(playerClearing);
-      	    	refreshMap();
-      	    }
-    
+            
+            
     private int rollDice(){
     	if (cheatMode){
     		return gui.getDieRoll();
