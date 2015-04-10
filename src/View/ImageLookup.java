@@ -41,11 +41,19 @@ public class ImageLookup {
 		lookupTable.put("Rogue HQ", "assassin.gif");
 		lookupTable.put("Wolf", "wolf.gif");
 		lookupTable.put("Viper", "serpent.gif");
-		lookupTable.put("Dragon", "dragon.gif");
+		lookupTable.put("Tremendous Dragon", "dragon.gif");
+		lookupTable.put("Tremendous Flying Dragon", "dragon_flying.gif");
+		lookupTable.put("Heavy Dragon", "firedrake.gif");
+		lookupTable.put("Ogre", "orc_sword.gif");
+		lookupTable.put("Tremendous Octopus", "octopus.gif");
+		lookupTable.put("Tremendous Troll", "troll.gif");
 		lookupTable.put("Serpent", "serpent.gif");
+		lookupTable.put("Heavy Serpent", "serpent.gif");
 		lookupTable.put("Giant", "giant.gif");
-		lookupTable.put("Spider", "spider.gif");
-		lookupTable.put("Goblin", "goblin_spear.gif");
+		lookupTable.put("Tremendous Spider", "spider.gif");
+		lookupTable.put("Heavy Spider", "spider.gif");
+		lookupTable.put("Goblin with Spear", "goblin_spear.gif");
+		lookupTable.put("Goblin with Axe", "goblin_axe.gif");
 		lookupTable.put("Giant Bat", "bat.gif");
 		for(int i = 1; i < 5; i++){
 			lookupTable.put("Warhorse " + i, "warhorse.gif");
