@@ -339,9 +339,9 @@ public class MagicRealmClient implements Runnable {
           	        					ListOfMonsters.monsters.get(monsterName).get("size")));
           	        				refreshMap();
           	        			}
-          	        			else if (!clearing.getName().equals(targetClearing)){
-          	        				System.out.println("-- Else.");
-          	        			}
+//          	        			else if (!clearing.getName().equals(targetClearing)){
+//          	        				System.out.println("-- Else.");
+//          	        			}
           	        		}
           	        	}
           	    	}
